@@ -665,7 +665,8 @@ public class Session {
     }
 	
     public void close() {
-	sworker.interrupt();
+    	//ark_bot.ui.fsm.UpdateTitle("");
+    	sworker.interrupt();
     }
 	
     public synchronized boolean alive() {

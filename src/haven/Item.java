@@ -1,7 +1,7 @@
 /*
  *  This file is part of the Haven & Hearth game client.
  *  Copyright (C) 2009 Fredrik Tolf <fredrik@dolda2000.com>, and
- *                     BjГ¶rn Johannessen <johannessen.bjorn@gmail.com>
+ *                     Bjorn Johannessen <johannessen.bjorn@gmail.com>
  *
  *  Redistribution and/or modification of this file is subject to the
  *  terms of the GNU Lesser General Public License, version 3, as
@@ -32,17 +32,17 @@ import java.awt.Color;
 public class Item extends Widget implements DTarget {
     static Coord shoff = new Coord(1, 3);
     static Resource missing = Resource.load("gfx/invobjs/missing");
-    boolean dm = false;
-    int q;
+    public boolean dm = false;
+    public int q;
     boolean hq;
     Coord doff;
-    String tooltip;
-    int num = -1;
+    public String tooltip;
+    public int num = -1;
     Indir<Resource> res;
     Tex sh;
     Color olcol = null;
     Tex mask = null;
-    int meter = 0;
+    public int meter = 0;
 	
     static {
 	Widget.addtype("item", new WidgetFactory() {
@@ -337,4 +337,15 @@ public class Item extends Widget implements DTarget {
 	wdgmsg("itemact", ui.modflags());
 	return(true);
     }
+    
+    // arksu получить координаты вещи
+    public int coord_x() { return c.div(31).x; }
+    public int coord_y() { return c.div(31).y; }
+    
+    public String getResName() {
+        if (res.get() != null)
+            return res.get().name;
+        else
+            return  "";
+    } 
 }

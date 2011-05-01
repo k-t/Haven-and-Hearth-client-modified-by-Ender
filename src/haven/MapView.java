@@ -1,7 +1,7 @@
 /*
  *  This file is part of the Haven & Hearth game client.
  *  Copyright (C) 2009 Fredrik Tolf <fredrik@dolda2000.com>, and
- *                     BjГ¶rn Johannessen <johannessen.bjorn@gmail.com>
+ *                     Bjorn Johannessen <johannessen.bjorn@gmail.com>
  *
  *  Redistribution and/or modification of this file is subject to the
  *  terms of the GNU Lesser General Public License, version 3, as
@@ -68,6 +68,11 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     Map<String, Integer> radiuses;
     int beast_check_delay = 0;
     
+    // ark.su
+    public boolean player_moving = false;
+    public Gob gob_at_mouse = null;
+    public boolean mode_select_object = false;
+
     public double getScale() {
         return Config.zoom?_scale:1;
     }
@@ -92,7 +97,10 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 		    int pgob = -1;
 		    if(args.length > 2)
 			pgob = (Integer)args[2];
-		    return(new MapView(c, sz, parent, mc, pgob));
+		    ark.bot.PlayerID = pgob;
+            MapView mv = new MapView(c, sz, parent, mc, pgob);
+            ark.bot.mapview = mv;
+		    return mv;
 		}
 	    });
 	olc[0] = new Color(255, 0, 128);
@@ -516,7 +524,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	mask = new ILM(MainFrame.getScreenSize(), glob.oc);
 	radiuses = new HashMap<String, Integer>();
     }
-    
+	
     public void resetcam(){
 	if(cam != null){
 	    cam.reset();
@@ -567,6 +575,12 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	Coord c0 = c;
 	c = new Coord((int)(c.x/getScale()), (int)(c.y/getScale()));
 	Gob hit = gobatpos(c);
+	// arksu: если мы в режиме выбора объекта - возвращаем его и выходим
+	if (mode_select_object) {
+		gob_at_mouse = hit;
+		mode_select_object = false;
+		return true;
+	}
 	Coord mc = s2m(c.add(viewoffset(sz, this.mc).inv()));
 	if(grab != null) {
 	    grab.mmousedown(mc, button);
@@ -616,6 +630,11 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	    boolean plontile = this.plontile ^ ui.modshift;
 	    gob.move(plontile?tilify(mc):mc);
 	}
+    //arksu: вычисляем объект под мышью
+    if(pmousepos != null)
+        gob_at_mouse = gobatpos(pmousepos);
+    else
+        gob_at_mouse = null; 
     }
     
     public boolean mousewheel(Coord c, int amount) {
@@ -630,7 +649,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	this.mc = mc;
     }
 	
-    private static Coord tilify(Coord c) {
+    public static Coord tilify(Coord c) {
 	c = c.div(tilesz);
 	c = c.mul(tilesz);
 	c = c.add(tilesz.div(2));
@@ -1069,8 +1088,12 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	    if(curf != null)
 		curf.tick("sort");
 	    onmouse = null;
-	    if(pmousepos != null)
-		onmouse = gobatpos(pmousepos);
+	    if(pmousepos != null) {
+	        onmouse = gobatpos(pmousepos);
+	        gob_at_mouse = onmouse;
+	    } else {
+	        gob_at_mouse = null;
+	    }
 	    obscured = findobsc();
 	    if(curf != null)
 		curf.tick("obsc");
@@ -1188,6 +1211,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 		}
 	    }
 	}
+	player_moving = ((now - lastmove) < 400);
     }
 
     private void checkmappos() {
@@ -1231,6 +1255,8 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	    g.chcolor(Color.WHITE);
 	    if(Config.dbtext)
 		g.atext(mc.toString(), new Coord(10, 560), 0, 1);
+        // arksu: тут надо вызвать отрисовку лога
+        ark.log.Draw(g);
 //	} catch(Loading l) {
 //	    String text = "Loading...";
 //	    g.chcolor(Color.BLACK);
@@ -1311,4 +1337,115 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     public Map<String, Console.Command> findcmds() {
 	return(cmdmap);
     }
-}
+    
+    // дропнуть вещь которую держим в руках
+    public void drop_thing(int mod) {
+    	wdgmsg("drop", mod);
+    }
+    
+    // arksu: тут добавляем свои фишки для работы с ботом
+    // для начала двигаться к указанному объекту с оффсетом
+    public void map_move(int obj_id, Coord offset) {
+    	Coord oc, sc;
+	    int btn = 1; // левой кнопкой щелкаем
+	    int modflags = 0; // никаких клавиш не держим
+	    Gob gob;
+    	synchronized(glob.oc) {
+    	    gob = glob.oc.getgob(obj_id);
+    	}
+	    if (gob == null) return;
+        sc = new Coord(
+                (int)Math.round(Math.random() * 200 + sz.x / 2 - 100),
+                (int)Math.round(Math.random() * 200 + sz.y / 2 - 100));
+        oc = gob.getc();
+        oc = oc.add(offset);
+        ark.log.LogPrint("send object click: "+oc.toString()+" obj_id="+obj_id+" btn="+btn+" modflags="+modflags);
+        wdgmsg("click",sc, oc, btn, modflags, obj_id, oc);    	    	
+    	
+    }
+    public void map_move_step(int x, int y) {
+    	Gob pgob;
+	    int btn = 1; // левой кнопкой щелкаем
+	    int modflags = 0; // никаких клавиш не держим
+    	synchronized(glob.oc) {
+    		pgob = glob.oc.getgob(playergob);
+    	}
+    	if (pgob == null) return;
+    	Coord mc = tilify(pgob.getc());
+    	Coord offset = new Coord(x,y).mul(tilesz);
+    	mc = mc.add( offset );
+        ark.log.LogPrint("send map click: "+mc.toString()+" btn="+btn+" modflags="+modflags);
+        wdgmsg("click", ark.bot.GetCenterScreenCoord(), mc, btn, modflags );    	    	    	
+    }
+    
+    public void map_place(int x, int y, int btn, int mod) {
+    	if (plob != null) {
+        	Gob pgob;
+        	synchronized(glob.oc) {
+        		pgob = glob.oc.getgob(playergob);
+        	}
+        	if (pgob == null) return;
+        	Coord mc = tilify(pgob.getc());
+        	Coord offset = new Coord(x,y).mul(tilesz);
+        	mc = mc.add( offset );		    
+		    wdgmsg("place", mc, btn, mod);
+    	}
+	    }
+    	
+    // клик по карте с объектом. координаты относительные. 
+    public void map_click(int x, int y, int btn, int mod) {
+    	Gob pgob;
+    	synchronized(glob.oc) {
+    		pgob = glob.oc.getgob(playergob);
+    	}
+    	if (pgob == null) return;
+    	Coord mc = tilify(pgob.getc());
+    	Coord offset = new Coord(x,y).mul(tilesz);
+    	mc = mc.add( offset );
+        ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
+        wdgmsg("click",ark.bot.GetCenterScreenCoord(), mc, btn, mod);    	
+    }
+    
+    // клик с абсолютными координатами
+    public void map_abs_click(int x, int y, int btn, int mod) {
+    	Coord mc = new Coord(x,y);
+        ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
+        wdgmsg("click",ark.bot.GetCenterScreenCoord(), mc, btn, mod);    	    	
+    }
+    
+    // клик взаимодействия по карте с объектом. координаты относительные. 
+    public void map_interact_click(int x, int y, int mod) {
+    	Gob pgob;
+    	synchronized(glob.oc) {
+    		pgob = glob.oc.getgob(playergob);
+    	}
+    	if (pgob == null) return;
+    	Coord mc = tilify(pgob.getc());
+    	Coord offset = new Coord(x,y).mul(tilesz);
+    	mc = mc.add( offset );
+        ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
+        wdgmsg("itemact",ark.bot.GetCenterScreenCoord(), mc, mod);    	
+    }
+    
+    public void map_abs_interact_click(int x, int y, int mod) {
+    	Gob pgob;
+    	synchronized(glob.oc) {
+    		pgob = glob.oc.getgob(playergob);
+    	}
+    	if (pgob == null) return;
+    	Coord mc = new Coord(x,y);
+        ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
+        wdgmsg("itemact",ark.bot.GetCenterScreenCoord(), mc, mod);    	
+    }
+    
+    public void map_interact_click(int id, int mod) {
+    	Gob pgob, gob;
+    	synchronized(glob.oc) {
+    		pgob = glob.oc.getgob(playergob);
+    		gob = glob.oc.getgob(id);
+    	}
+    	if (pgob == null || gob == null) return;
+    	Coord mc = gob.getc();    	
+        ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
+        wdgmsg("itemact",ark.bot.GetCenterScreenCoord(), mc, mod, id, mc);    	
+    }}

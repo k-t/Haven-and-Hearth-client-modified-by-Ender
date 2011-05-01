@@ -30,7 +30,12 @@ import java.util.*;
 import java.awt.Font;
 
 public class Makewindow extends HWindow {
-    Widget obtn, cbtn;
+    
+	// ark_su
+	public boolean is_ready = false;
+	public String craft_name = "";
+	
+	Widget obtn, cbtn;
     List<Widget> inputs;
     List<Widget> outputs;
     static Coord boff = new Coord(7, 9);
@@ -46,6 +51,7 @@ public class Makewindow extends HWindow {
 	
     public Makewindow(Widget parent, String rcpnm) {
 	super(parent, "Crafting", true);
+	craft_name = rcpnm;
 	Label nm = new Label(new Coord(10, 10), this, rcpnm, nmf);
 	nm.c = new Coord(sz.x - 10 - nm.sz.x, 10);
 	new Label(new Coord(10, 18), this, "Input:");
@@ -56,6 +62,7 @@ public class Makewindow extends HWindow {
 	
     public void uimsg(String msg, Object... args) {
 	if(msg == "pop") {
+		is_ready = true;
 	    final int xoff = 50;
 	    if(inputs != null) {
 		for(Widget w : inputs)

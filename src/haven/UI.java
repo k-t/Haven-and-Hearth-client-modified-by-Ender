@@ -1,7 +1,7 @@
 /*
  *  This file is part of the Haven & Hearth game client.
  *  Copyright (C) 2009 Fredrik Tolf <fredrik@dolda2000.com>, and
- *                     BjГ¶rn Johannessen <johannessen.bjorn@gmail.com>
+ *                     Bjorn Johannessen <johannessen.bjorn@gmail.com>
  *
  *  Redistribution and/or modification of this file is subject to the
  *  terms of the GNU Lesser General Public License, version 3, as
@@ -51,6 +51,12 @@ public class UI {
     public FSMan fsm;
     public Console cons = new WidgetConsole();
     private Collection<AfterDraw> afterdraws = null;
+    
+    // ark.su
+    static public FlowerMenu flower_menu = null;
+    static public OptWnd options_wnd = null;
+    static public Makewindow make_window = null;
+    static public Equipory equip = null;
 	
     public interface Receiver {
 	public void rcvmsg(int widget, String msg, Object... args);
@@ -171,6 +177,7 @@ public class UI {
 	    wdg.binded();
 	    if(wdg instanceof MapView)
 		mainview = (MapView)wdg;
+	    ark_create_wdg(wdg); 
 	}
     }
 	
@@ -185,6 +192,7 @@ public class UI {
     private void removeid(Widget wdg) {
 	if(rwidgets.containsKey(wdg)) {
 	    int id = rwidgets.get(wdg);
+	    ark_delete_wdg(wdg); 
 	    widgets.remove(id);
 	    rwidgets.remove(wdg);
 	}
@@ -206,6 +214,7 @@ public class UI {
 	synchronized(this) {
 	    if(widgets.containsKey(id)) {
 		Widget wdg = widgets.get(id);
+		ark_delete_wdg(wdg);
 		destroy(wdg);
 	    }
 	}
@@ -255,6 +264,7 @@ public class UI {
 	
     public void keydown(KeyEvent ev) {
 	setmods(ev);
+	ark.bot.KeyEvent(ev.getKeyChar(), ev.getKeyCode(), ev.isControlDown(), ev.isAltDown(), ev.isShiftDown() ); 
 	if(keygrab == null) {
 	    if(!root.keydown(ev))
 		root.globtype((char)0, ev);
@@ -332,4 +342,28 @@ public class UI {
 	       (modmeta?4:0) |
 	       (modsuper?8:0));
     }
+    
+    // arksu: обработчик создания виджета
+    private void ark_create_wdg(Widget wdg) {
+	    if(wdg instanceof MapView)
+		    mainview = (MapView)wdg;
+        if (wdg instanceof FlowerMenu)
+            flower_menu = (FlowerMenu)wdg;
+        if (wdg instanceof Makewindow)
+        	make_window = (Makewindow)wdg;
+        if (wdg instanceof Equipory)
+        	equip = (Equipory)wdg;    	
+    }
+    
+    // arksu : обработчик удаления виджета
+    private void ark_delete_wdg(Widget wdg) {                
+        if (wdg instanceof FlowerMenu)
+            flower_menu = null;
+        if (wdg instanceof OptWnd)
+            options_wnd = null;
+        if (wdg instanceof Makewindow)
+        	make_window = null;
+        if (wdg instanceof Equipory)
+        	equip = null;
+    } 
 }

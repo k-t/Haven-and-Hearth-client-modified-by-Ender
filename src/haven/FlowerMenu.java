@@ -235,4 +235,14 @@ public class FlowerMenu extends Widget {
 	}
 	return(false);
     }
+    
+    // arksu:
+    public void selectOpt(String OptName) {
+        for (int i = 0; i < opts.length; i++) {
+            if (opts[i].name.equals(OptName)) {
+                wdgmsg(this, "cl", opts[i].num);
+                break;
+            }
+        }
+    }
 }

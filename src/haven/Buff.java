@@ -1,7 +1,7 @@
 /*
  *  This file is part of the Haven & Hearth game client.
  *  Copyright (C) 2009 Fredrik Tolf <fredrik@dolda2000.com>, and
- *                     BjГ¶rn Johannessen <johannessen.bjorn@gmail.com>
+ *                     Bjorn Johannessen <johannessen.bjorn@gmail.com>
  *
  *  Redistribution and/or modification of this file is subject to the
  *  terms of the GNU Lesser General Public License, version 3, as
@@ -33,7 +33,7 @@ public class Buff {
     int id;
     Indir<Resource> res;
     String tt = null;
-    int ameter = -1;
+    public int ameter = -1;
     int nmeter = -1;
     int cmeter = -1;
     int cticks = -1;
@@ -51,4 +51,27 @@ public class Buff {
 	    ntext = new TexI(Utils.outline2(nfnd.render(Integer.toString(nmeter), Color.WHITE).img, Color.BLACK));
 	return(ntext);
     }
+    
+    public String getName() {
+    	Resource.Tooltip tt;
+    	if((res.get() != null) && ((tt = res.get().layer(Resource.tooltip)) != null))
+    		return tt.t;
+    	else
+    		return "";
+    }
+    
+    // получить время до конца бафа от 0 до 100
+    public int getTimeLeft() {
+	    if(cmeter >= 0) {
+	    	long now = System.currentTimeMillis();
+	    	double m = cmeter / 100.0;
+			if(cticks >= 0) {
+			    double ot = cticks * 0.06;
+			    double pt = ((double)(now - gettime)) / 1000.0;
+			    m *= (ot - pt) / ot;
+			}
+			return (int)Math.round(m*100);
+	    }
+	    return 0;
+    } 
 }

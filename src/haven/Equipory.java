@@ -30,7 +30,7 @@ import java.util.*;
 
 public class Equipory extends Window implements DTarget {
     List<Inventory> epoints;
-    List<Item> equed;
+    public List<Item> equed;
     static final Tex bg = Resource.loadtex("gfx/hud/equip/bg");
     int avagob = -1;
 	

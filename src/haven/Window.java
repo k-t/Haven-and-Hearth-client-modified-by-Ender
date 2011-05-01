@@ -51,7 +51,7 @@ public class Window extends Widget implements DTarget {
     static IBox wbox;
     boolean dt = false;
     public boolean justclose = false;
-    Text cap;
+    public Text cap;
     boolean dm = false;
     public Coord atl, asz, wsz;
     public Coord tlo, rbo;

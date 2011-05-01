@@ -95,6 +95,7 @@ public class MenuGrid extends Widget {
     public MenuGrid(Coord c, Widget parent) {
 	super(c, bgsz.mul(gsz).add(1, 1), parent);
 	cons(null);
+	ark.bot.menugrid = this;
 	ui.mnu = this;
 	ToolbarWnd.loadBelts();
 	new ToolbarWnd(new Coord(0,300), ui.root, "toolbar1");

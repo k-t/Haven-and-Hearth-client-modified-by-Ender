@@ -34,23 +34,26 @@ public class IMeter extends Widget {
     static Coord fsz = new Coord(63, 18);
     static Coord msz = new Coord(49, 4);
     Resource bg;
+    String bgname = "";
     List<Meter> meters;
     
     static {
 	Widget.addtype("im", new WidgetFactory() {
 		public Widget create(Coord c, Widget parent, Object[] args) {
-		    Resource bg = Resource.load((String)args[0]);
+			String bgname = (String)args[0];
+			Resource bg = Resource.load(bgname);
 		    List<Meter> meters = new LinkedList<Meter>();
 		    for(int i = 1; i < args.length; i += 2)
 			meters.add(new Meter((Color)args[i], (Integer)args[i + 1]));
-		    return(new IMeter(c, parent, bg, meters));
+		    return(new IMeter(c, parent, bg, bgname, meters));
 		}
 	    });
     }
     
-    public IMeter(Coord c, Widget parent, Resource bg, List<Meter> meters) {
+    public IMeter(Coord c, Widget parent, Resource bg, String bgname, List<Meter> meters) {
 	super(c, fsz, parent);
 	this.bg = bg;
+	this.bgname = bgname;
 	this.meters = meters;
     }
     
@@ -87,8 +90,33 @@ public class IMeter extends Widget {
 	    for(int i = 0; i < args.length; i += 2)
 		meters.add(new Meter((Color)args[i], (Integer)args[i + 1]));
 	    this.meters = meters;
+        if (bgname.equals("gfx/hud/meter/nrj"))
+            ark.bot.Stamina = meters.get(0).a;
 	} else if(msg == "tt") {
 	    tooltip = args[0];
+	    if (bgname.equals("gfx/hud/meter/hp")) {
+            String s = (String)args[0];
+            String [] temp = null;
+            s = s.replaceAll("Health: ", "");
+            temp = s.split("/");
+            if (temp != null) {
+                ark.bot.HP = Integer.parseInt(temp[0]);
+                ark.log.LogPrint("set HP="+ark.bot.HP);
+            }
+        }
+        if (bgname.equals("gfx/hud/meter/hngr")) {
+            String s = (String)args[0];
+            String r = "";
+            for (int j = s.indexOf('(')+1; j < s.length(); j++) {
+                if (s.charAt(j) == '%')
+                    break;
+                r += s.charAt(j);
+            }
+            if (r.length() > 0) {
+                ark.bot.Hungry = Integer.parseInt(r);
+                ark.log.LogPrint("set hungry="+ark.bot.Hungry);
+            }
+        }
 	} else {
 	    super.uimsg(msg, args);
 	}

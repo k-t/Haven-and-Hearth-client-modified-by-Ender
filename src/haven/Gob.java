@@ -1,7 +1,7 @@
 /*
  *  This file is part of the Haven & Hearth game client.
  *  Copyright (C) 2009 Fredrik Tolf <fredrik@dolda2000.com>, and
- *                     BjГ¶rn Johannessen <johannessen.bjorn@gmail.com>
+ *                     Bjorn Johannessen <johannessen.bjorn@gmail.com>
  *
  *  Redistribution and/or modification of this file is subject to the
  *  terms of the GNU Lesser General Public License, version 3, as
@@ -224,4 +224,33 @@ public class Gob implements Sprite.Owner {
 	}
 	return(null);
     }
+    
+    // arksu: получить имя ресурса
+    public String getResName() {
+        String s = "";
+        Drawable d = getattr(Drawable.class);
+        ResDrawable dw = getattr(ResDrawable.class);
+        if (d != null)
+        {
+            if (dw != null)
+            {
+                if (dw.res.get() != null) {
+                    s = dw.res.get().name;
+                }
+            }
+        }
+        return s;
+    }
+    
+    // получить байт из мессаги
+    public byte getBlob(int index) {
+        Drawable d = getattr(Drawable.class);
+        ResDrawable dw = getattr(ResDrawable.class);
+        if (dw != null && d != null)
+        {
+        	if (index < dw.sdt.blob.length && index >= 0)
+                return dw.sdt.blob[index];
+        }
+        return 0;
+    } 
 }

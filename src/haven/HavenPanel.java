@@ -314,6 +314,8 @@ public class HavenPanel extends GLCanvas implements Runnable {
 		if(curs != lastcursor) {
 		    try {
 			setCursor(makeawtcurs(curs.layer(Resource.imgc).img, curs.layer(Resource.negc).cc));
+			ark.bot.cursor_name = curs.name;
+			ark.bot.cursor_name = ark.bot.cursor_name.replace("gfx/hud/curs/", "");
 			lastcursor = curs;
 		    } catch(Exception e) {
 			cursmode = "tex";
