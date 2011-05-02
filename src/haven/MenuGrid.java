@@ -264,6 +264,11 @@ public class MenuGrid extends Widget {
 			}
 		    }
 		}
+		String[] ss = r.layer(Resource.action).ad;
+        String s = "";
+        for (int i = 0; i < ss.length; i++)
+            s = s + ss[i] + ",    ";
+        ark.log.LogPrint("send act click: "+s);
 		wdgmsg("act", (Object[])ad);
 	    }
 	}

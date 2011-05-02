@@ -36,7 +36,7 @@ public class Item extends Widget implements DTarget {
     public int q;
     boolean hq;
     Coord doff;
-    public String tooltip;
+    String tooltip;
     public int num = -1;
     Indir<Resource> res;
     Tex sh;

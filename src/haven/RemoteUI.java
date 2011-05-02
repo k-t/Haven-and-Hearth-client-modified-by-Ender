@@ -76,6 +76,7 @@ public class RemoteUI implements UI.Receiver {
 		    }else if(type.equals("wnd") && c.x == 400 && c.y == 200){
 		    	c = MainFrame.getCenterPoint().add(0,-100);
 		    }
+		    //ark.log.LogPrint("create new widget, type=" + type + " id=" + id);
 		    ui.newwidget(id, type, c, parent, args);
 		} else if(msg.type == Message.RMSG_WDGMSG) {
 		    int id = msg.uint16();

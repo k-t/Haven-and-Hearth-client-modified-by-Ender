@@ -1533,7 +1533,9 @@ public class eval extends TreeParser {
 
                     match(input, Token.UP, null); if (state.failed) return ;
                     if ( state.backtracking==0 ) {
-                      System.out.println((s!=null?s.getText():null));
+                      String text = (s!=null?s.getText():null);
+                      System.out.println(text);
+                      ark.log.LogPrint(text);
                     }
 
                     }

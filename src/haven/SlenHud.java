@@ -259,8 +259,11 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 	super.draw(g);
 	
 	if(cmdline != null) {
-	    drawcmd(g.reclip(new Coord(0, -20), new Coord(sz.x, 20)), new Coord(15, 0));
 	    GOut eg = g.reclip(new Coord(0, -20), new Coord(sz.x, 20));
+	    eg.chcolor(20, 20, 20, 127);
+	    eg.frect(new Coord(0,0), new Coord(sz.x, 20));
+	    eg.chcolor(255, 255, 255, 255);
+	    drawcmd(g.reclip(new Coord(0, -20), new Coord(sz.x, 20)), new Coord(15, 0));
 	} else if(lasterr != null) {
 	    if((System.currentTimeMillis() - errtime) > 3000) {
 		lasterr = null;

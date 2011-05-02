@@ -184,8 +184,10 @@ public class bot {
         if (!isInventoryOpen()) return null;
         List<Item> list = new ArrayList<Item>();
         Widget inv = GetInventoryWdg();
-        for (Widget i = inv.child; i != null; i = i.next)
-            list.add((Item)i);
+        for (Widget i = inv.child; i != null; i = i.next) {
+            if (i instanceof Item)
+                list.add((Item)i);
+        }
         return list;
     }
 
@@ -434,18 +436,20 @@ public class bot {
     	if (i == null) return 0;
     	return ((i.getResName().indexOf(name) >= 0)?1:0);
     }
+    
     public static int is_item_tooltip(String name) {
     	Item i = GetCurrentItem();
     	if (i == null) return 0;
-    	return ((i.tooltip.indexOf(name) >= 0)?1:0);
+    	String tip = i.shorttip();
+    	return (tip != null && tip.indexOf(name) >= 0) ? 1 : 0;
     }
+    
     // получить ку текущей вещи
     public static int item_quality() {
     	Item i = GetCurrentItem();
-    	if (i == null) return 0;
-    	
-    	return i.q;
+    	return (i != null) ? i.q : 0;
     }
+    
     // кликнуть по вещи. с указанным типом действия
     public static void item_click(String action, int mod) {
     	if (action.equals("itemact") && !HaveDragItem()) return;

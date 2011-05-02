@@ -90,8 +90,10 @@ public class IMeter extends Widget {
 	    for(int i = 0; i < args.length; i += 2)
 		meters.add(new Meter((Color)args[i], (Integer)args[i + 1]));
 	    this.meters = meters;
-        if (bgname.equals("gfx/hud/meter/nrj"))
+        if (bgname.equals("gfx/hud/meter/nrj")) {
             ark.bot.Stamina = meters.get(0).a;
+            //ark.log.LogPrint("set Stamina=" + ark.bot.Stamina);
+        }
 	} else if(msg == "tt") {
 	    tooltip = args[0];
 	    if (bgname.equals("gfx/hud/meter/hp")) {
