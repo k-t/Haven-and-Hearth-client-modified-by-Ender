@@ -1,8 +1,7 @@
-Vanilla Ender's client + arksu bot (http://code.google.com/p/hh-client/) features.
+Vanilla Ender's client + arksu (http://code.google.com/p/hh-client/) bot features.
 
 Hotkeys:
 Alt+F1: start script binded with start_bot1
 Alt+F2: start script binded with start_bot2
 Alt+F3: stop currently executing script
 Alt+F12: show ark bot debug info
-

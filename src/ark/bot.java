@@ -10,7 +10,6 @@ import java.net.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.Random;
 
 import haven.*;
 import haven.Console;
@@ -34,6 +33,8 @@ public class bot {
     public static int HP = 0;
     // голод
     public static int Hungry = 0; 
+    // Area Chat widget
+    public static Widget AreaChat = null;
 
     // есть ли песочные часы
     public static boolean HourGlass = false; 
@@ -138,8 +139,10 @@ public class bot {
     	UI.instance.sess.close();
     }
     
-    public static void say(String msg) {
-    	
+    public static void say(String text) {
+        if (AreaChat != null) {
+            UI.instance.wdgmsg(AreaChat , "msg", text);
+        }
     }
     
     public static void set_render_mode(int val) {
