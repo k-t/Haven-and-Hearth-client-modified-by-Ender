@@ -85,6 +85,8 @@ public class RootWidget extends ConsoleHost {
                 ark.log.Show();
 	    } else if (code == KeyEvent.VK_Y && ctrl) {
 	    	Config.render_enable = !Config.render_enable;
+	    } else if (code == KeyEvent.VK_Q && ctrl) {
+	    	Config.showQuality = !Config.showQuality;
 	    }
 	}
 	return(true);

@@ -76,6 +76,7 @@ public class Config {
     public static boolean showBeast = false;
     public static boolean showDirection;
     public static boolean showNames;
+    public static boolean showQuality = false;
     
     // ark.su options
     public static String bot_name1;
@@ -270,6 +271,7 @@ public class Config {
         timestamp = options.getProperty("timestamp","false").equals("true");
         bot_name1 = options.getProperty("bot_name1", "");
         bot_name2 = options.getProperty("bot_name2", "");
+        showQuality = options.getProperty("showQuality", "false").equals("true");
     }
 
     public static synchronized void setWindowOpt(String key, String value) {
@@ -317,6 +319,7 @@ public class Config {
         options.setProperty("simple_plants", simple_plants?"true":"false");
         options.setProperty("bot_name1", bot_name1);
         options.setProperty("bot_name2", bot_name2);
+        options.setProperty("showQuality", showQuality ? "true" : "false");
         try {
             options.store(new FileOutputStream("haven.conf"), "Custom config options");
         } catch (IOException e) {
