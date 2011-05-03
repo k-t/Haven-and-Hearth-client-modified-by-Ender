@@ -59,7 +59,7 @@ public class hhl_main {
 
  public static void Sleep(int time) {
   try {
-   thread.sleep(time);
+   thread.wait(time);
   } catch (InterruptedException e) {
    e.printStackTrace();
   }

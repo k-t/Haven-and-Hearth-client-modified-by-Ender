@@ -665,7 +665,7 @@ public class Session {
     }
 	
     public void close() {
-    	//ark_bot.ui.fsm.UpdateTitle("");
+    	Config.render_enable = true;
     	sworker.interrupt();
     }
 	

@@ -80,7 +80,7 @@ public class Config {
     // ark.su options
     public static String bot_name1;
     public static String bot_name2;
-    public static boolean render_enable;
+    public static boolean render_enable = true;
     public static boolean ark_debug_drawto_console = false;
     
     static {
@@ -315,8 +315,8 @@ public class Config {
         options.setProperty("showRadius", showRadius?"true":"false");
         options.setProperty("showHidden", showHidden?"true":"false");
         options.setProperty("simple_plants", simple_plants?"true":"false");
-        options.getProperty("bot_name1", bot_name1);
-        options.getProperty("bot_name2", bot_name2);
+        options.setProperty("bot_name1", bot_name1);
+        options.setProperty("bot_name2", bot_name2);
         try {
             options.store(new FileOutputStream("haven.conf"), "Custom config options");
         } catch (IOException e) {

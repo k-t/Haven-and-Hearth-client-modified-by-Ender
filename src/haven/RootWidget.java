@@ -77,12 +77,14 @@ public class RootWidget extends ConsoleHost {
 		entercmd();
 	    } else if(key != 0) {
 		wdgmsg("gk", (int)key);
-	    } else if(code == KeyEvent.VK_F12 && alt) {
+	    } else if (code == KeyEvent.VK_F12 && alt) {
             Config.ark_debug_drawto_console = true;
             if (ark.log.Drawable)
                 ark.log.Hide();
             else
                 ark.log.Show();
+	    } else if (code == KeyEvent.VK_Y && ctrl) {
+	    	Config.render_enable = !Config.render_enable;
 	    }
 	}
 	return(true);
