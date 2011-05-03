@@ -62,7 +62,6 @@ public class ChatHW extends HWindow {
 	    cbtn.raise();
 	    if (title.equals("Area Chat")) {
 		cbtn.hide();
-		ark.bot.AreaChat = this;
 	    }
 	}
 	setsz(sz);

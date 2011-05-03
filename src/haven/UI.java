@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.scripting.Engine;
+
 import java.util.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -88,6 +90,11 @@ public class UI {
 			}
 		    }
 		});
+        setscmd("exec", new Console.Command() {
+            public void run(Console cons, String[] args) {
+                System.out.println("exec");
+                Engine.getInstance().run((args[1]));
+            }});
 	}
 	
 	private void findcmds(Map<String, Command> map, Widget wdg) {
@@ -264,7 +271,7 @@ public class UI {
 	
     public void keydown(KeyEvent ev) {
 	setmods(ev);
-	ark.bot.KeyEvent(ev.getKeyChar(), ev.getKeyCode(), ev.isControlDown(), ev.isAltDown(), ev.isShiftDown() ); 
+	//ark.bot.KeyEvent(ev.getKeyChar(), ev.getKeyCode(), ev.isControlDown(), ev.isAltDown(), ev.isShiftDown() ); 
 	if(keygrab == null) {
 	    if(!root.keydown(ev))
 		root.globtype((char)0, ev);

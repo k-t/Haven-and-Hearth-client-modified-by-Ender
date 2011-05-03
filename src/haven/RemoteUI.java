@@ -70,9 +70,8 @@ public class RemoteUI implements UI.Receiver {
 		    		c = MainFrame.getCenterPoint().add(-415, -300);
 		    	String s = (String)args[0];
 		    	if (s.indexOf("gfx/hud/prog/") >= 0) {
-	                    ark.bot.HourGlass = true;
-	                    ark.log.LogPrint("hour glass ON");
-	                } 		    	
+	                haven.scripting.Engine.getInstance().setHourGlass(true);
+		    	} 		    	
 		    }else if(type.equals("charlist") && args.length >= 1){
 		    	c = MainFrame.getCenterPoint().add(-380, -50);
 		    }else if(type.equals("ibtn") && args.length >= 2){
@@ -82,7 +81,6 @@ public class RemoteUI implements UI.Receiver {
 		    }else if(type.equals("wnd") && c.x == 400 && c.y == 200){
 		    	c = MainFrame.getCenterPoint().add(0,-100);
 		    }
-		    //ark.log.LogPrint("create new widget, type=" + type + " id=" + id);
 		    ui.newwidget(id, type, c, parent, args);
 		} else if(msg.type == Message.RMSG_WDGMSG) {
 		    int id = msg.uint16();
@@ -93,8 +91,7 @@ public class RemoteUI implements UI.Receiver {
             if(ui.widgets.get(new Integer(id)) instanceof Img){
                 Img img = (Img)ui.widgets.get(new Integer(id));
                 if (img.texname.indexOf("gfx/hud/prog/") >= 0) {
-                    ark.bot.HourGlass = false;
-                    ark.log.LogPrint("hour glass OFF");
+                    haven.scripting.Engine.getInstance().setHourGlass(false);
                 }
             } 
 		    ui.destroy(id);

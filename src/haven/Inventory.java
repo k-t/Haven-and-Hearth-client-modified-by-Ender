@@ -162,4 +162,11 @@ public class Inventory extends Widget implements DTarget {
 	    hsz = null;
 	}
     }
+    
+    /* 
+     * Returns inventory size.
+     */
+    public Coord getSize() {
+        return isz;
+    }
 }

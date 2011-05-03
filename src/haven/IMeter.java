@@ -91,8 +91,7 @@ public class IMeter extends Widget {
 		meters.add(new Meter((Color)args[i], (Integer)args[i + 1]));
 	    this.meters = meters;
         if (bgname.equals("gfx/hud/meter/nrj")) {
-            ark.bot.Stamina = meters.get(0).a;
-            //ark.log.LogPrint("set Stamina=" + ark.bot.Stamina);
+            haven.scripting.Engine.getInstance().setStamina(meters.get(0).a);
         }
 	} else if(msg == "tt") {
 	    tooltip = args[0];
@@ -102,8 +101,7 @@ public class IMeter extends Widget {
             s = s.replaceAll("Health: ", "");
             temp = s.split("/");
             if (temp != null) {
-                ark.bot.HP = Integer.parseInt(temp[0]);
-                ark.log.LogPrint("set HP="+ark.bot.HP);
+                haven.scripting.Engine.getInstance().setHp(Integer.parseInt(temp[0]));
             }
         }
         if (bgname.equals("gfx/hud/meter/hngr")) {
@@ -115,8 +113,7 @@ public class IMeter extends Widget {
                 r += s.charAt(j);
             }
             if (r.length() > 0) {
-                ark.bot.Hungry = Integer.parseInt(r);
-                ark.log.LogPrint("set hungry="+ark.bot.Hungry);
+                haven.scripting.Engine.getInstance().setHunger(Integer.parseInt(r));
             }
         }
 	} else {

@@ -27,7 +27,7 @@
         <pathelement path="lib/jnlp.jar" />
         <pathelement path="lib/jorbis.jar" />
         <pathelement path="lib/jogg.jar" />
-        <pathelement path="lib/antlr-3.2.jar" />
+        <pathelement path="lib/groovy-all-1.8.0.jar" />
       </classpath>
       <compilerarg value="-Xlint:unchecked" />
       <!-- <compilerarg value="-Xbarda" /> -->
@@ -63,7 +63,7 @@
       <fileset dir="build/classes-lib" />
       <manifest>
         <attribute name="Main-Class" value="haven.MainFrame" />
-        <attribute name="Class-Path" value="jogl.jar gluegen-rt.jar haven-res.jar antlr-3.2.jar" />
+        <attribute name="Class-Path" value="jogl.jar gluegen-rt.jar haven-res.jar groovy-all-1.8.0.jar" />
       </manifest>
     </jar>
     <chmod file="build/haven.jar" perm="a+x" />
@@ -80,7 +80,7 @@
         <include name="jogl.jar" />
         <include name="gluegen-rt.jar" />
         <include name="haven-res.jar" />
-        <include name="antlr-3.2.jar" />
+        <include name="groovy-all-1.8.0.jar" />
       </fileset>
     </copy>
   </target>

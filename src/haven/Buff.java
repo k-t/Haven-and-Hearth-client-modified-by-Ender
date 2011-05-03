@@ -60,17 +60,17 @@ public class Buff {
     		return "";
     }
     
-    // получить время до конца бафа от 0 до 100
+    // Returns time till buff finishes in a range from 0 to 100
     public int getTimeLeft() {
 	    if(cmeter >= 0) {
 	    	long now = System.currentTimeMillis();
 	    	double m = cmeter / 100.0;
-			if(cticks >= 0) {
+			if (cticks >= 0) {
 			    double ot = cticks * 0.06;
 			    double pt = ((double)(now - gettime)) / 1000.0;
 			    m *= (ot - pt) / ot;
 			}
-			return (int)Math.round(m*100);
+			return (int)Math.round(m * 100);
 	    }
 	    return 0;
     } 

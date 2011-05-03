@@ -28,6 +28,8 @@ package haven;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
+
 import static java.lang.Math.PI;
 
 public class FlowerMenu extends Widget {
@@ -236,10 +238,16 @@ public class FlowerMenu extends Widget {
 	return(false);
     }
     
-    // arksu:
-    public void selectOpt(String OptName) {
+    public Object[] getOptions() {
+        ArrayList<String> result = new ArrayList<String>();
+        for (Petal opt : opts)
+            result.add(opt.name);
+        return result.toArray();
+    }
+    
+    public void selectOpt(String optname) {
         for (int i = 0; i < opts.length; i++) {
-            if (opts[i].name.equals(OptName)) {
+            if (opts[i].name.equals(optname)) {
                 wdgmsg(this, "cl", opts[i].num);
                 break;
             }
