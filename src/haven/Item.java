@@ -95,23 +95,6 @@ public class Item extends Widget implements DTarget {
 	    } else {
 		g.image(tex, Coord.z);
 	    }
-	    if(num >= 0 || (Config.showQuality && q > 0 && !dm)) {
-	        
-	    	String t = (num >= 0 ? Integer.toString(num) : "");
-	    	t += ((num >= 0 && q > 0) ? ", " : "");
-	    	t += (q > 0 ? Integer.toString(q) : ""); 
-	    	
-	    	// render text with transparent black background >_>
-	    	Text qt = Text.render(t);
-	    	Tex T = qt.tex();
-	    	Coord sz = qt.sz();
-	    	Coord c = tex.sz().add((int)((double)sz.x * -1), (int)((double)sz.y * -1));
-		    g.chcolor(0, 0, 0, 100);
-	    	g.frect(c, sz);
-		    g.chcolor(Color.WHITE);
-	    	g.image(T, c);
-	    	T.dispose();
-	    }
 	    if(meter > 0) {
 		double a = ((double)meter) / 100.0;
 		int r = (int) ((1-a)*255);
@@ -121,6 +104,12 @@ public class Item extends Widget implements DTarget {
 		//g.fellipse(sz.div(2), new Coord(15, 15), 90, (int)(90 + (360 * a)));
 		g.frect(new Coord(sz.x-5,(int) ((1-a)*sz.y)), new Coord(5,(int) (a*sz.y)));
 		g.chcolor();
+	    }
+	    if(num >= 0 && !Config.showQuality) { // don't show number if q display is enabled
+		g.chcolor(Color.WHITE);
+		g.atext(Integer.toString(num), tex.sz(), 1, 1);
+	    } else if (q >= 0 && Config.showQuality && !dm) {
+		g.atext(Color.WHITE, new Color(0, 0, 0, 100), Integer.toString(q), tex.sz(), 1, 1);
 	    }
 	    ttres = res.get();
 	}
