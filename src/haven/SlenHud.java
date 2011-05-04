@@ -68,6 +68,9 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     long errtime;
     OptWnd optwnd = null;
     static int dh;
+    
+    Window minimapwnd;
+    ChatHWPanel chatwnd; 
 	
     static {
 	Widget.addtype("slen", new WidgetFactory() {
@@ -171,7 +174,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 	super(new Coord((MainFrame.innerSize.width - sz.x) / 2, MainFrame.innerSize.height - sz.y), sz, parent);
 	ui.slen = this;
 	if(Config.new_chat)
-	    new ChatHWPanel(new Coord(0,MainFrame.getInnerSize().y-300), new Coord(350,300), ui.root);
+	    chatwnd = new ChatHWPanel(new Coord(0,MainFrame.getInnerSize().y-300), new Coord(350,300), ui.root);
 	else
 	    ChatHWPanel.instance = this;
 	dy = -sz.y;
@@ -220,7 +223,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 	    }
 	    new MiniMap(new Coord(5, 5), new Coord(125, 125), this, ui.mainview);
 	} else {
-	    new MinimapPanel(Coord.z, Coord.z, ui.root);
+	    minimapwnd = new MinimapPanel(Coord.z, Coord.z, ui.root);
 	}
 	vc = new VC(this, fb = new FoldButton(new Coord((MainFrame.innerSize.width - 40) / 2, MainFrame.innerSize.height), parent) {
 		public void click() {
@@ -545,6 +548,14 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 	    }
 	}*/
 	return(false);
+    }
+    
+    public Window getMinimapWindow() {
+    	return minimapwnd;
+    }
+    
+    public ChatHWPanel getChatWindow() {
+    	return chatwnd;
     }
 
     private Map<String, Console.Command> cmdmap = new TreeMap<String, Console.Command>();

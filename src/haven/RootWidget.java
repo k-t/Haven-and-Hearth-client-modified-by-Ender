@@ -87,6 +87,16 @@ public class RootWidget extends ConsoleHost {
 	    	Config.render_enable = !Config.render_enable;
 	    } else if (code == KeyEvent.VK_Q && ctrl) {
 	    	Config.showQuality = !Config.showQuality;
+	    } else if (code == KeyEvent.VK_M && ctrl) {
+	    	Window mw = UI.instance.slen.getMinimapWindow();
+	    	if (mw != null) {
+	    		mw.folded = !mw.folded;
+	    		mw.checkfold();
+	    	}
+	    } else if (code == KeyEvent.VK_ENTER && alt) {
+	    	ChatHWPanel cp = UI.instance.slen.getChatWindow();
+	    	if (cp != null)
+	    		cp.folded = !cp.folded;
 	    }
 	}
 	return(true);
