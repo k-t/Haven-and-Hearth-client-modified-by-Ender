@@ -112,8 +112,14 @@ public class ScriptGlobal {
             return 0;
     }
     
-    public BuffIterator getBuffs() {
-        return this.new BuffIterator();
+    public ScriptBuff[] getBuffs() {
+        ArrayList<ScriptBuff> list = new ArrayList<ScriptBuff>();
+        synchronized(glob.buffs) {
+            for (Buff b : glob.buffs.values())
+                list.add(new ScriptBuff(b));
+        }
+        ScriptBuff[] arr = new ScriptBuff[list.size()];
+        return arr;
     }
     
     public ScriptFlowerMenu getContextMenu() {
@@ -348,41 +354,6 @@ public class ScriptGlobal {
     public void sendAction(String action1, String action2) {
         if (UI.instance.mnu != null) {
             UI.instance.mnu.wdgmsg("act", action1, action2);
-        }
-    }
-    
-    public class BuffIterator {
-        ArrayList<ScriptBuff> buffs;
-        private int itemindex;
-        
-        public BuffIterator() {
-            buffs = new ArrayList<ScriptBuff>();
-            reset();
-        }
-       
-        public int count() {
-            return buffs.size();
-        }
-        
-        public ScriptBuff get(int index) {
-            if (index >= 0 && index < buffs.size())
-                return buffs.get(index);
-            else
-                return null;
-        }
-        
-        public ScriptBuff next() {
-            itemindex++;
-            return get(itemindex);
-        }
-        
-        public void reset() {
-            buffs.clear();
-            synchronized(glob.buffs) {
-                for (Buff b : glob.buffs.values())
-                    buffs.add(new ScriptBuff(b));
-            }
-            itemindex = -1;
         }
     }
 }

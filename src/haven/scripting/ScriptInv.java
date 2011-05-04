@@ -19,8 +19,14 @@ public class ScriptInv {
         inventory.wdgmsg("drop", new Coord(x, y));
     }
     
-    public ItemIterator getItems() {
-        return this.new ItemIterator();
+    public ScriptItem[] getItems() {
+        ArrayList<ScriptItem> list = new ArrayList<ScriptItem>();
+        for (Widget i = inventory.child; i != null; i = i.next) {
+            if (i instanceof Item)
+                list.add(new ScriptItem((Item)i, ui));
+        }
+        ScriptItem[] arr = new ScriptItem[list.size()];
+        return list.toArray(arr);
     }
     
     public int getWidth() {
@@ -56,40 +62,5 @@ public class ScriptInv {
                         it.wdgmsg(action, c);
                 }
             }
-    }
-    
-    public class ItemIterator {
-        private List<ScriptItem> items;
-        private int itemindex;
-        
-        public ItemIterator() {
-            items = new ArrayList<ScriptItem>();
-            reset();
-        }
-       
-        public int count() {
-            return items.size();
-        }
-        
-        public ScriptItem get(int index) {
-            if (index >= 0 && index < items.size())
-                return items.get(index);
-            else
-                return null;
-        }
-        
-        public ScriptItem next() {
-            itemindex++;
-            return get(itemindex);
-        }
-        
-        public void reset() {
-            items.clear();
-            for (Widget i = inventory.child; i != null; i = i.next) {
-                if (i instanceof Item)
-                    items.add(new ScriptItem((Item)i, ui));
-            }
-            itemindex = -1;
-        }
     }
 }

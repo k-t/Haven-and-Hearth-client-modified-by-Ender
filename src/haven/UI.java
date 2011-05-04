@@ -90,10 +90,13 @@ public class UI {
 			}
 		    }
 		});
-        setscmd("exec", new Console.Command() {
+        setscmd("ex", new Console.Command() {
             public void run(Console cons, String[] args) {
-                System.out.println("exec");
                 Engine.getInstance().run((args[1]));
+            }});
+        setscmd("br", new Console.Command() {
+            public void run(Console cons, String[] args) {
+                Engine.getInstance().stop();
             }});
 	}
 	

@@ -17,6 +17,9 @@ public class Engine {
         return instance;
     }
     
+    private ScriptGlobal glob;
+    private Logger log;
+    
     private ScriptThread thread;
     private GroovyScriptEngine gse; 
     private Binding binding;
@@ -27,7 +30,14 @@ public class Engine {
     private int stamina = 0;
     private boolean hourglass = false;
 
-    private Engine() {
+    private Engine() { }
+    
+    public ScriptGlobal glob() {
+        return glob;
+    }
+    
+    public Logger log() {
+        return log;
     }
     
     public String getCursor() {
@@ -71,12 +81,15 @@ public class Engine {
     }
 
     public void init() {
+        glob = new ScriptGlobal(this);
+        log = new Logger();
         binding = new Binding();
-        binding.setVariable("Log", new Logger());
-        binding.setVariable("Global", new ScriptGlobal(this));
-        binding.setVariable("Craft", new ScriptCraft(this));
-        binding.setVariable("Input", new ScriptCraft(this));
-        String[] roots = new String[] { "./scripts/" };
+        binding.setVariable("Log", log);
+        binding.setVariable("Glob", glob);
+        //binding.setVariable("Craft", new ScriptCraft(this));
+        //binding.setVariable("Input", new ScriptInput(this));
+        
+        String[] roots = new String[] { ".", "./scripts/" };
         try {
             gse = new GroovyScriptEngine(roots);
         } catch (IOException e) {
@@ -101,7 +114,7 @@ public class Engine {
     public void stop() {
         try {
             if (thread != null)
-             thread.interrupt();
+             thread.stop();
         } catch (Exception e) {
             e.printStackTrace();
         }
