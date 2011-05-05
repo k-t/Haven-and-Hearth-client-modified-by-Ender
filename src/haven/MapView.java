@@ -36,7 +36,7 @@ import java.lang.reflect.*;
 public class MapView extends Widget implements DTarget, Console.Directory {
     static Color[] olc = new Color[31];
     static Map<String, Class<? extends Camera>> camtypes = new HashMap<String, Class<? extends Camera>>();
-    public Coord mc, mousepos, pmousepos;
+    public Coord mc, mousepos, pmousepos, mousetile;
     Camera cam;
     Sprite.Part[] clickable = {};
     List<Sprite.Part> obscured = Collections.emptyList();
@@ -70,7 +70,6 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     
     // ark.su
     public boolean player_moving = false;
-    public Gob gob_at_mouse = null;
     public boolean mode_select_object = false;
 
     public double getScale() {
@@ -575,7 +574,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	Gob hit = gobatpos(c);
 	// arksu: если мы в режиме выбора объекта - возвращаем его и выходим
 	if (mode_select_object) {
-		gob_at_mouse = hit;
+		onmouse = hit;
 		mode_select_object = false;
 		return true;
 	}
@@ -614,6 +613,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     public void mousemove(Coord c) {
 	c = new Coord((int)(c.x/getScale()), (int)(c.y/getScale()));
 	this.pmousepos = c;
+	this.mousetile = tilify(c);
 	Coord mc = s2m(c.add(viewoffset(sz, this.mc).inv()));
 	this.mousepos = mc;
 	Collection<Gob> plob = this.plob;
@@ -628,11 +628,10 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	    boolean plontile = this.plontile ^ ui.modshift;
 	    gob.move(plontile?tilify(mc):mc);
 	}
-    //arksu: вычисляем объект под мышью
     if(pmousepos != null)
-        gob_at_mouse = gobatpos(pmousepos);
+        onmouse = gobatpos(pmousepos);
     else
-        gob_at_mouse = null; 
+        onmouse = null; 
     }
     
     public boolean mousewheel(Coord c, int amount) {
@@ -1088,9 +1087,8 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	    onmouse = null;
 	    if(pmousepos != null) {
 	        onmouse = gobatpos(pmousepos);
-	        gob_at_mouse = onmouse;
 	    } else {
-	        gob_at_mouse = null;
+	        onmouse = null;
 	    }
 	    obscured = findobsc();
 	    if(curf != null)
@@ -1251,9 +1249,31 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	    drawmap(g);
 	    drawarrows(g);
 	    g.chcolor(Color.WHITE);
-	    if(Config.dbtext)
-		g.atext(mc.toString(), new Coord(10, 560), 0, 1);
-        // arksu: тут надо вызвать отрисовку лога
+	    if (Config.debug_flag) {
+	    	int ay = 120;
+	    	int margin = 15;
+	    	if (onmouse != null) {
+	    		g.atext("Gob on mouse: id = [" + onmouse.id +
+	    				"] coord = " + onmouse.getc()+
+	    				" res = [" + onmouse.getResName()+ 
+	    				"] msg = [" + onmouse.getBlob(0) + "]", 
+	    				new Coord(10, ay), 0, 1);
+	    		ay += margin;
+	    	} else {
+	    		g.atext("Gob on mouse: <<< NULL >>>", new Coord(10, ay), 0, 1);
+	    		ay += margin;
+	    	}
+	    	if (mousepos != null) {
+	            g.atext("Map pos: " + mousepos.toString(), new Coord(10, ay), 0, 1);
+	            ay += margin;
+			    g.atext("Tile coord: " + mousetile.toString(), new Coord(10, ay), 0, 1);
+			    ay += margin;
+	    	}
+		    g.atext("Cursor: " + haven.scripting.Engine.getInstance().getCursor(), new Coord(10, ay), 0, 1);
+		    ay += margin;
+		    g.atext("Player: " + playergob, new Coord(10, ay), 0, 1);
+		    ay += margin;
+        }
         ark.log.Draw(g);
 //	} catch(Loading l) {
 //	    String text = "Loading...";

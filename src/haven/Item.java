@@ -95,10 +95,6 @@ public class Item extends Widget implements DTarget {
 	    } else {
 		g.image(tex, Coord.z);
 	    }
-	    if(num >= 0) {
-		g.chcolor(Color.WHITE);
-		g.atext(Integer.toString(num), tex.sz(), 1, 1);
-	    }
 	    if(meter > 0) {
 		double a = ((double)meter) / 100.0;
 		int r = (int) ((1-a)*255);
@@ -108,6 +104,13 @@ public class Item extends Widget implements DTarget {
 		//g.fellipse(sz.div(2), new Coord(15, 15), 90, (int)(90 + (360 * a)));
 		g.frect(new Coord(sz.x-5,(int) ((1-a)*sz.y)), new Coord(5,(int) (a*sz.y)));
 		g.chcolor();
+	    }
+	    // don't show number if q display is enabled and object has q (!craft ingredient)
+	    if(num >= 0 && (!Config.showQuality || q < 0)) {
+		g.chcolor(Color.WHITE);
+		g.atext(Integer.toString(num), tex.sz(), 1, 1);
+	    } else if (q >= 0 && Config.showQuality && !dm) {
+		g.atext(Color.WHITE, new Color(0, 0, 0, 100), Integer.toString(q), tex.sz(), 1, 1);
 	    }
 	    ttres = res.get();
 	}

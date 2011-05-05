@@ -94,40 +94,47 @@ public class OptWnd extends Window {
 		}
 	    }).a = Config.new_minimap;
 	    
-	    (new CheckBox(new Coord(10, 165), tab, "Use new chat (restart required)") {
+	    (new CheckBox(new Coord(10, 160), tab, "Use new chat (restart required)") {
 		public void changed(boolean val) {
 		    Config.new_chat = val;
 		    Config.saveOptions();
 		}
 	    }).a = Config.new_chat;
 	    
-	    (new CheckBox(new Coord(10, 200), tab, "Add timestamp in chat") {
+	    (new CheckBox(new Coord(10, 190), tab, "Add timestamp in chat") {
 		public void changed(boolean val) {
 		    Config.timestamp = val;
 		    Config.saveOptions();
 		}
 	    }).a = Config.timestamp;
 	    
-	    (new CheckBox(new Coord(10, 235), tab, "Show dowsing direcion") {
+	    (new CheckBox(new Coord(10, 220), tab, "Show dowsing direcion") {
 		public void changed(boolean val) {
 		    Config.showDirection = val;
 		    Config.saveOptions();
 		}
 	    }).a = Config.showDirection;
 	    
-	    (new CheckBox(new Coord(10, 270), tab, "Always show kin names") {
+	    (new CheckBox(new Coord(10, 250), tab, "Always show kin names") {
 		public void changed(boolean val) {
 		    Config.showNames = val;
 		    Config.saveOptions();
 		}
 	    }).a = Config.showNames;
 	    
-	    (new CheckBox(new Coord(10, 305), tab, "Show smileys in chat") {
+	    (new CheckBox(new Coord(10, 280), tab, "Show smileys in chat") {
 		public void changed(boolean val) {
 		    Config.use_smileys = val;
 		    Config.saveOptions();
 		}
 	    }).a = Config.use_smileys;
+	    
+	    (new CheckBox(new Coord(10, 310), tab, "Show item quality") {
+			public void changed(boolean val) {
+			    Config.showQuality = val;
+			    Config.saveOptions();
+			}
+		    }).a = Config.showQuality;
 	    
 	    Widget editbox = new Frame(new Coord(310, 30), new Coord(90, 100), tab);
 	    new Label(new Coord(20, 10), editbox, "Edit mode:");

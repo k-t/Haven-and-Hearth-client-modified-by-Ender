@@ -213,6 +213,10 @@ public class ScriptGlobal {
         return null;
     }
     
+    public boolean isMoving() {
+        return UI.instance.mainview.player_moving;
+    }
+    
     // Move to specified object
     public void mapMove(int objid, Coord offset) {
         Coord oc, sc;

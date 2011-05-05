@@ -21,9 +21,9 @@ public class ScriptInput {
         while (mv.mode_select_object) 
             engine.wait(200);
         
-        if (mv.gob_at_mouse != null) {
-            ark.log.LogPrint("objid = " + mv.gob_at_mouse.id);
-            return mv.gob_at_mouse.id;
+        if (mv.onmouse != null) {
+            ark.log.LogPrint("objid = " + mv.onmouse.id);
+            return mv.onmouse.id;
         }
         
         return 0;
