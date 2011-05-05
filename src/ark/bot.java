@@ -276,9 +276,9 @@ public class bot {
     	while (mapview.mode_select_object) 
     		hhl_main.Sleep(200);
     	
-    	if (mapview.gob_at_mouse != null) {
-        	LogPrint("objid = "+mapview.gob_at_mouse.id);
-    		return mapview.gob_at_mouse.id;
+    	if (mapview.onmouse != null) {
+        	LogPrint("objid = "+mapview.onmouse.id);
+    		return mapview.onmouse.id;
     	}
     	
     	return 0;

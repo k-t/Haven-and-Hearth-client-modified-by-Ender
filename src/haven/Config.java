@@ -82,7 +82,7 @@ public class Config {
     public static String bot_name1;
     public static String bot_name2;
     public static boolean render_enable = true;
-    public static boolean ark_debug_drawto_console = false;
+    public static boolean debug_flag = false;
     
     static {
 	try {

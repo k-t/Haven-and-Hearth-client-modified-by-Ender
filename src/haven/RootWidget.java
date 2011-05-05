@@ -78,7 +78,6 @@ public class RootWidget extends ConsoleHost {
 	    } else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    } else if (code == KeyEvent.VK_F12 && alt) {
-            Config.ark_debug_drawto_console = true;
             if (ark.log.Drawable)
                 ark.log.Hide();
             else
@@ -87,6 +86,7 @@ public class RootWidget extends ConsoleHost {
 	    	Config.render_enable = !Config.render_enable;
 	    } else if (code == KeyEvent.VK_Q && ctrl) {
 	    	Config.showQuality = !Config.showQuality;
+	    	Config.saveOptions();
 	    } else if (code == KeyEvent.VK_M && ctrl) {
 	    	Window mw = UI.instance.slen.getMinimapWindow();
 	    	if (mw != null) {
@@ -97,7 +97,10 @@ public class RootWidget extends ConsoleHost {
 	    	ChatHWPanel cp = UI.instance.slen.getChatWindow();
 	    	if (cp != null)
 	    		cp.folded = !cp.folded;
+	    } else if (code == KeyEvent.VK_F11 && alt) {
+	    	Config.debug_flag =  !Config.debug_flag;
 	    }
+
 	}
 	return(true);
     }

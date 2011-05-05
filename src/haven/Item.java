@@ -105,7 +105,8 @@ public class Item extends Widget implements DTarget {
 		g.frect(new Coord(sz.x-5,(int) ((1-a)*sz.y)), new Coord(5,(int) (a*sz.y)));
 		g.chcolor();
 	    }
-	    if(num >= 0 && !Config.showQuality) { // don't show number if q display is enabled
+	    // don't show number if q display is enabled and object has q (!craft ingredient)
+	    if(num >= 0 && (!Config.showQuality || q < 0)) {
 		g.chcolor(Color.WHITE);
 		g.atext(Integer.toString(num), tex.sz(), 1, 1);
 	    } else if (q >= 0 && Config.showQuality && !dm) {
