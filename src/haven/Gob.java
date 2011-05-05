@@ -225,23 +225,6 @@ public class Gob implements Sprite.Owner {
 	return(null);
     }
     
-    // arksu: получить имя ресурса
-    public String getResName() {
-        String s = "";
-        Drawable d = getattr(Drawable.class);
-        ResDrawable dw = getattr(ResDrawable.class);
-        if (d != null)
-        {
-            if (dw != null)
-            {
-                if (dw.res.get() != null) {
-                    s = dw.res.get().name;
-                }
-            }
-        }
-        return s;
-    }
-    
     // получить байт из мессаги
     public byte getBlob(int index) {
         Drawable d = getattr(Drawable.class);

@@ -45,7 +45,8 @@ public class Utils {
     private static Background bgworker = null;
 
     static Coord imgsz(BufferedImage img) {
-	return(new Coord(img.getWidth(), img.getHeight()));
+        if (img == null) return Coord.z;
+        return(new Coord(img.getWidth(), img.getHeight()));
     }
 	
     public static class Background extends HackThread {

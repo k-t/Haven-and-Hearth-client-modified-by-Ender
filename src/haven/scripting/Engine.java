@@ -1,11 +1,17 @@
 package haven.scripting;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.*;
+
+import org.codehaus.groovy.control.*;
+import org.codehaus.groovy.control.customizers.*;
 
 import groovy.lang.Binding;
-import groovy.util.GroovyScriptEngine;
+import groovy.lang.GroovyShell;
 import groovy.util.ResourceException;
 import groovy.util.ScriptException;
+import groovy.transform.ThreadInterrupt;
 import haven.UI;
 
 public class Engine {
@@ -21,8 +27,8 @@ public class Engine {
     private Logger log;
     
     private ScriptThread thread;
-    private GroovyScriptEngine gse; 
     private Binding binding;
+    private CompilerConfiguration configuration;
     
     private String cursor = null;
     private int hp = 0;
@@ -83,11 +89,17 @@ public class Engine {
     public void init() {
         glob = new ScriptGlobal(this);
         log = new Logger();
+        
         binding = new Binding();
         binding.setVariable("Log", log);
         binding.setVariable("Glob", glob);
-        //binding.setVariable("Craft", new ScriptCraft(this));
-        //binding.setVariable("Input", new ScriptInput(this));
+        
+        configuration = new CompilerConfiguration();
+        configuration.addCompilationCustomizers(new ASTTransformationCustomizer(ThreadInterrupt.class));
+        ArrayList<String> cp = new ArrayList<String>();
+        cp.add(".");
+        cp.add("./scripts");
+        configuration.setClasspathList(cp);
     }
     
     public boolean initialized() {
@@ -106,8 +118,9 @@ public class Engine {
     
     public void stop() {
         try {
-            if (thread != null)
-             thread.stop();
+            if (thread != null) {
+             thread.interrupt();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -132,15 +145,10 @@ public class Engine {
             if (!initialized())
                 return;
             try {
-                String[] roots = new String[] { ".", "./scripts/" };
-                gse = new GroovyScriptEngine(roots);
-                gse.run(filename, binding);
+                GroovyShell shell = new GroovyShell(binding, configuration);
+                shell.run(new File("./scripts/" + filename), new String[] { });
             } catch (IOException ie) {
                 ie.printStackTrace();
-            } catch (ResourceException re) {
-                re.printStackTrace();
-            } catch (ScriptException se) {
-                se.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }

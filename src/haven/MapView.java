@@ -1255,7 +1255,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	    	if (onmouse != null) {
 	    		g.atext("Gob on mouse: id = [" + onmouse.id +
 	    				"] coord = " + onmouse.getc()+
-	    				" res = [" + onmouse.getResName()+ 
+	    				" res = [" + onmouse.resname()+ 
 	    				"] msg = [" + onmouse.getBlob(0) + "]", 
 	    				new Coord(10, ay), 0, 1);
 	    		ay += margin;

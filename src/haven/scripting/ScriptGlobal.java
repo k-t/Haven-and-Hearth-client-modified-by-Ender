@@ -69,7 +69,7 @@ public class ScriptGlobal {
         synchronized (glob.oc) {
             for (Gob gob : glob.oc) {
                 double len = gob.getc().dist(my);
-                boolean m = ((name.length() > 0) && (gob.getResName().indexOf(name) >= 0)) || (name.length() < 1);
+                boolean m = ((name.length() > 0) && (gob.resname().indexOf(name) >= 0)) || (name.length() < 1);
                 if ((m) && (len < min)) {
                     min = len;
                     mingob = gob;
@@ -96,7 +96,7 @@ public class ScriptGlobal {
                 boolean matched = false;
                 if (name.equals("tree"))
                     // find trees and grow stage... 
-                    matched = ((gob.getResName().indexOf("trees") >= 0) && (gob.getResName().indexOf("0") >= 0));
+                    matched = ((gob.resname().indexOf("trees") >= 0) && (gob.resname().indexOf("0") >= 0));
                 if (matched) {
                     double len = gob.getc().dist(my);
                     if (len < min) {
@@ -127,6 +127,16 @@ public class ScriptGlobal {
             return new ScriptFlowerMenu(UI.flower_menu);
         else
             return null;
+    }
+    
+    public ScriptGob[] getGobs() {
+        ArrayList<ScriptGob> gobs = new ArrayList<ScriptGob>();
+        synchronized(glob.oc) {
+            for (Gob gob : glob.oc)
+                gobs.add(new ScriptGob(gob));
+        }
+        ScriptGob[] arr = new ScriptGob[gobs.size()];
+        return gobs.toArray(arr);
     }
     
     public String getCursor() {

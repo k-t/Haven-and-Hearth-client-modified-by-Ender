@@ -62,4 +62,8 @@ public class Speaking extends GAttrib {
 	g.chcolor(Color.WHITE);
 	g.image(svans, c.add(0, -svans.sz().y));
     }
+    
+    public String text() {
+        return text.text;
+    }
 }
