@@ -72,11 +72,11 @@ public class Engine {
         this.stamina = stamina;
     }
     
-    public boolean isHourGlass() {
+    public boolean isHourglass() {
         return hourglass;
     }
 
-    public void setHourGlass(boolean hourglass) {
+    public void setHourglass(boolean hourglass) {
         this.hourglass = hourglass;
     }
 
@@ -88,17 +88,10 @@ public class Engine {
         binding.setVariable("Glob", glob);
         //binding.setVariable("Craft", new ScriptCraft(this));
         //binding.setVariable("Input", new ScriptInput(this));
-        
-        String[] roots = new String[] { ".", "./scripts/" };
-        try {
-            gse = new GroovyScriptEngine(roots);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     
     public boolean initialized() {
-        return gse != null;
+        return binding != null;
     }
     
     public void run(String scriptname) {
@@ -139,12 +132,17 @@ public class Engine {
             if (!initialized())
                 return;
             try {
+                String[] roots = new String[] { ".", "./scripts/" };
+                gse = new GroovyScriptEngine(roots);
                 gse.run(filename, binding);
+            } catch (IOException ie) {
+                ie.printStackTrace();
             } catch (ResourceException re) {
                 re.printStackTrace();
-
             } catch (ScriptException se) {
                 se.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             UI.instance.slen.error("Script finished");
         }

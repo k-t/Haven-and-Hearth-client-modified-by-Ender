@@ -70,7 +70,7 @@ public class RemoteUI implements UI.Receiver {
 		    		c = MainFrame.getCenterPoint().add(-415, -300);
 		    	String s = (String)args[0];
 		    	if (s.indexOf("gfx/hud/prog/") >= 0) {
-	                haven.scripting.Engine.getInstance().setHourGlass(true);
+	                haven.scripting.Engine.getInstance().setHourglass(true);
 		    	} 		    	
 		    }else if(type.equals("charlist") && args.length >= 1){
 		    	c = MainFrame.getCenterPoint().add(-380, -50);
@@ -91,7 +91,7 @@ public class RemoteUI implements UI.Receiver {
             if(ui.widgets.get(new Integer(id)) instanceof Img){
                 Img img = (Img)ui.widgets.get(new Integer(id));
                 if (img.texname.indexOf("gfx/hud/prog/") >= 0) {
-                    haven.scripting.Engine.getInstance().setHourGlass(false);
+                    haven.scripting.Engine.getInstance().setHourglass(false);
                 }
             } 
 		    ui.destroy(id);

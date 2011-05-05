@@ -15,8 +15,8 @@ public class ScriptGlobal {
         this.glob = UI.instance.sess.glob;
     }
     
-    public boolean checkHourGlass() {
-        return engine.isHourGlass();
+    public boolean checkHourglass() {
+        return engine.isHourglass();
     }
     
     public void doClick(int objid, int btn, int modflags) {

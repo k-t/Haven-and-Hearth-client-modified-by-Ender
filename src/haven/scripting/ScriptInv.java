@@ -29,11 +29,11 @@ public class ScriptInv {
         return list.toArray(arr);
     }
     
-    public int getWidth() {
+    public int width() {
         return inventory.getSize().x;
     }
     
-    public int getHeight() {
+    public int height() {
         return inventory.getSize().y;
     }
     

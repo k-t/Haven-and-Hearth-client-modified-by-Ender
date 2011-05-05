@@ -32,40 +32,40 @@ public class ScriptItem {
             item.wdgmsg(action, c);
     }
     
-    public int getX() {
+    public int x() {
         return item.coord_x();
     }
     
-    public int getY() {
+    public int y() {
         return item.coord_y();
     }
     
-    public String getName() {
+    public String name() {
         return item.getResName();
     }
     
-    public int getNum() {
+    public int num() {
         return item.num;
     }
     
-    public int getMeter() {
+    public int meter() {
         return item.meter;
     }
     
-    public String getTooltip() {
+    public String tooltip() {
         String t = item.shorttip();
         return (t != null) ? t : "";
     }
     
-    public int getQuality() {
+    public int quality() {
         return item.q;
     }
     
     public boolean isName(String s) {
-        return getName().indexOf(s) >= 0;
+        return name().indexOf(s) >= 0;
     }
     
     public boolean isTooltip(String s) {
-        return getTooltip().indexOf(s) >= 0;
+        return tooltip().indexOf(s) >= 0;
     }
 }
