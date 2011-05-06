@@ -1,5 +1,6 @@
 package haven.scripting;
 
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -7,19 +8,17 @@ import java.util.*;
 import org.codehaus.groovy.control.*;
 import org.codehaus.groovy.control.customizers.*;
 
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
-import groovy.util.ResourceException;
-import groovy.util.ScriptException;
+import groovy.lang.*;
+import groovy.util.*;
 import groovy.transform.ThreadInterrupt;
 import haven.UI;
 
 public class Engine {
     private static Engine instance = null;
+    
     public static Engine getInstance() {
-        if (instance == null) {
+        if (instance == null)
             instance = new Engine();
-        }
         return instance;
     }
     
@@ -29,6 +28,7 @@ public class Engine {
     private ScriptThread thread;
     private Binding binding;
     private CompilerConfiguration configuration;
+    private GroovyScriptEngine gse;
     
     private String cursor = null;
     private int hp = 0;
@@ -89,21 +89,58 @@ public class Engine {
     public void init() {
         glob = new ScriptGlobal(this);
         log = new Logger();
-        
         binding = new Binding();
         binding.setVariable("Log", log);
         binding.setVariable("Glob", glob);
-        
+        // configuration for script execution
         configuration = new CompilerConfiguration();
         configuration.addCompilationCustomizers(new ASTTransformationCustomizer(ThreadInterrupt.class));
-        ArrayList<String> cp = new ArrayList<String>();
-        cp.add(".");
-        cp.add("./scripts");
-        configuration.setClasspathList(cp);
+        configuration.setClasspathList(Arrays.asList(".", "./scripts"));
+        // init engine for working with callback scripts
+        try {
+            gse = new GroovyScriptEngine(new String[] { ".", "./scripts" });
+            gse.setConfig(configuration);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
     
     public boolean initialized() {
         return binding != null;
+    }
+    
+    private GroovyObject getScriptCallbackObject() {
+        if (!initialized())
+            init();        
+        try {
+            Class<?> groovyClass = gse.loadScriptByName("haven.groovy");
+            return (GroovyObject)groovyClass.newInstance();
+        } catch (CompilationFailedException e) {
+            // TODO logging
+            e.printStackTrace();
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        } catch (ResourceException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public boolean handleKeyEvent(KeyEvent ev) {
+        GroovyObject callback = getScriptCallbackObject();
+        if (callback != null) {
+            try {
+                return (Boolean)callback.invokeMethod("handleKeyEvent", new Object[] { ev });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
     
     public void run(String scriptname) {
@@ -146,7 +183,7 @@ public class Engine {
                 return;
             try {
                 GroovyShell shell = new GroovyShell(binding, configuration);
-                shell.run(new File("./scripts/" + filename), new String[] { });
+                shell.run(new File("./scripts/" + filename), new String[0]);
             } catch (IOException ie) {
                 ie.printStackTrace();
             } catch (Exception e) {

@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.scripting.Engine;
+
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -99,8 +101,10 @@ public class RootWidget extends ConsoleHost {
 	    		cp.folded = !cp.folded;
 	    } else if (code == KeyEvent.VK_F11 && alt) {
 	    	Config.debug_flag =  !Config.debug_flag;
+	    } else {
+	        // call script handler
+	        Engine.getInstance().handleKeyEvent(ev);
 	    }
-
 	}
 	return(true);
     }

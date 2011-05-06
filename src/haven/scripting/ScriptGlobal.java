@@ -8,11 +8,13 @@ import haven.*;
 
 public class ScriptGlobal {
     private Engine engine;
-    private Glob glob;
     
     public ScriptGlobal(Engine engine) {
         this.engine = engine;
-        this.glob = UI.instance.sess.glob;
+    }
+    
+    private Glob glob() {
+        return UI.instance.sess.glob;
     }
     
     public boolean checkHourglass() {
@@ -22,8 +24,8 @@ public class ScriptGlobal {
     public void doClick(int objid, int btn, int modflags) {
         Coord sc, sz, oc;
         Gob o = null;
-        synchronized (glob.oc) {
-            o = glob.oc.getgob(objid);
+        synchronized (glob().oc) {
+            o = glob().oc.getgob(objid);
         }
         if (o == null)
             return;
@@ -66,8 +68,8 @@ public class ScriptGlobal {
         my = my.add(offset);
         double min = radius;
         Gob mingob = null;
-        synchronized (glob.oc) {
-            for (Gob gob : glob.oc) {
+        synchronized (glob().oc) {
+            for (Gob gob : glob().oc) {
                 double len = gob.getc().dist(my);
                 boolean m = ((name.length() > 0) && (gob.resname().indexOf(name) >= 0)) || (name.length() < 1);
                 if ((m) && (len < min)) {
@@ -91,8 +93,8 @@ public class ScriptGlobal {
         Coord my = getMyCoords();
         double min = radius * 11;
         Gob mingob = null;
-        synchronized (glob.oc) {
-            for (Gob gob : glob.oc) {
+        synchronized (glob().oc) {
+            for (Gob gob : glob().oc) {
                 boolean matched = false;
                 if (name.equals("tree"))
                     // find trees and grow stage... 
@@ -114,8 +116,8 @@ public class ScriptGlobal {
     
     public ScriptBuff[] getBuffs() {
         ArrayList<ScriptBuff> list = new ArrayList<ScriptBuff>();
-        synchronized(glob.buffs) {
-            for (Buff b : glob.buffs.values())
+        synchronized(glob().buffs) {
+            for (Buff b : glob().buffs.values())
                 list.add(new ScriptBuff(b));
         }
         ScriptBuff[] arr = new ScriptBuff[list.size()];
@@ -131,8 +133,8 @@ public class ScriptGlobal {
     
     public ScriptGob[] getGobs() {
         ArrayList<ScriptGob> gobs = new ArrayList<ScriptGob>();
-        synchronized(glob.oc) {
-            for (Gob gob : glob.oc)
+        synchronized(glob().oc) {
+            for (Gob gob : glob().oc)
                 gobs.add(new ScriptGob(gob));
         }
         ScriptGob[] arr = new ScriptGob[gobs.size()];
@@ -168,8 +170,8 @@ public class ScriptGlobal {
     
     private Coord getMyCoords() {
         Gob pl;
-        synchronized (glob.oc) {
-            pl = glob.oc.getgob(getPlayerId());
+        synchronized (glob().oc) {
+            pl = glob().oc.getgob(getPlayerId());
         }
         return (pl != null) ? pl.getc() : new Coord(0, 0);
     }
@@ -233,8 +235,8 @@ public class ScriptGlobal {
         int btn = 1; // left button click
         int modflags = 0; // no pressed keys
         Gob gob;
-        synchronized(glob.oc) {
-            gob = glob.oc.getgob(objid);
+        synchronized(glob().oc) {
+            gob = glob().oc.getgob(objid);
         }
         if (gob == null)
             return;
@@ -253,8 +255,8 @@ public class ScriptGlobal {
         int btn = 1;
         int modflags = 0;
         MapView mv = getMapView();
-        synchronized(glob.oc) {
-            pgob = glob.oc.getgob(mv.getPlayerGob());
+        synchronized(glob().oc) {
+            pgob = glob().oc.getgob(mv.getPlayerGob());
         }
         if (pgob == null) return;
         Coord mc = MapView.tilify(pgob.getc());
@@ -283,8 +285,8 @@ public class ScriptGlobal {
     public void mapClick(int x, int y, int btn, int mod) {
         MapView mv = getMapView();
         Gob pgob;
-        synchronized(glob.oc) {
-            pgob = glob.oc.getgob(mv.getPlayerGob());
+        synchronized(glob().oc) {
+            pgob = glob().oc.getgob(mv.getPlayerGob());
         }
         if (pgob == null) return;
         Coord mc = MapView.tilify(pgob.getc());
@@ -304,8 +306,8 @@ public class ScriptGlobal {
     public void mapInteractClick(int x, int y, int mod) {
         MapView mv = getMapView();
         Gob pgob;
-        synchronized(glob.oc) {
-            pgob = glob.oc.getgob(mv.getPlayerGob());
+        synchronized(glob().oc) {
+            pgob = glob().oc.getgob(mv.getPlayerGob());
         }
         if (pgob == null) return;
         Coord mc = MapView.tilify(pgob.getc());
@@ -318,8 +320,8 @@ public class ScriptGlobal {
     public void mapAbsInteractClick(int x, int y, int mod) {
         MapView mv = getMapView();
         Gob pgob;
-        synchronized(glob.oc) {
-            pgob = glob.oc.getgob(mv.getPlayerGob());
+        synchronized(glob().oc) {
+            pgob = glob().oc.getgob(mv.getPlayerGob());
         }
         if (pgob == null) return;
         Coord mc = new Coord(x,y);
@@ -330,9 +332,9 @@ public class ScriptGlobal {
     public void mapInteractClick(int id, int mod) {
         MapView mv = getMapView();
         Gob pgob, gob;
-        synchronized(glob.oc) {
-            pgob = glob.oc.getgob(mv.getPlayerGob());
-            gob = glob.oc.getgob(id);
+        synchronized(glob().oc) {
+            pgob = glob().oc.getgob(mv.getPlayerGob());
+            gob = glob().oc.getgob(id);
         }
         if (pgob == null || gob == null) return;
         Coord mc = gob.getc();      
