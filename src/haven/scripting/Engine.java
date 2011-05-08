@@ -101,7 +101,7 @@ public class Engine {
             gse = new GroovyScriptEngine(new String[] { ".", "./scripts" });
             gse.setConfig(configuration);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
     }
@@ -118,15 +118,15 @@ public class Engine {
             return (GroovyObject)groovyClass.newInstance();
         } catch (CompilationFailedException e) {
             // TODO logging
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         } catch (ScriptException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         } catch (ResourceException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return null;
     }
@@ -137,7 +137,7 @@ public class Engine {
             try {
                 return (Boolean)callback.invokeMethod("handleKeyEvent", new Object[] { ev });
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
         return false;
@@ -146,6 +146,10 @@ public class Engine {
     public void run(String scriptname) {
         if (!initialized())
             init();
+        if (thread != null) {
+            log.message("Current scripting engine allows only one script in time.");
+            return;
+        }
         if (thread != null && thread.isAlive())
             return;
         String filename = scriptname + (scriptname.endsWith(".groovy") ? "" : ".groovy");
@@ -155,20 +159,16 @@ public class Engine {
     
     public void stop() {
         try {
-            if (thread != null) {
-             thread.interrupt();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            if (thread != null)
+                thread.interrupt();
+        } catch (Exception e) { };
     }
     
     public void wait(int time) {
         try {
-            thread.wait(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            if (thread != null)
+                thread.wait(time);
+        } catch (InterruptedException e) { }
     }
     
     private class ScriptThread extends Thread {
@@ -184,12 +184,13 @@ public class Engine {
             try {
                 GroovyShell shell = new GroovyShell(binding, configuration);
                 shell.run(new File("./scripts/" + filename), new String[0]);
-            } catch (IOException ie) {
-                ie.printStackTrace();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
             UI.instance.slen.error("Script finished");
+            thread = null;
         }
     }
 }

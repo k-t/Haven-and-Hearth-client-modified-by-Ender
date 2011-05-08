@@ -21,6 +21,16 @@ public class ScriptGlobal {
         return engine.isHourglass();
     }
     
+    public void closeWindow(String windowname) {
+        for (Widget wdg = UI.instance.root.child; wdg != null; wdg = wdg.next) {
+            if (wdg instanceof Window) {
+                Window w = (Window)wdg;
+                if (w.cap != null && w.cap.text.equals(windowname))
+                    w.wdgmsg("close", new Object[0]);
+            }
+        }
+    }
+    
     public void doClick(int objid, int btn, int modflags) {
         Coord sc, sz, oc;
         Gob o = null;
@@ -35,8 +45,7 @@ public class ScriptGlobal {
                     (int)Math.round(Math.random() * 200 + sz.x / 2 - 100),
                     (int)Math.round(Math.random() * 200 + sz.y / 2 - 100));
             oc = o.getc();
-            ark.log.LogPrint("send object click: " + oc.toString() + " obj_id=" + objid + " btn=" + btn + " modflags=" + modflags);
-            UI.instance.mainview.wdgmsg("click",sc, oc, btn, modflags, objid, oc);
+            UI.instance.mainview.wdgmsg("click", sc, oc, btn, modflags, objid, oc);
         }
     }
     
@@ -86,32 +95,7 @@ public class ScriptGlobal {
     }
     
     public int findObjectByName(String name, int radius) {
-        return findMapObject(name, radius * 11, 0,0);
-    }
-    
-    public int findObjectByType(String name, int radius) {
-        Coord my = getMyCoords();
-        double min = radius * 11;
-        Gob mingob = null;
-        synchronized (glob().oc) {
-            for (Gob gob : glob().oc) {
-                boolean matched = false;
-                if (name.equals("tree"))
-                    // find trees and grow stage... 
-                    matched = ((gob.resname().indexOf("trees") >= 0) && (gob.resname().indexOf("0") >= 0));
-                if (matched) {
-                    double len = gob.getc().dist(my);
-                    if (len < min) {
-                        min = len;
-                        mingob = gob;
-                    }
-                }
-            }
-        }
-        if (mingob != null)
-            return mingob.id;
-        else
-            return 0;
+        return findMapObject(name, radius * 11, 0, 0);
     }
     
     public ScriptBuff[] getBuffs() {
@@ -159,9 +143,9 @@ public class ScriptGlobal {
         return null;
     }
     
-    public ScriptInv getInventory(String windowname) {
+    public ScriptInventory getInventory(String windowname) {
         Inventory inv = getWindowInventory(windowname);
-        return (inv != null) ? new ScriptInv(inv, this) : null;
+        return (inv != null) ? new ScriptInventory(inv, this) : null;
     }
     
     private MapView getMapView() {
@@ -230,7 +214,7 @@ public class ScriptGlobal {
     }
     
     // Move to specified object
-    public void mapMove(int objid, Coord offset) {
+    public void mapMove(int objid, int x, int y) {
         Coord oc, sc;
         int btn = 1; // left button click
         int modflags = 0; // no pressed keys
@@ -245,8 +229,7 @@ public class ScriptGlobal {
                 (int)Math.round(Math.random() * 200 + mv.sz.x / 2 - 100),
                 (int)Math.round(Math.random() * 200 + mv.sz.y / 2 - 100));
         oc = gob.getc();
-        oc = oc.add(offset);
-        ark.log.LogPrint("send object click: "+oc.toString()+" obj_id="+objid+" btn="+btn+" modflags="+modflags);
+        oc = oc.add(new Coord(x, y));
         mv.wdgmsg("click", sc, oc, btn, modflags, objid, oc);              
     }
     
@@ -262,7 +245,6 @@ public class ScriptGlobal {
         Coord mc = MapView.tilify(pgob.getc());
         Coord offset = new Coord(x,y).mul(tilesz);
         mc = mc.add( offset );
-        ark.log.LogPrint("send map click: "+mc.toString()+" btn="+btn+" modflags="+modflags);
         mv.wdgmsg("click", this.getScreenCenter(), mc, btn, modflags );                        
     }
     
@@ -292,14 +274,12 @@ public class ScriptGlobal {
         Coord mc = MapView.tilify(pgob.getc());
         Coord offset = new Coord(x,y).mul(tilesz);
         mc = mc.add(offset);
-        ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
         mv.wdgmsg("click", getScreenCenter(), mc, btn, mod);
     }
     
     // Click using absolute coords
     public void mapAbsClick(int x, int y, int btn, int mod) {
         Coord mc = new Coord(x,y);
-        ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
         getMapView().wdgmsg("click", getScreenCenter(), mc, btn, mod);               
     }
     
@@ -313,7 +293,6 @@ public class ScriptGlobal {
         Coord mc = MapView.tilify(pgob.getc());
         Coord offset = new Coord(x,y).mul(tilesz);
         mc = mc.add( offset );
-        ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
         mv.wdgmsg("itemact", getScreenCenter(), mc, mod);      
     }
     
@@ -325,21 +304,19 @@ public class ScriptGlobal {
         }
         if (pgob == null) return;
         Coord mc = new Coord(x,y);
-        ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
         mv.wdgmsg("itemact", getScreenCenter(), mc, mod);      
     }
     
-    public void mapInteractClick(int id, int mod) {
+    public void mapInteractClick(int objid, int mod) {
         MapView mv = getMapView();
         Gob pgob, gob;
         synchronized(glob().oc) {
             pgob = glob().oc.getgob(mv.getPlayerGob());
-            gob = glob().oc.getgob(id);
+            gob = glob().oc.getgob(objid);
         }
         if (pgob == null || gob == null) return;
         Coord mc = gob.getc();      
-        ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
-        mv.wdgmsg("itemact", getScreenCenter(), mc, mod, id, mc);      
+        mv.wdgmsg("itemact", getScreenCenter(), mc, mod, objid, mc);      
     }
     
     public boolean hasContextMenu() {

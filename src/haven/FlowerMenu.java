@@ -238,11 +238,12 @@ public class FlowerMenu extends Widget {
 	return(false);
     }
     
-    public Object[] getOptions() {
-        ArrayList<String> result = new ArrayList<String>();
+    public String[] getOptions() {
+        ArrayList<String> list = new ArrayList<String>();
         for (Petal opt : opts)
-            result.add(opt.name);
-        return result.toArray();
+            list.add(opt.name);
+        String[] arr = new String[list.size()];
+        return list.toArray(arr);
     }
     
     public void selectOpt(String optname) {

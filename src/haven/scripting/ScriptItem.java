@@ -12,11 +12,11 @@ public class ScriptItem {
         this.ui = ui;
     }
     
-    public void click(String action) {
-        click(action, 0);
+    public void sendAction(String action) {
+        sendAction(action, 0);
     }
     
-    public void click(String action, int mod) {
+    public void sendAction(String action, int mod) {
         if (action.equals("itemact") && !ui.hasDragItem()) return;
         if ((!action.equals("take")) &&
             (!action.equals("transfer")) &&
@@ -32,12 +32,20 @@ public class ScriptItem {
             item.wdgmsg(action, c);
     }
     
-    public int x() {
-        return item.coord_x();
+    public int row() {
+        return item.c.div(31).y;
     }
     
-    public int y() {
-        return item.coord_y();
+    public int column() {
+        return item.c.div(31).x;
+    }
+    
+    public int width() {
+        return item.sz.div(30).x;
+    }
+    
+    public int height() {
+        return item.sz.div(30).y;
     }
     
     public String name() {

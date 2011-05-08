@@ -341,11 +341,6 @@ public class Item extends Widget implements DTarget {
 	return(true);
     }
     
-    // arksu получить координаты вещи
-    // TODO: fix magic
-    public int coord_x() { return c.div(31).x; }
-    public int coord_y() { return c.div(31).y; }
-    
     public String getResName() {
         if (res.get() != null)
             return res.get().name;

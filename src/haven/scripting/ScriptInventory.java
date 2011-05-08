@@ -5,18 +5,18 @@ import java.util.List;
 
 import haven.*;
 
-public class ScriptInv {
+public class ScriptInventory {
     private final ScriptGlobal ui;
     private Inventory inventory;
     
-    public ScriptInv(Inventory inventory, ScriptGlobal ui) {
+    public ScriptInventory(Inventory inventory, ScriptGlobal ui) {
         this.inventory = inventory;
         this.ui = ui;
     }
     
     /* Drops currently dragging item into specified position inside inventory. */
-    public void drop(int x, int y) {
-        inventory.wdgmsg("drop", new Coord(x, y));
+    public void drop(int row, int col) {
+        inventory.wdgmsg("drop", new Coord(col, row));
     }
     
     public ScriptItem[] getItems() {
@@ -29,19 +29,19 @@ public class ScriptInv {
         return list.toArray(arr);
     }
     
-    public int width() {
-        return inventory.getSize().x;
-    }
-    
-    public int height() {
+    public int rowCount() {
         return inventory.getSize().y;
     }
     
-    public void sendAction(int x, int y, String name) {
-        sendAction(x, y, name, 0);
+    public int columnCount() {
+        return inventory.getSize().x;
     }
     
-    public void sendAction(int x, int y, String action, int mode) {
+    public void sendAction(int row, int col, String name) {
+        sendAction(row, col, name, 0);
+    }
+    
+    public void sendAction(int row, int col, String action, int mode) {
         if ((!action.equals("take")) &&
             (!action.equals("transfer")) &&
             (!action.equals("drop")) &&
@@ -53,13 +53,13 @@ public class ScriptInv {
         // find item in specified position
         for (Widget i = inventory.child; i != null; i = i.next)
             if (i instanceof Item) {
-                Item it = (Item)i;
-                if ((it.coord_x() == x) && (it.coord_y() == y)) {
+                ScriptItem it = new ScriptItem((Item)i, this.ui);
+                if ((it.column() == col) && (it.row() == row)) {
                     Coord c = ui.getScreenCenter();
                     if (action.equals("itemact"))
-                        it.wdgmsg("itemact", mode);
+                        it.sendAction("itemact", mode);
                     else
-                        it.wdgmsg(action, c);
+                        it.sendAction(action);
                 }
             }
     }

@@ -316,7 +316,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
 		if(curs != lastcursor) {
 		    try {
 			setCursor(makeawtcurs(curs.layer(Resource.imgc).img, curs.layer(Resource.negc).cc));
-			haven.scripting.Engine.getInstance().setCursor(curs.name);
+			haven.scripting.Engine.getInstance().setCursor(curs.name.replace("gfx/hud/curs/", ""));
 			lastcursor = curs;
 		    } catch(Exception e) {
 			cursmode = "tex";

@@ -9,11 +9,11 @@ public class ScriptFlowerMenu {
         this.menu = menu;
     }
     
-    public Object[] getOptions() {
+    public String[] getOptions() {
         return menu.getOptions();
     }
     
-    public void selectOpt(String optname) {
+    public void select(String optname) {
         menu.selectOpt(optname);
     }
 }

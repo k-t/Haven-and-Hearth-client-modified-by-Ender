@@ -9,19 +9,19 @@ public class ScriptBuff {
         this.buff = buff;
     }
     
-    public String getName() {
+    public String name() {
         return buff.getName();
     }
     
-    public int getMeter() {
+    public int meter() {
         return buff.ameter;
     }
     
-    public int getTimeMeter() {
+    public int getTimeLeft() {
         return buff.getTimeLeft();
     }
     
     public boolean isName(String name) {
-        return getName().indexOf(name) > 0;
+        return name().indexOf(name) > 0;
     }
 }
