@@ -170,9 +170,9 @@ public class CustomLogwindow extends CustomWindow {
 			    	return;
 				Text rl = lines.get(0);
 				lines.remove(0);
-				if (cury > rl.sz().y)
-					cury -= rl.sz().y;
 				maxy -= rl.sz().y;
+				if (cury > maxy)
+					cury = maxy;
 			}
 		}
 		
