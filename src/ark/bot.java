@@ -313,7 +313,7 @@ public class bot {
          
     // готово ли контекстное меню к приему команды
     public static boolean isFlowerMenuReady() {
-        return (UI.instance.flower_menu != null);// && (ui.flower_menu.isReady());
+        return (UI.flower_menu != null);// && (ui.flower_menu.isReady());
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -329,7 +329,7 @@ public class bot {
             return;
         }
         LogPrint("select flower menu option: "+OptName);
-        UI.instance.flower_menu.selectOpt(OptName);
+        UI.flower_menu.selectOpt(OptName);
     }
     
 //-------------------------------------------------------------------------------------------------------------------------
@@ -374,9 +374,6 @@ public class bot {
     // сбросить итератор итемов в инвентаре
     public static void reset_inventory() {
         if (CurrentInventory == null) return;
-        
-        List<Item> tmp = inventory_list;
-        inventory_list = null;
         
         inventory_list = new ArrayList<Item>();
         for (Widget i = CurrentInventory.child; i != null; i = i.next) {
@@ -427,8 +424,8 @@ public class bot {
 	    	}				
 	    	break;
 		case 2 :
-			if (UI.instance.equip != null) {
-				return UI.instance.equip.equed.get(current_equip_index);
+			if (UI.equip != null) {
+				return UI.equip.equed.get(current_equip_index);
 			}
 			break;
 		}

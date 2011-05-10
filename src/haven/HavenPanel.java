@@ -249,7 +249,9 @@ public class HavenPanel extends GLCanvas implements Runnable {
 
     void redraw(GL gl) {
 	GOut g = new GOut(gl, getContext(), MainFrame.getInnerSize());
-	
+    synchronized (ui) {
+    	ui.update();
+    }
 	if (Config.render_enable) {
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();

@@ -365,5 +365,9 @@ public class UI {
         	make_window = null;
         if (wdg instanceof Equipory)
         	equip = null;
-    } 
+    }
+    
+    public void update() {
+    	root.update(0);
+    }
 }

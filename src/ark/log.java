@@ -1,46 +1,50 @@
 package ark;
-// start at 11.07.2010
-import java.awt.*;
-import java.io.*;
-import java.util.Vector;
 
+import java.io.*;
 import haven.*;
 
 public class log {
     public static boolean Drawable = false;
-    static Vector<String> Messages = new Vector<String>();
-    static int MaxMessages = 20;
-    static Coord LogScreenPos = new Coord(30, 300);
-    static int MeesageHeight = 14;
-    static int LogScreenWidth = 650;
-
-    public static void Draw(GOut g) {
-        if (!Drawable) return;
-
-        g.chcolor(new Color(0,0,0,100));
-        g.frect(LogScreenPos, new Coord(LogScreenWidth, MeesageHeight*MaxMessages+MeesageHeight));
-        g.chcolor(Color.WHITE);
-        String s;
-        int y = LogScreenPos.y + MeesageHeight;
-        for (int i = 0; i < Messages.size(); i++){
-            s = (String)Messages.elementAt(i);
-            g.atext(s, new Coord(LogScreenPos.x, y), 0, 1);
-            y += MeesageHeight;
-        }
+    
+    static {
+    	OutputStream out = new OutputStream() {  
+	    	@Override  
+		    public void write(final int b) throws IOException {  
+	    		String s = String.valueOf((char) b);
+	    		System.console().printf("%s", s);
+	    		ConsolePrint(s);
+		    }  
+	  
+		    @Override  
+		    public void write(byte[] b, int off, int len) throws IOException {  
+		    	String s = new String(b, off, len);
+		    	System.console().printf("%s", s);
+		    	ConsolePrint(s);
+		    }  
+	  
+		    @Override  
+		    public void write(byte[] b) throws IOException {  
+		      write(b, 0, b.length);  
+		    }  
+	  };
+	  System.setOut(new PrintStream(out, true));  
+	  System.setErr(new PrintStream(out, true));
     }
 
-    public static void LogPrint(String Msg) {
-        while (Messages.size() > MaxMessages-1)
-            Messages.remove(0);
-        Messages.addElement(Msg);
-//        try {
-//            PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream("log.txt", true), "Windows-1251"));
-//            pw.append(Msg);
-//            pw.append("\r\n");
-//            pw.flush();
-//        } catch (IOException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
+    public static void LogPrint(String msg) {
+    	if (UI.instance.root.logwindow != null)
+    		UI.instance.root.logwindow.write("Messages", msg);
+    }
+    
+    private static void ConsolePrint(String msg) {
+    	if (UI.instance.root.logwindow != null) {
+    		UI.instance.root.logwindow.write("Console", msg.trim());
+    	}
+    }
+    
+    public static void OutputPrint(String msg) {
+    	if (UI.instance.root.logwindow != null)
+    		UI.instance.root.logwindow.write("Output", msg);
     }
 
     static void LogWarning(String Msg) {
@@ -49,13 +53,5 @@ public class log {
 
     static void LogError(String Msg) {
         LogPrint("ERROR: "+Msg);
-    }
-
-    public static void Show() {
-        Drawable = true;
-    }
-
-    public static void Hide() {
-        Drawable = false;
     }
 }
