@@ -5,20 +5,18 @@ import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class CustomLogwindow extends CustomWindow {
-	private static final int MaxLines = 100;
-	
+public class CustomLogWindow extends CustomWindow {
 	private CustomTextlog tl;
 	private HashMap<String, ToggleButton> tabs;
-	private HashMap<String, LinkedList<String>> logs;
+	private HashMap<String, LogManager.Log> logs;
 	private Button clearbtn;
 	private String currenttab;
 	
-	public CustomLogwindow(Coord c, Coord sz, Widget parent, String cap) {
+	public CustomLogWindow(Coord c, Coord sz, Widget parent, String cap) {
 	    super(c, sz, parent, cap);
 	    
 	    tabs = new HashMap<String, ToggleButton>();
-	    logs = new HashMap<String, LinkedList<String>>();
+	    logs = new HashMap<String, LogManager.Log>();
 	    // text log
 	    tl = new CustomTextlog(new Coord(0, 25), new Coord(0, 0), this);
 	    tl.drawbg = false;
@@ -32,7 +30,7 @@ public class CustomLogwindow extends CustomWindow {
 	    pack();
     }
 	
-	public synchronized void addtab(String name) {
+	public void addlog(String name, LogManager.Log log) {
 		// add tab button
 		ToggleButton tb = new ToggleButton(new Coord(tabs.size() * 85, 0), 80, this, name) {
 			public void click() {
@@ -40,7 +38,7 @@ public class CustomLogwindow extends CustomWindow {
 			}
 	    };
 	    tabs.put(name, tb);
-	    logs.put(name, new LinkedList<String>());
+	    logs.put(name, log);
 	    // activate first added tab
 	    if (tabs.size() == 1)
 	    	settab(tb);
@@ -51,7 +49,6 @@ public class CustomLogwindow extends CustomWindow {
 		if (currenttab == null)
 			return;
 		logs.get(currenttab).clear();
-		tl.clear();
 	}
 	
 	@Override
@@ -64,10 +61,6 @@ public class CustomLogwindow extends CustomWindow {
 		return new Coord(minwidth + this.mrgn.x * 2, 125);
 	}
 	
-	private boolean hastab(String name) {
-		return tabs.containsKey(name);
-	}
-	
 	private void settab(ToggleButton tabbtn) {
 		synchronized(tabs) {
 			for (Entry<String, ToggleButton> entry : tabs.entrySet()) {
@@ -76,23 +69,9 @@ public class CustomLogwindow extends CustomWindow {
 				btn.settoggle(btn == tabbtn);
 				if (btn == tabbtn) {
 					currenttab = tab;
-					tl.settextsource(logs.get(tab));
+					tl.setlog(logs.get(tab));
 				}
 			}
-		}
-	}
-	
-	public void write(String source, String message) {
-		if (!hastab(source))
-			addtab(source);
-		LinkedList<String> log = logs.get(source); 
-		log.add(message);
-		if (source == currenttab)
-			tl.append(message);
-		if (log.size() > MaxLines) {
-			log.removeFirst();
-			if (source == currenttab)
-				tl.removeFirst();
 		}
 	}
 	
@@ -140,10 +119,11 @@ public class CustomLogwindow extends CustomWindow {
 	return(super.type(key, ev));
     }
 	
-	private static class CustomTextlog extends Textlog {
+	private static class CustomTextlog extends Textlog implements LogManager.LogView {
 		static RichText.Foundry fnd = new RichText.Foundry(TextAttribute.FAMILY, "Sans Serif", TextAttribute.SIZE, 10, TextAttribute.FOREGROUND, Color.WHITE);
 		
 		private boolean update = false;
+		private LogManager.Log log = null;
 
 		public CustomTextlog(Coord c, Coord sz, Widget parent) {
 	        super(c, sz, parent);
@@ -164,7 +144,7 @@ public class CustomLogwindow extends CustomWindow {
 			maxy += rl.sz().y;
 		}
 		
-		public void removeFirst() {
+		public void removefirst() {
 			synchronized(lines) {
 			    if (lines.size() == 0)
 			    	return;
@@ -200,12 +180,18 @@ public class CustomLogwindow extends CustomWindow {
 	    	}
 	    }
 	    
-	    public void settextsource(List<String> source) {
+	    public void setlog(LogManager.Log log) {
+	    	if (this.log != null)
+	    		this.log.setview(null);
+	    	if (this.log == log)
+	    		return;
+	    	this.log = log;
 	    	beginupdate();
 	    	lines.clear();
-	    	for (String line : source)
+	    	for (String line : this.log.lines())
 	    		append(line);
 	    	endupdate();
+	    	this.log.setview(this);	    		
 	    }
 	    
 	    private void update() {
@@ -217,9 +203,9 @@ public class CustomLogwindow extends CustomWindow {
 				maxy = 0;
 				for (Text line : oldlines) {
 					Text rl = fnd.render(line.text, sz.x - (margin * 2) - sflarp.sz().x);
-					lines.add(rl);
-					if(cury >= maxy)
-						cury += rl.sz().y;
+				    lines.add(rl);
+					if(cury == maxy)
+					    cury += rl.sz().y;
 					maxy += rl.sz().y;
 				}
 			}

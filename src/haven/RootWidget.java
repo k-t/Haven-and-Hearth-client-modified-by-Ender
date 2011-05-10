@@ -34,7 +34,7 @@ public class RootWidget extends ConsoleHost {
     Logout logout = null;
     Profile gprof;
     boolean afk = false;
-    public CustomLogwindow logwindow = null;
+    public CustomLogWindow logwindow = null;
 	
     public RootWidget(UI ui, Coord sz) {
 	super(ui, new Coord(0, 0), sz);
@@ -79,13 +79,13 @@ public class RootWidget extends ConsoleHost {
 	    } else if(key != 0) {
 		wdgmsg("gk", (int)key);
 	    } else if (code == KeyEvent.VK_F12 && alt) {
-	    	if (logwindow == null)
-        		logwindow = new CustomLogwindow(new Coord(10, 10), new Coord(200, 200), this, null);
-	    	ark.log.Drawable = !ark.log.Drawable;
-	    	if (ark.log.Drawable) {
-            	logwindow.show();
-            } else {
+	    	if (logwindow == null) {
+        		logwindow = new CustomLogWindow(new Coord(10, 10), new Coord(200, 200), this, null);
+        		LogManager.addwindow(logwindow);
+	    	} else if (logwindow.visible) {
             	logwindow.hide();
+            } else {
+            	logwindow.show();
             }
 	    } else if (code == KeyEvent.VK_Y && ctrl) {
 	    	Config.render_enable = !Config.render_enable;

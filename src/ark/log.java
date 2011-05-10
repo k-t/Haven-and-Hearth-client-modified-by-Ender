@@ -2,9 +2,12 @@ package ark;
 
 import java.io.*;
 import haven.*;
+import haven.LogManager;
 
 public class log {
-    public static boolean Drawable = false;
+    private static ILog console = LogManager.getlog("Console");
+    private static ILog messages = LogManager.getlog("Messages");
+    private static ILog output = LogManager.getlog("Output");
     
     static {
     	OutputStream out = new OutputStream() {  
@@ -32,19 +35,15 @@ public class log {
     }
 
     public static void LogPrint(String msg) {
-    	if (UI.instance.root.logwindow != null)
-    		UI.instance.root.logwindow.write("Messages", msg);
+    	messages.write(msg);
     }
     
     private static void ConsolePrint(String msg) {
-    	if (UI.instance.root.logwindow != null) {
-    		UI.instance.root.logwindow.write("Console", msg.trim());
-    	}
+    	console.write(msg.trim());
     }
     
     public static void OutputPrint(String msg) {
-    	if (UI.instance.root.logwindow != null)
-    		UI.instance.root.logwindow.write("Output", msg);
+    	output.write(msg);
     }
 
     static void LogWarning(String Msg) {
