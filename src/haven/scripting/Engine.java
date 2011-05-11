@@ -23,7 +23,7 @@ public class Engine {
     }
     
     private ScriptGlobal glob;
-    private Logger log;
+    private Log log;
     
     private ScriptThread thread;
     private Binding binding;
@@ -42,7 +42,7 @@ public class Engine {
         return glob;
     }
     
-    public Logger log() {
+    public Log log() {
         return log;
     }
     
@@ -88,7 +88,7 @@ public class Engine {
 
     public void init() {
         glob = new ScriptGlobal(this);
-        log = new Logger();
+        log = new Log();
         binding = new Binding();
         binding.setVariable("Log", log);
         binding.setVariable("Glob", glob);

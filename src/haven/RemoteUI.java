@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.scripting.Log;
+
 public class RemoteUI implements UI.Receiver {
     Session sess;
     UI ui;
@@ -41,7 +43,7 @@ public class RemoteUI implements UI.Receiver {
         sb.append(arg).append(',');
     if (sb.length() > 0)
         sb.deleteCharAt(sb.length() - 1);
-	ark.log.LogPrint("WDGMSG: " + Integer.toString(id) + "; " + name + " { " + sb.toString() +  " }");
+	Log.getInstance().uimessage("Id: " + Integer.toString(id) + "; Name: " + name + "; Args: { " + sb.toString() +  " }");
     Message msg = new Message(Message.RMSG_WDGMSG);
 	msg.adduint16(id);
 	msg.addstring(name);

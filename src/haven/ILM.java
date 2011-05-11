@@ -99,4 +99,8 @@ public class ILM extends TexRT {
     protected byte[] initdata() {
 	return(null);
     }
+    
+    public void updatesize(Coord sz) {
+        dim = sz;
+    }
 }

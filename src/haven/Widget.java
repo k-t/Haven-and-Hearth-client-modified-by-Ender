@@ -494,4 +494,12 @@ public class Widget {
     public void show() {
 	visible = true;
     }
+    
+    public void update(long dt) {
+    	Widget next;
+    	for(Widget wdg = child; wdg != null; wdg = next) {
+    	    next = wdg.next;
+    	    wdg.update(0);
+    	}    	
+    }
 }

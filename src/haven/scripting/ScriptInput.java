@@ -15,14 +15,11 @@ public class ScriptInput {
         if (mv == null)
             return 0;
         
-        ark.log.LogPrint("input get object....");
-        
         mv.mode_select_object = true;
         while (mv.mode_select_object) 
             engine.wait(200);
         
         if (mv.onmouse != null) {
-            ark.log.LogPrint("objid = " + mv.onmouse.id);
             return mv.onmouse.id;
         }
         

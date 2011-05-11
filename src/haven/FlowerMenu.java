@@ -254,4 +254,10 @@ public class FlowerMenu extends Widget {
             }
         }
     }
+    
+    @Override
+    public void update(long dt) {
+    	if(anim != null)
+    	    anim.tick();
+    }
 }

@@ -1221,6 +1221,26 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	if(player != null)
 	    cam.setpos(this, player, sz);
     }
+    
+    public void update(long dt) {
+		Coord requl = mc.add(-500, -500).div(tilesz).div(cmaps);
+		Coord reqbr = mc.add(500, 500).div(tilesz).div(cmaps);
+		Coord cgc = new Coord(0, 0);
+		for(cgc.y = requl.y; cgc.y <= reqbr.y; cgc.y++) {
+		 for(cgc.x = requl.x; cgc.x <= reqbr.x; cgc.x++) {
+			 if(map.grids.get(cgc) == null)
+				 map.request(new Coord(cgc));
+		 }
+		}
+		long now = System.currentTimeMillis();
+		if((olftimer != 0) && (olftimer < now))
+			unflashol();
+		map.sendreqs();
+		checkplmove();	    
+		sz = MainFrame.getInnerSize();
+		mask.updatesize(sz);
+		checkmappos();   
+    }
 
     public void draw(GOut og) {
 	hsz = MainFrame.getInnerSize();
@@ -1228,21 +1248,6 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	GOut g = og.reclip(Coord.z, sz);
 	g.gl.glPushMatrix();
 	g.scale(getScale());
-	checkmappos();
-	Coord requl = mc.add(-500, -500).div(tilesz).div(cmaps);
-	Coord reqbr = mc.add(500, 500).div(tilesz).div(cmaps);
-	Coord cgc = new Coord(0, 0);
-	for(cgc.y = requl.y; cgc.y <= reqbr.y; cgc.y++) {
-	    for(cgc.x = requl.x; cgc.x <= reqbr.x; cgc.x++) {
-		if(map.grids.get(cgc) == null)
-		    map.request(new Coord(cgc));
-	    }
-	}
-	long now = System.currentTimeMillis();
-	if((olftimer != 0) && (olftimer < now))
-	    unflashol();
-	map.sendreqs();
-	checkplmove();
 //	try {
 	    if(((mask.amb = glob.amblight) == null) || Config.nightvision)
 		mask.amb = new Color(0, 0, 0, 0);
@@ -1274,7 +1279,6 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 		    g.atext("Player: " + playergob, new Coord(10, ay), 0, 1);
 		    ay += margin;
         }
-        ark.log.Draw(g);
 //	} catch(Loading l) {
 //	    String text = "Loading...";
 //	    g.chcolor(Color.BLACK);
@@ -1282,7 +1286,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 //	    g.chcolor(Color.WHITE);
 //	    g.atext(text, sz, 0.5, 0.5);
 //	}
-	long poldt = now - polchtm;
+	long poldt = System.currentTimeMillis() - polchtm;
 	if((polownert != null) && (poldt < 6000)) {
 	    int a;
 	    if(poldt < 1000)
