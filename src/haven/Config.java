@@ -79,8 +79,8 @@ public class Config {
     public static boolean showQuality = false;
     
     // ark.su options
-    public static String bot_name1;
-    public static String bot_name2;
+    public static String bot_name1 = "";
+    public static String bot_name2 = "";
     public static boolean render_enable = true;
     public static boolean debug_flag = false;
     
