@@ -76,6 +76,10 @@ public class Config {
     public static boolean showBeast = false;
     public static boolean showDirection;
     public static boolean showNames;
+    public static boolean fastFlowerAnim;
+    public static boolean sshot_compress;
+    public static boolean sshot_noui;
+    public static boolean newclaim;
     public static boolean showQuality = false;
     
     // ark.su options
@@ -258,6 +262,10 @@ public class Config {
         showRadius = options.getProperty("showRadius", "false").equals("true");
         showHidden = options.getProperty("showHidden", "false").equals("true");
         simple_plants = options.getProperty("simple_plants", "false").equals("true");
+        fastFlowerAnim = options.getProperty("fastFlowerAnim", "false").equals("true");
+        sshot_compress = options.getProperty("sshot_compress", "false").equals("true");
+        sshot_noui = options.getProperty("sshot_noui", "false").equals("true");
+        newclaim = options.getProperty("newclaim", "true").equals("true");
         sfxVol = Integer.parseInt(options.getProperty("sfx_vol", "100"));
         musicVol = Integer.parseInt(options.getProperty("music_vol", "100"));
         hideObjectList.clear();
@@ -317,6 +325,11 @@ public class Config {
         options.setProperty("showRadius", showRadius?"true":"false");
         options.setProperty("showHidden", showHidden?"true":"false");
         options.setProperty("simple_plants", simple_plants?"true":"false");
+        options.setProperty("fastFlowerAnim", fastFlowerAnim?"true":"false");
+        options.setProperty("sshot_compress", sshot_compress?"true":"false");
+        options.setProperty("sshot_noui", sshot_noui?"true":"false");
+        options.setProperty("newclaim", newclaim?"true":"false");
+        
         options.setProperty("bot_name1", bot_name1);
         options.setProperty("bot_name2", bot_name2);
         options.setProperty("showQuality", showQuality ? "true" : "false");
