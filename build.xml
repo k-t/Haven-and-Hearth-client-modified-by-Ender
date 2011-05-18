@@ -85,7 +85,15 @@
     </copy>
   </target>
 
-  <target name="deftgt" depends="jars, appletview" />
+  <target name="deftgt" depends="jars, appletview, doc" />
+  
+  <target name="doc">
+    <mkdir dir="build" />
+    <mkdir dir="build/doc" />
+    <exec executable="doxygen" dir="src/doc/" />
+    <copy file="src/doc/html/ScriptEngine.chm" todir="build/doc" />
+    <delete dir="src/doc/html" />
+  </target>
 
   <target name="run" depends="jars">
     <java jar="build/haven.jar" fork="true" />
@@ -94,6 +102,7 @@
   <target name="clean">
     <delete dir="build/classes" />
     <delete dir="build/classes-lib" />
+    <delete dir="build/doc" />
   </target>
 
   <target name="profile" depends="jars">
