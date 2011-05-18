@@ -1,7 +1,7 @@
 /*
  *  This file is part of the Haven & Hearth game client.
  *  Copyright (C) 2009 Fredrik Tolf <fredrik@dolda2000.com>, and
- *                     Bjorn Johannessen <johannessen.bjorn@gmail.com>
+ *                     Bj√∂rn Johannessen <johannessen.bjorn@gmail.com>
  *
  *  Redistribution and/or modification of this file is subject to the
  *  terms of the GNU Lesser General Public License, version 3, as
@@ -537,7 +537,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	mask = new ILM(MainFrame.getScreenSize(), glob.oc);
 	radiuses = new HashMap<String, Integer>();
     }
-	
+    
     public void resetcam(){
 	if(cam != null){
 	    cam.reset();
@@ -588,7 +588,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	Coord c0 = c;
 	c = new Coord((int)(c.x/getScale()), (int)(c.y/getScale()));
 	Gob hit = gobatpos(c);
-	// arksu: ÂÒÎË Ï˚ ‚ ÂÊËÏÂ ‚˚·Ó‡ Ó·˙ÂÍÚ‡ - ‚ÓÁ‚‡˘‡ÂÏ Â„Ó Ë ‚˚ıÓ‰ËÏ
+	// arksu: –µ—Å–ª–∏ –º—ã –≤ —Ä–µ–∂–∏–º–µ –≤—ã–±–æ—Ä–∞ –æ–±—ä–µ–∫—Ç–∞ - –≤–æ–∑–≤—Ä–∞—â–∞–µ–º –µ–≥–æ –∏ –≤—ã—Ö–æ–¥–∏–º
 	if (mode_select_object) {
 		onmouse = hit;
 		mode_select_object = false;
@@ -1322,33 +1322,27 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
     
     public void update(long dt) {
-		Coord new_my_coord = ark.bot.MyCoord();
-		if ((new_my_coord != null) && (last_my_coord != null))
-			if ((new_my_coord.dist(last_my_coord) > 20*11) && (cam != null)) 
-				cam.reset();
-		last_my_coord = new_my_coord;    	
-		Coord requl = mc.add(-500, -500).div(tilesz).div(cmaps);
-		Coord reqbr = mc.add(500, 500).div(tilesz).div(cmaps);
-		Coord cgc = new Coord(0, 0);
-		for(cgc.y = requl.y; cgc.y <= reqbr.y; cgc.y++) {
-		 for(cgc.x = requl.x; cgc.x <= reqbr.x; cgc.x++) {
-			 if(map.grids.get(cgc) == null)
-				 map.request(new Coord(cgc));
-		 }
-		}
-		long now = System.currentTimeMillis();
-		if((olftimer != 0) && (olftimer < now))
-			unflashol();
-		map.sendreqs();
-		checkplmove();	    
-		sz = MainFrame.getInnerSize();
-		mask.updatesize(sz);
-		checkmappos();   
+    	hsz = MainFrame.getInnerSize();
+    	sz = hsz.mul(1/getScale());
+    	checkmappos();
+    	Coord requl = mc.add(-500, -500).div(tilesz).div(cmaps);
+    	Coord reqbr = mc.add(500, 500).div(tilesz).div(cmaps);
+    	Coord cgc = new Coord(0, 0);
+    	for(cgc.y = requl.y; cgc.y <= reqbr.y; cgc.y++) {
+    	    for(cgc.x = requl.x; cgc.x <= reqbr.x; cgc.x++) {
+    		if(map.grids.get(cgc) == null)
+    		    map.request(new Coord(cgc));
+    	    }
+    	}
+    	long now = System.currentTimeMillis();
+    	if((olftimer != 0) && (olftimer < now))
+    	    unflashol();
+    	map.sendreqs();
+    	checkplmove();
     }
 
     public void draw(GOut og) {
-	hsz = MainFrame.getInnerSize();
-	sz = hsz.mul(1/getScale());
+    long now = System.currentTimeMillis();
 	GOut g = og.reclip(Coord.z, sz);
 	g.gl.glPushMatrix();
 	g.scale(getScale());
@@ -1390,7 +1384,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 //	    g.chcolor(Color.WHITE);
 //	    g.atext(text, sz, 0.5, 0.5);
 //	}
-	long poldt = System.currentTimeMillis() - polchtm;
+	long poldt = now - polchtm;
 	if((polownert != null) && (poldt < 6000)) {
 	    int a;
 	    if(poldt < 1000)
@@ -1464,17 +1458,17 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	return(cmdmap);
     }
     
-    // ‰ÓÔÌÛÚ¸ ‚Â˘¸ ÍÓÚÓÛ˛ ‰ÂÊËÏ ‚ ÛÍ‡ı
+    // –¥—Ä–æ–ø–Ω—É—Ç—å –≤–µ—â—å –∫–æ—Ç–æ—Ä—É—é –¥–µ—Ä–∂–∏–º –≤ —Ä—É–∫–∞—Ö
     public void drop_thing(int mod) {
     	wdgmsg("drop", mod);
     }
     
-    // arksu: ÚÛÚ ‰Ó·‡‚ÎˇÂÏ Ò‚ÓË ÙË¯ÍË ‰Îˇ ‡·ÓÚ˚ Ò ·ÓÚÓÏ
-    // ‰Îˇ Ì‡˜‡Î‡ ‰‚Ë„‡Ú¸Òˇ Í ÛÍ‡Á‡ÌÌÓÏÛ Ó·˙ÂÍÚÛ Ò ÓÙÙÒÂÚÓÏ
+    // arksu: —Ç—É—Ç –¥–æ–±–∞–≤–ª—è–µ–º —Å–≤–æ–∏ —Ñ–∏—à–∫–∏ –¥–ª—è —Ä–∞–±–æ—Ç—ã —Å –±–æ—Ç–æ–º
+    // –¥–ª—è –Ω–∞—á–∞–ª–∞ –¥–≤–∏–≥–∞—Ç—å—Å—è –∫ —É–∫–∞–∑–∞–Ω–Ω–æ–º—É –æ–±—ä–µ–∫—Ç—É —Å –æ—Ñ—Ñ—Å–µ—Ç–æ–º
     public void map_move(int obj_id, Coord offset) {
     	Coord oc, sc;
-	    int btn = 1; // ÎÂ‚ÓÈ ÍÌÓÔÍÓÈ ˘ÂÎÍ‡ÂÏ
-	    int modflags = 0; // ÌËÍ‡ÍËı ÍÎ‡‚Ë¯ ÌÂ ‰ÂÊËÏ
+	    int btn = 1; // –ª–µ–≤–æ–π –∫–Ω–æ–ø–∫–æ–π —â–µ–ª–∫–∞–µ–º
+	    int modflags = 0; // –Ω–∏–∫–∞–∫–∏—Ö –∫–ª–∞–≤–∏—à –Ω–µ –¥–µ—Ä–∂–∏–º
 	    Gob gob;
     	synchronized(glob.oc) {
     	    gob = glob.oc.getgob(obj_id);
@@ -1491,8 +1485,8 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     }
     public void map_move_step(int x, int y) {
     	Gob pgob;
-	    int btn = 1; // ÎÂ‚ÓÈ ÍÌÓÔÍÓÈ ˘ÂÎÍ‡ÂÏ
-	    int modflags = 0; // ÌËÍ‡ÍËı ÍÎ‡‚Ë¯ ÌÂ ‰ÂÊËÏ
+	    int btn = 1; // –ª–µ–≤–æ–π –∫–Ω–æ–ø–∫–æ–π —â–µ–ª–∫–∞–µ–º
+	    int modflags = 0; // –Ω–∏–∫–∞–∫–∏—Ö –∫–ª–∞–≤–∏—à –Ω–µ –¥–µ—Ä–∂–∏–º
     	synchronized(glob.oc) {
     		pgob = glob.oc.getgob(playergob);
     	}
@@ -1518,7 +1512,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     	}
 	    }
     	
-    // ÍÎËÍ ÔÓ Í‡ÚÂ Ò Ó·˙ÂÍÚÓÏ. ÍÓÓ‰ËÌ‡Ú˚ ÓÚÌÓÒËÚÂÎ¸Ì˚Â. 
+    // –∫–ª–∏–∫ –ø–æ –∫–∞—Ä—Ç–µ —Å –æ–±—ä–µ–∫—Ç–æ–º. –∫–æ–æ—Ä–¥–∏–Ω–∞—Ç—ã –æ—Ç–Ω–æ—Å–∏—Ç–µ–ª—å–Ω—ã–µ. 
     public void map_click(int x, int y, int btn, int mod) {
     	Gob pgob;
     	synchronized(glob.oc) {
@@ -1532,14 +1526,14 @@ public class MapView extends Widget implements DTarget, Console.Directory {
         wdgmsg("click",ark.bot.GetCenterScreenCoord(), mc, btn, mod);    	
     }
     
-    // ÍÎËÍ Ò ‡·ÒÓÎ˛ÚÌ˚ÏË ÍÓÓ‰ËÌ‡Ú‡ÏË
+    // –∫–ª–∏–∫ —Å –∞–±—Å–æ–ª—é—Ç–Ω—ã–º–∏ –∫–æ–æ—Ä–¥–∏–Ω–∞—Ç–∞–º–∏
     public void map_abs_click(int x, int y, int btn, int mod) {
     	Coord mc = new Coord(x,y);
         ark.log.LogPrint("send map interact click: "+mc.toString()+" modflags="+mod);
         wdgmsg("click",ark.bot.GetCenterScreenCoord(), mc, btn, mod);    	    	
     }
     
-    // ÍÎËÍ ‚Á‡ËÏÓ‰ÂÈÒÚ‚Ëˇ ÔÓ Í‡ÚÂ Ò Ó·˙ÂÍÚÓÏ. ÍÓÓ‰ËÌ‡Ú˚ ÓÚÌÓÒËÚÂÎ¸Ì˚Â. 
+    // –∫–ª–∏–∫ –≤–∑–∞–∏–º–æ–¥–µ–π—Å—Ç–≤–∏—è –ø–æ –∫–∞—Ä—Ç–µ —Å –æ–±—ä–µ–∫—Ç–æ–º. –∫–æ–æ—Ä–¥–∏–Ω–∞—Ç—ã –æ—Ç–Ω–æ—Å–∏—Ç–µ–ª—å–Ω—ã–µ. 
     public void map_interact_click(int x, int y, int mod) {
     	Gob pgob;
     	synchronized(glob.oc) {

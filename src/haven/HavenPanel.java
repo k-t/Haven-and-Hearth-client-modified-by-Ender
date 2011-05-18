@@ -249,10 +249,10 @@ public class HavenPanel extends GLCanvas implements Runnable {
 
     void redraw(GL gl) {
 	GOut g = new GOut(gl, getContext(), MainFrame.getInnerSize());
-    synchronized (ui) {
-    	ui.update();
-    }
-	if (Config.render_enable) {
+	
+	boolean render = Config.render_enable;
+	
+	if (render) {
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glOrtho(0, getWidth(), 0, getHeight(), -1, 1);
@@ -267,12 +267,17 @@ public class HavenPanel extends GLCanvas implements Runnable {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		if(curf != null)
 		    curf.tick("cls");
-		synchronized(ui) {
-		    ui.draw(g);
-		}
+	}
+		
+	synchronized(ui) {
+		ui.update(0);
+	    if (render)
+	    	ui.draw(g);
+	}
+	
+	if (render) {
 		if(curf != null)
 		    curf.tick("draw");
-	
 		if(Config.dbtext) {
 		    g.atext("FPS: " + fps, new Coord(10, 545), 0, 1);
 		    g.atext("Texhit: " + dth, new Coord(10, 530), 0, 1);
@@ -285,7 +290,7 @@ public class HavenPanel extends GLCanvas implements Runnable {
 		    if(Resource.qdepth() > 0)
 			g.atext(String.format("RQ depth: %d (%d)", Resource.qdepth(), Resource.numloaded()), new Coord(10, 455), 0, 1);
 		}
-	        Object tooltip = ui.root.tooltip(mousepos, true);
+	    Object tooltip = ui.root.tooltip(mousepos, true);
 		Tex tt = null;
 		if(tooltip != null) {
 		    if(tooltip instanceof Text) {

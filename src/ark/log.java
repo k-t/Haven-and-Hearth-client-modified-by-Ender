@@ -1,8 +1,9 @@
 package ark;
 
 import java.io.*;
+import java.io.Console;
+
 import haven.*;
-import haven.LogManager;
 
 public class log {
     private static ILog console = LogManager.getlog("Console");
@@ -13,15 +14,19 @@ public class log {
     	OutputStream out = new OutputStream() {  
 	    	@Override  
 		    public void write(final int b) throws IOException {  
-	    		String s = String.valueOf((char) b);
-	    		System.console().printf("%s", s);
+	    		String s = String.valueOf((char)b);
+	    		Console con = System.console();
+	    		if (con != null)
+	    			con.printf("%s", s);
 	    		ConsolePrint(s);
 		    }  
 	  
 		    @Override  
 		    public void write(byte[] b, int off, int len) throws IOException {  
 		    	String s = new String(b, off, len);
-		    	System.console().printf("%s", s);
+	    		Console con = System.console();
+	    		if (con != null)
+	    			con.printf("%s", s);
 		    	ConsolePrint(s);
 		    }  
 	  
@@ -30,8 +35,12 @@ public class log {
 		      write(b, 0, b.length);  
 		    }  
 	  };
-	  System.setOut(new PrintStream(out, true));  
-	  System.setErr(new PrintStream(out, true));
+	  try {
+		  System.setOut(new PrintStream(out, true));  
+		  System.setErr(new PrintStream(out, true));
+	  } catch (SecurityException e) {
+		  e.printStackTrace();
+	  }
     }
 
     public static void LogPrint(String msg) {
@@ -39,7 +48,8 @@ public class log {
     }
     
     private static void ConsolePrint(String msg) {
-    	console.write(msg.trim());
+    	if (msg != null)
+    		console.write(msg.trim());
     }
     
     public static void OutputPrint(String msg) {
