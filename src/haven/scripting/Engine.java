@@ -11,7 +11,7 @@ import org.codehaus.groovy.control.customizers.*;
 import groovy.lang.*;
 import groovy.util.*;
 import groovy.transform.ThreadInterrupt;
-import haven.UI;
+import haven.*;
 
 public class Engine {
     private static Engine instance = null;
@@ -23,7 +23,6 @@ public class Engine {
     }
     
     private ScriptGlobal glob;
-    private Log log;
     
     private ScriptThread thread;
     private Binding binding;
@@ -42,8 +41,8 @@ public class Engine {
         return glob;
     }
     
-    public Log log() {
-        return log;
+    public ILog log() {
+        return LogManager.getlog("Messages");
     }
     
     public String getCursor() {
@@ -88,11 +87,10 @@ public class Engine {
 
     public void init() {
         glob = new ScriptGlobal(this);
-        log = new Log();
         binding = new Binding();
-        binding.setVariable("Log", log);
+        binding.setVariable("Log", log());
         binding.setVariable("Glob", glob);
-        // configuration for script execution
+        // configuration for the script execution
         configuration = new CompilerConfiguration();
         configuration.addCompilationCustomizers(new ASTTransformationCustomizer(ThreadInterrupt.class));
         configuration.setClasspathList(Arrays.asList(".", "./scripts"));
@@ -117,7 +115,6 @@ public class Engine {
             Class<?> groovyClass = gse.loadScriptByName("haven.groovy");
             return (GroovyObject)groovyClass.newInstance();
         } catch (CompilationFailedException e) {
-            // TODO logging
             System.out.println(e.getMessage());
         } catch (ScriptException e) {
             System.out.println(e.getMessage());
@@ -147,13 +144,16 @@ public class Engine {
         if (!initialized())
             init();
         if (thread != null) {
-            log.message("Current scripting engine allows only one script in time.");
+            String msg = "Only one script in time is allowed";
+            log().write(msg);
+            UI.instance.slen.error(msg);
             return;
         }
         if (thread != null && thread.isAlive())
             return;
         String filename = scriptname + (scriptname.endsWith(".groovy") ? "" : ".groovy");
         thread = new ScriptThread(filename);
+        log().write("Starting script " + filename + "...");
         thread.start();
     }
     
@@ -182,14 +182,13 @@ public class Engine {
             if (!initialized())
                 return;
             try {
-                GroovyShell shell = new GroovyShell(binding, configuration);
-                shell.run(new File("./scripts/" + filename), new String[0]);
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+                gse.run("./scripts/" + filename, binding);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            UI.instance.slen.error("Script finished");
+            String msg = "Script finished";
+            UI.instance.slen.error(msg);
+            log().write(msg);
             thread = null;
         }
     }

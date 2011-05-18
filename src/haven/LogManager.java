@@ -1,12 +1,37 @@
 package haven;
 
+import java.io.*;
 import java.util.*;
-
-import ark.log;
 
 public class LogManager {
 	private static final int LogSize = 100;
 	private static LogManager instance;
+	
+	static {
+	    // redirect output to our logger
+	    OutputStream out = new OutputStream() {  
+	        @Override  
+            public void write(final int b) throws IOException {  
+                String s = String.valueOf((char) b);
+                System.console().printf("%s", s);
+                getlog("Console").write(s.trim());
+            }  
+      
+            @Override  
+            public void write(byte[] b, int off, int len) throws IOException {  
+                String s = new String(b, off, len);
+                System.console().printf("%s", s);
+                getlog("Console").write(s.trim());
+            }  
+      
+            @Override  
+            public void write(byte[] b) throws IOException {  
+                write(b, 0, b.length);  
+            }  
+      };
+      System.setOut(new PrintStream(out, true));  
+      System.setErr(new PrintStream(out, true));
+	}
 	
 	private static LogManager getInstance() {
 		if (instance == null)

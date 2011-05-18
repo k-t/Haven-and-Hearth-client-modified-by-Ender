@@ -60,7 +60,7 @@ public class OptWnd extends Window {
     public OptWnd(Coord c, Widget parent) {
 	super(c, new Coord(400, 370), parent, "Options");
 
-	body = new Tabs(Coord.z, new Coord(400, 330), this) {
+	body = new Tabs(Coord.z, new Coord(400, 360), this) {
 	    public void changed(Tab from, Tab to) {
 		Utils.setpref("optwndtab", to.btn.text.text);
 		from.btn.c.y = 0;
@@ -128,6 +128,34 @@ public class OptWnd extends Window {
 		    Config.saveOptions();
 		}
 	    }).a = Config.use_smileys;
+	    
+	    (new CheckBox(new Coord(220, 130), tab, "Fast menu") {
+		public void changed(boolean val) {
+		    Config.fastFlowerAnim = val;
+		    Config.saveOptions();
+		}
+	    }).a = Config.fastFlowerAnim;
+	    
+	    (new CheckBox(new Coord(220, 165), tab, "Compress screenshots") {
+		public void changed(boolean val) {
+		    Config.sshot_compress = val;
+		    Config.saveOptions();
+		}
+	    }).a = Config.sshot_compress;
+	    
+	    (new CheckBox(new Coord(220, 200), tab, "Exclude UI from screenshot") {
+		public void changed(boolean val) {
+		    Config.sshot_noui = val;
+		    Config.saveOptions();
+		}
+	    }).a = Config.sshot_noui;
+	    
+	    (new CheckBox(new Coord(220, 235), tab, "Use optimized claim higlighting") {
+		public void changed(boolean val) {
+		    Config.newclaim = val;
+		    Config.saveOptions();
+		}
+	    }).a = Config.newclaim;
 	    
 	    (new CheckBox(new Coord(10, 310), tab, "Show item quality") {
 			public void changed(boolean val) {

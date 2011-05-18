@@ -377,7 +377,7 @@ public class UI {
         	equip = null;
     }
     
-    public void update() {
-    	root.update(0);
+    public void update(long dt) {
+    	root.update(dt);
     }
 }
