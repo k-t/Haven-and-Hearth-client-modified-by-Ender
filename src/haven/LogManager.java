@@ -1,6 +1,7 @@
 package haven;
 
 import java.io.*;
+import java.io.Console;
 import java.util.*;
 
 public class LogManager {
@@ -9,28 +10,37 @@ public class LogManager {
 	
 	static {
 	    // redirect output to our logger
-	    OutputStream out = new OutputStream() {  
-	        @Override  
+        OutputStream out = new OutputStream() {  
+            @Override  
             public void write(final int b) throws IOException {  
-                String s = String.valueOf((char) b);
-                System.console().printf("%s", s);
-                getlog("Console").write(s.trim());
+                String s = String.valueOf((char)b);
+                Console con = System.console();
+                if (con != null)
+                    con.printf("%s", s);
+                getlog("Console").write(s);
             }  
       
             @Override  
             public void write(byte[] b, int off, int len) throws IOException {  
                 String s = new String(b, off, len);
-                System.console().printf("%s", s);
-                getlog("Console").write(s.trim());
+                Console con = System.console();
+                if (con != null)
+                    con.printf("%s", s);
+                getlog("Console").write(s);
             }  
       
             @Override  
             public void write(byte[] b) throws IOException {  
-                write(b, 0, b.length);  
+              write(b, 0, b.length);  
             }  
       };
-      System.setOut(new PrintStream(out, true));  
-      System.setErr(new PrintStream(out, true));
+      try {
+          System.setOut(new PrintStream(out, true));  
+          System.setErr(new PrintStream(out, true));
+      } catch (SecurityException e) {
+          e.printStackTrace();
+      }
+
 	}
 	
 	private static LogManager getInstance() {

@@ -140,6 +140,13 @@ public class Engine {
         return false;
     }
     
+    public boolean handleConsoleCmd(String[] cmdline) {
+        GroovyObject callback = getScriptCallbackObject();
+        if (callback != null)
+            return (Boolean)callback.invokeMethod("handleConsoleCmd", new Object[] { cmdline });
+        return false;
+    }
+    
     public void run(String scriptname) {
         if (!initialized())
             init();
@@ -182,7 +189,7 @@ public class Engine {
             if (!initialized())
                 return;
             try {
-                gse.run("./scripts/" + filename, binding);
+                gse.run(filename, binding);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

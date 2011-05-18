@@ -175,6 +175,19 @@ public class ScriptGlobal {
     public int getMyCoordX() { return getMyCoords().x; }
     public int getMyCoordY() { return getMyCoords().y; }
     
+    public int getObjectBlob(int id, int index) {
+        int r = 0;
+        synchronized (glob().oc) {
+            for (Gob gob : glob().oc) {
+                if (gob.id == id) {
+                    r = gob.getBlob(index);
+                    break;
+                }
+            }
+        }
+        return r;
+    }
+    
     public int getPlayerId() {
         return (UI.instance.mainview != null)
             ? UI.instance.mainview.getPlayerGob()

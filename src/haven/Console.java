@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.scripting.Engine;
+
 import java.util.*;
 import java.io.*;
 
@@ -77,9 +79,12 @@ public class Console {
 	if(args.length < 1)
 	    return;
 	Command cmd = findcmd(args[0]);
-	if(cmd == null)
+	if(cmd != null) {
+	    cmd.run(this, args);
+	// try to handle command in the script
+	} else if (!Engine.getInstance().handleConsoleCmd(args)) {
 	    throw(new Exception(args[0] + ": no such command"));
-	cmd.run(this, args);
+	}
     }
     
     public void run(String cmdl) throws Exception {
