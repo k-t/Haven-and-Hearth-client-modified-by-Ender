@@ -1,0 +1,22 @@
+/** Graphical object.
+ *
+ * Wrapper for haven.Gob class objects.
+ */
+class ScriptGob {
+
+    /** Returns the unique identifier of this object. */
+    public int id();
+    
+    /** Returns the x coordinate of this object. */
+    public int x();
+    
+    /** Returns the y coordinate of this object. */
+    public int y();
+    
+    /** Returns the name of the object resource. */
+    public String resname();
+    
+    /** Returns the speech text associated with this object. */
+    public String speakingText();
+
+}

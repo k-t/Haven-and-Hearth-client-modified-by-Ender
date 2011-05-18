@@ -1,0 +1,55 @@
+/**
+
+@mainpage Overview
+
+@section sec_general Overview
+
+@subsection sec_groovy Groovy scripting language integration
+- Groovy homepage: http://groovy.codehaus.org/
+- User scripts should be placed in the @a scripts folder.
+- To run the script, use the command:
+@code :scrun <scriptfilename>[.groovy] @endcode
+- To stop the script, use the command:
+@code :scstop @endcode
+
+@subsection sec_hooks Client scripting
+Besides creating scripts for the purposes of task automation the scripting engine
+allows to you to extend the client at some points.
+
+For example, as it is you can add your own hotkey handler inside the @a haven.groovy script placed
+in the client folder:
+@code
+import java.awt.event.KeyEvent
+import haven.scripting.Engine
+import haven.Config
+
+boolean handleKeyEvent(KeyEvent ev) {
+    int code = ev.getKeyCode()
+    // Alt+F1: run script binded by set_bot1 command
+    if (code == KeyEvent.VK_F1 && ev.isAltDown()) {
+        // directly accesses scripting engine object to run script
+        // defined in the client configuration
+        Engine.getInstance().run(Config.bot_name1)
+        return true
+    // Alt+F2: run script binded by set_bot2 command
+    } else if (code == KeyEvent.VK_F2 && ev.isAltDown()) {
+        Engine.getInstance().run(Config.bot_name2)
+        return true
+    // Alt+F3: stop script execution
+    } else if (code == KeyEvent.VK_F3 && ev.isAltDown()) {
+        Engine.getInstance().stop()
+        return true
+    }
+    return false
+}
+@endcode
+
+Points of interest:
+- custom handlers for client console commands;
+- custom configuration properties.
+
+@section sec_subpages Further info
+- @subpage page_global
+- @subpage page_changelog
+
+*/

@@ -1,0 +1,25 @@
+/**
+ * Inventory.
+ *
+ * Wrapper for haven.Inventory.
+ */
+class ScriptInventory {
+    
+    /** Drops the currently dragged item to a specified position inside this inventory. */
+    public void drop(int row, int col);
+    
+    /** Returns an array of all items inside this inventory. */
+    public ScriptItem[] getItems();
+    
+    /** Returns a count of rows. */
+    public int rowCount();
+    
+    /** Returns a count of columns. */
+    public int columnCount();
+    
+    /** Sends an action with the specified name to the item in the specified position. */
+    public void sendAction(int row, int col, String name);
+    
+    /** Sends an action with the specified name to the item in the specified position. */
+    public void sendAction(int row, int col, String name, int mod);
+}

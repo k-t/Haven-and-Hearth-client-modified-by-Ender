@@ -1,0 +1,54 @@
+/**
+ * Item.
+ *
+ * Wrapper for haven.Item widget.
+ */
+class ScriptItem {
+    /** Sends item action message.
+     * @param action Action name.
+     */
+    public void sendAction(String action);
+    
+    /** Sends item action message.
+     * @param action Action name
+     * @param mod    Key modifier
+     */
+    public void sendAction(String action, int mod);
+    
+    /** Returns the item vertical position inside inventory. */
+    public int row();
+    
+    /** Returns the item horizontal position inside inventory. */
+    public int column();
+    
+    /** Returns the number of rows which this item occupies. */
+    public int height();
+    
+    /** Returns the number of columns which this item occupies. */
+    public int width();
+    
+    /** Returns the name of the item resource. */
+    public String name();
+    
+    /** Returns a number associated with the item.
+     *
+     *  The property is used for things like number of ingredients needed for a craft,
+     *  silkworm growth stage, etc.
+     */
+    public int num();
+    
+    /** Returns a value which indicates progress on the item. */
+    public int meter();
+    
+    /** Returns the item tooltip text. */
+    public String tooltip();
+    
+    /** Returns the item quality. */
+    public int quality();
+    
+    /** Checks whether the item resource name contains a specified string. */
+    public boolean isName(String s);
+    
+    /** Checks whether the item tooltip text contains a specified string. */
+    public boolean isTooltip(String s);
+}

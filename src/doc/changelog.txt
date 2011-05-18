@@ -1,0 +1,12 @@
+/**
+
+@page page_changelog Changelog
+
+@par 2011/05/20
+- Added <i>getObjectBlob(int, int)</i> global function.
+- Added <i>handleConsoleCmd</i> function for handling client console commands with the scripts.
+
+@par 2011/05/08
+- Initial release.
+
+*/

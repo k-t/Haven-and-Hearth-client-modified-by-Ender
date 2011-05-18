@@ -1,0 +1,13 @@
+/** Flower menu.
+ *
+ * Wrapper for haven.FlowerMenu widget.
+ */
+class ScriptFlowerMenu {
+
+    /** Returns all available options. */
+    public String[] getOptions();
+    
+    /** Selects the specified option. */
+    public void select(String option);    
+
+}

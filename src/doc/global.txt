@@ -1,0 +1,180 @@
+/**
+
+@page page_global Global Functions List
+
+@section sec_sum Intro
+
+Set of functions defined in the @a glob.groovy script (should be included in the client distibution).
+To use it in your script add following import declaration:
+@code
+import static glob.*
+@endcode
+
+Basically this script wraps over the @a haven.scripting.ScriptGlobal object allowing more
+convient access to methods it defines from the user scripts.
+
+@section sec_func Function List
+- @ref sec_inv
+- @ref sec_equip
+- @ref sec_mapinterac
+
+@code boolean checkHourglass() @endcode
+@par
+Checks for the presence of the hourglass indicating some continious process.
+
+@code void closeWindow(String windowname) @endcode
+@par
+Closes window with the specified name (e.g. "Chest", "Cupboard", "Seedbag").
+
+@code void doClick(int objid, int btn, int modflags) @endcode
+@par
+Sends click message to the object with the specified identifier.
+@param objid    Unique object identifier
+@param btn      Mouse button
+@param modflags Keyboard modifier
+
+@code void drop(int mod) @endcode
+@par
+Sends drop message causing currently dragged object to drop to the ground.
+@param mod Keyboard modifier
+
+@code int findMapObject(String name, int radius, int x, int y) @endcode
+@par
+Searches for the object with the specified name inside the specified area.
+@param  name   Object resource name
+@param  radius Radius of the area (in tiles)
+@param  x, y   Offset from the player position which determines the area center (in map points)
+@return Object ID. 0, if such object not found.
+    
+@code int findObjectByName(String name, int radius) @endcode
+@par
+Searches for the object with the specified name inside the specified radius from the player.
+@param  name   Object resource name
+@param  radius Radius of the search area (in tiles)
+@return Object ID. 0, if such object not found.
+
+@code ScriptBuff[] getBuffs() @endcode
+@par
+Returns all current buffs.
+
+@code ScriptFlowerMenu getContextMenu() @endcode
+@par
+Returns currently opened flower menu.
+    
+@code ScriptGob[] getGobs() @endcode
+@par
+Returns all graphical objects currently visible on the map.
+    
+@code String getCursor() @endcode
+@par
+Returns the name of the current cursor.
+    
+@code ScriptItem getDragItem() @endcode
+@par
+Returns the currently dragged item.
+
+@code int getStamina() @endcode
+@par
+
+@code int getHunger() @endcode
+@par
+
+@code int getHp() @endcode
+@par
+    
+@code int getMyCoordX() @endcode
+@par
+Returns the player world map position.
+
+@code int getMyCoordY() @endcode
+@par
+Returns the player world map position.
+
+@code int getObjectBlob(int id, int index) @endcode
+@par
+Returns message blob associated with the object.
+For example, message blobs are used for specifying crops growth stage: <code>getObjectBlob(34676844, 0)</code>. 
+@param id Object ID
+    
+@code int getPlayerId() @endcode
+@par
+Returns the player ID.
+    
+@code boolean isMoving() @endcode
+@par
+Checks whether the player character is moving.
+
+@code boolean hasContextMenu() @endcode
+@par
+Checks whether a flower menu is opened.
+    
+@code boolean hasDragItem() @endcode
+@par
+Checks whether any item is currently dragged.
+
+@code void sendAction(String action) @endcode
+@par
+Sends action with the specified name from the menu grid.
+    
+@code void sendAction(String action1, String action2) @endcode
+@par
+Sends action with two parameters from the menu grid.
+
+@subsection sec_inv Functions to work with inventories
+
+@code ScriptInventory getInventory(String windowname) @endcode
+@par
+Returns the inventory object of a window with the specified name.
+    
+@code boolean hasInventory(String windowname) @endcode
+@par
+Checks whether the window with the specified name has inventory.
+
+@code void openInventory() @endcode
+@par
+Opens the player inventory.
+
+@subsection sec_equip Functions to work with the equipment window
+
+@par
+@a WIP
+
+@subsection sec_mapinterac Map interaction functions
+
+@code void mapMove(int objid, int x, int y) @endcode
+@par
+Moves the player character to the point relative to the specified object.
+@param objid Object ID
+@param x, y  Offset of the target point relative to the object (in map points)
+    
+@code void mapMoveStep(int x, int y) @endcode
+Moves the player character by the specified number of tiles.
+
+@code void mapClick(int x, int y, int btn, int mod) @endcode
+Clicks on the map in the specified point.
+@param x, y  Offset from the player position
+@param btn   Mouse button
+@param mod   Keyboard modifier
+
+@code void mapAbsClick(int x, int y, int btn, int mod) @endcode
+Clicks on the map in the specified point.
+@param x, y  Absolute map coords
+@param btn   Mouse button
+@param mod   Keyboard modifier
+
+@code void mapInteractClick(int x, int y, int mod) @endcode
+Clicks on the map with the currently dragged item.
+@param x, y  Offset from the player position
+@param mod   Keyboard modifier
+
+@code void mapInteractClick(int objid, int mod) @endcode
+Clicks on the specified object with the currently dragged item.
+@param objid Object ID
+@param mod   Keyboard modifier
+
+@code void mapAbsInteractClick(int x, int y, int mod) @endcode
+Clicks on the map with the currently dragged item.
+@param x, y  Absolute map coords
+@param mod   Keyboard modifier
+
+*/
