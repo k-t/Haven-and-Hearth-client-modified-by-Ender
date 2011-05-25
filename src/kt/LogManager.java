@@ -1,8 +1,10 @@
-package haven;
+package kt;
+
+import haven.ILog;
 
 import java.io.*;
-import java.io.Console;
 import java.util.*;
+
 
 public class LogManager {
 	private static final int LogSize = 100;
@@ -17,7 +19,7 @@ public class LogManager {
                 Console con = System.console();
                 if (con != null)
                     con.printf("%s", s);
-                getlog("Console").write(s);
+                getlog("Console").write(s != null ? s.trim() : "");
             }  
       
             @Override  
@@ -26,7 +28,7 @@ public class LogManager {
                 Console con = System.console();
                 if (con != null)
                     con.printf("%s", s);
-                getlog("Console").write(s);
+                getlog("Console").write(s != null ? s.trim() : "");
             }  
       
             @Override  
@@ -50,9 +52,9 @@ public class LogManager {
 	}
 	
 	private final HashMap<String, Log> logs = new HashMap<String, Log>();
-	private final List<CustomLogWindow> views = new ArrayList<CustomLogWindow>();
+	private final List<LogWindow> views = new ArrayList<LogWindow>();
 	
-	public static void addwindow(CustomLogWindow wnd) {
+	public static void addwindow(LogWindow wnd) {
 		LogManager instance = getInstance();
 		instance.views.add(wnd);
 		for (String logname : instance.logs.keySet()) {
@@ -70,7 +72,7 @@ public class LogManager {
 				log = new Log();
 				instance.logs.put(name, log);
 				// add log to views
-				for (CustomLogWindow view : instance.views) {
+				for (LogWindow view : instance.views) {
 					view.addlog(name, log);
 				}
 				return log;

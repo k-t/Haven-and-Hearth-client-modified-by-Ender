@@ -21,7 +21,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     public final static Coord bgsz = bg.sz().add(-1, -1);
     private static final Properties beltsConfig = new Properties();
     private Coord gsz, off, beltNumC;
-    Resource pressed, dragging, layout[];
+    MenuGridButton pressed, dragging, layout[];
     private IButton lockbtn, flipbtn, minus, plus;
     public boolean flipped = false, locked = false;
     public int belt, key;
@@ -70,7 +70,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 	this.off = off;
 	fbtn.show();
 	mrgn = new Coord(2,18);
-	layout = new Resource[sz];
+	layout = new MenuGridButton[sz];
 	loadOpts();
 	cbtn.visible = false;
 	lockbtn = new IButton(Coord.z, this, locked?ilockc:ilocko, locked?ilocko:ilockc, locked?ilockch:ilockoh) {
@@ -145,7 +145,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 	    for (int slot = 0; slot < layout.length; slot++) {
 		String icon = beltsConfig.getProperty("belt_" + belt + "_" + slot, "");
 		if (icon.length() > 0) {
-		    layout[slot] = Resource.load(icon);
+		    layout[slot] = MenuGridButton.fromResource(icon, ui.mnu);
 		} else {
 		    layout[slot] = null;
 		}
@@ -187,9 +187,9 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 		if(key == KeyEvent.VK_0)
 		    slot = (slot + 1) % 10;
 		g.aimage(nums[slot], p.add(bg.sz()), 1, 1);
-		Resource btn = layout[x+y];
+		MenuGridButton btn = layout[x+y];
 		if(btn != null) {
-		    Tex btex = btn.layer(Resource.imgc).tex();
+		    Tex btex = btn.tex();
 		    g.image(btex, p.add(1, 1));
 		    if(btn == pressed) {
 			g.chcolor(new Color(0, 0, 0, 128));
@@ -202,7 +202,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 	g.aimage(beltNums[belt], beltNumC, 1, 1);
 	g.chcolor();
 	if(dragging != null) {
-	    final Tex dt = dragging.layer(Resource.imgc).tex();
+	    final Tex dt = dragging.tex();
 	    ui.drawafter(new UI.AfterDraw() {
 		    public void draw(GOut g) {
 			g.image(dt, ui.mc.add(dt.sz().div(2).inv()));
@@ -293,7 +293,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 	placecbtn();
     }
     
-    private Resource bhit(Coord c) {
+    private MenuGridButton bhit(Coord c) {
 	int i = index(c);
 	if (i >= 0)
 	    return (layout[i]);
@@ -312,7 +312,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     }
     
     public boolean mousedown(Coord c, int button) {
-	Resource h = bhit(c);
+	MenuGridButton h = bhit(c);
 	if (button == 1) {
 	    if (h != null) {
 		pressed = h;
@@ -325,15 +325,16 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     }
 
     public boolean mouseup(Coord c, int button) {
-	Resource h = bhit(c);
+        MenuGridButton h = bhit(c);
 	if (button == 1) {
 	    if(dragging != null) {
 		ui.dropthing(ui.root, ui.mc, dragging);
 		dragging = pressed = null;
 	    } else if (pressed != null) {
-		if (pressed == h)
+		if (pressed == h) {
 		    if(ui.mnu != null)
 			ui.mnu.use(h);
+		}
 		pressed = null;
 	    }
 	    ui.grabmouse(null);
@@ -374,7 +375,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 	    int slot = index(c);
 	    Resource res = (Resource)thing;
 	    setBeltSlot(slot, res.name);
-	    layout[slot] = res;
+	    layout[slot] = MenuGridButton.fromResource(res, ui.mnu);
 	    return true;
 	}
 	return false;
@@ -388,14 +389,14 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 	saveBelts();
     }
     
-    private Resource curttr = null;
+    private MenuGridButton curttr = null;
     private boolean curttl = false;
     private Text curtt = null;
     private long hoverstart;
     public Object tooltip(Coord c, boolean again) {
-	Resource res = bhit(c);
+	MenuGridButton res = bhit(c);
 	long now = System.currentTimeMillis();
-	if((res != null) && (res.layer(Resource.action) != null)) {
+	if((res != null) && res.hasTooltip()) {
 	    if(!again)
 		hoverstart = now;
 	    boolean ttl = (now - hoverstart) > 500;
@@ -411,10 +412,9 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 	}
     }
     
-    private static Text rendertt(Resource res, boolean withpg) {
-	Resource.AButton ad = res.layer(Resource.action);
-	Resource.Pagina pg = res.layer(Resource.pagina);
-	String tt = ad.name;
+    private static Text rendertt(MenuGridButton btn, boolean withpg) {
+	Resource.Pagina pg = btn.pagina();
+	String tt = btn.name();
 	if(withpg && (pg != null)) {
 	    tt += "\n\n" + pg.text;
 	}
@@ -442,7 +442,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 	} else	if(!alt && !ctrl && (slot >= 0)&&(slot < gsz.x*gsz.y)) {
 	    if(key == KeyEvent.VK_0)
 		    slot = (slot == 0)?9:slot-1;
-	    Resource h = layout[slot];
+	    MenuGridButton h = layout[slot];
 	    if((h!=null)&&(ui.mnu!=null))
 		ui.mnu.use(h);
 	    return true;

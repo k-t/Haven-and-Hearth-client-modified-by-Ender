@@ -35,9 +35,9 @@ import ender.GoogleTranslator;
 
 public class Window extends Widget implements DTarget {
     static Tex bg = Resource.loadtex("gfx/hud/bgtex");
-    static Tex cl = Resource.loadtex("gfx/hud/cleft");
-    static Tex cm = Resource.loadtex("gfx/hud/cmain");
-    static Tex cr = Resource.loadtex("gfx/hud/cright");
+    protected static Tex cl = Resource.loadtex("gfx/hud/cleft");
+    protected static Tex cm = Resource.loadtex("gfx/hud/cmain");
+    protected static Tex cr = Resource.loadtex("gfx/hud/cright");
     protected static BufferedImage[] cbtni = new BufferedImage[] {
 	Resource.loadimg("gfx/hud/cbtn"),
 	Resource.loadimg("gfx/hud/cbtnd"),
@@ -48,7 +48,7 @@ public class Window extends Widget implements DTarget {
 	Resource.loadimg("gfx/hud/fbtnh")}; 
     static Color cc = Color.YELLOW;
     static Text.Foundry cf = new Text.Foundry(new Font("Serif", Font.PLAIN, 12));
-    static IBox wbox;
+    protected static IBox wbox;
     boolean dt = false;
     public boolean justclose = false;
     public Text cap;

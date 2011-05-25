@@ -35,6 +35,9 @@ import java.io.IOException;
 
 import javax.media.opengl.GLException;
 
+import kt.LogWindow;
+import kt.LogManager;
+
 import com.sun.opengl.util.Screenshot;
 
 public class RootWidget extends ConsoleHost {
@@ -43,7 +46,7 @@ public class RootWidget extends ConsoleHost {
     Profile gprof;
     boolean afk = false;
     boolean screenshot = false;
-    public CustomLogWindow logwindow = null;
+    public LogWindow logwindow = null;
 	
     public RootWidget(UI ui, Coord sz) {
 	super(ui, new Coord(0, 0), sz);
@@ -87,13 +90,11 @@ public class RootWidget extends ConsoleHost {
 		screenshot = true;
 	    } else if(key == ':') {
 		entercmd();
-	    } else if(key != 0) {
-		wdgmsg("gk", (int)key);
 	    } else if (code == KeyEvent.VK_F12 && alt) {
 	    	if (logwindow == null) {
-        		logwindow = new CustomLogWindow(new Coord(10, 10), new Coord(200, 200), this, null);
+        		logwindow = new LogWindow(new Coord(10, 10), new Coord(200, 200), this, null);
         		LogManager.addwindow(logwindow);
-	    	} else if (logwindow.visible) {
+	    	} else if (logwindow.isVisible()) {
             	logwindow.hide();
             } else {
             	logwindow.show();
@@ -115,6 +116,8 @@ public class RootWidget extends ConsoleHost {
 	    		cp.folded = !cp.folded;
 	    } else if (code == KeyEvent.VK_F11 && alt) {
 	    	Config.debug_flag =  !Config.debug_flag;
+	    } else if(key != 0) {
+	        wdgmsg("gk", (int)key);
 	    } else {
 	        // call script handler
 	        Engine.getInstance().handleKeyEvent(ev);

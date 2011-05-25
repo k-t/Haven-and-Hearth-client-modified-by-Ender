@@ -36,12 +36,6 @@ public class RemoteUI implements UI.Receiver {
     }
 	
     public void rcvmsg(int id, String name, Object... args) {
-    StringBuilder sb = new StringBuilder();
-    for (Object arg : args)        
-        sb.append(arg).append(',');
-    if (sb.length() > 0)
-        sb.deleteCharAt(sb.length() - 1);
-	LogManager.getlog("Messages").write(name + " { " + sb.toString() +  " }");
     Message msg = new Message(Message.RMSG_WDGMSG);
 	msg.adduint16(id);
 	msg.addstring(name);
@@ -82,9 +76,11 @@ public class RemoteUI implements UI.Receiver {
 		    	c = MainFrame.getCenterPoint().add(0,-100);
 		    }
 		    ui.newwidget(id, type, c, parent, args);
+		    //LogManager.getlog("Messages").write("<NEWWDG>" + type + " { " + argstostr(args) +  " }");
 		} else if(msg.type == Message.RMSG_WDGMSG) {
 		    int id = msg.uint16();
 		    String name = msg.string();
+		    //LogManager.getlog("Messages").write("<RMSG>" + name + " { " + argstostr(msg.list()) +  " }");
 		    ui.uimsg(id, name, msg.list());
 		} else if(msg.type == Message.RMSG_DSTWDG) {
 		    int id = msg.uint16();
@@ -101,5 +97,14 @@ public class RemoteUI implements UI.Receiver {
 		sess.wait();
 	    }
 	}
+    }
+    
+    private String argstostr(Object... args) {
+        StringBuilder sb = new StringBuilder();
+        for (Object arg : args)        
+            sb.append(arg).append(',');
+        if (sb.length() > 0)
+            sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 }

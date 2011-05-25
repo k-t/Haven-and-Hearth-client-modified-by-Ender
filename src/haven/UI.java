@@ -98,6 +98,10 @@ public class UI {
             public void run(Console cons, String[] args) {
                 Engine.getInstance().stop();
             }});
+        setcmd("screcompile", new Console.Command() {
+            public void run(Console cons, String[] args) {
+                Engine.getInstance().recompile();
+            }});
 	}
 	
 	private void findcmds(Map<String, Command> map, Widget wdg) {

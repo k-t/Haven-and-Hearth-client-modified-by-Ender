@@ -1,15 +1,14 @@
-package haven.scripting;
+package haven.scripting
 
 import haven.Coord;
 import haven.Item;
 
-public class ScriptItem {
-    private final ScriptGlobal ui;
+public class ScriptItem extends ScriptWidget {
     private Item item;
     
-    public ScriptItem(Item item, ScriptGlobal ui) {
+    public ScriptItem(Item item) {
+        super(item)
         this.item = item;
-        this.ui = ui;
     }
     
     public void sendAction(String action) {
@@ -17,7 +16,7 @@ public class ScriptItem {
     }
     
     public void sendAction(String action, int mod) {
-        if (action.equals("itemact") && !ui.hasDragItem()) return;
+        if (action.equals("itemact") && Utils.getDragItem() != null) return;
         if ((!action.equals("take")) &&
             (!action.equals("transfer")) &&
             (!action.equals("drop")) &&
@@ -25,55 +24,64 @@ public class ScriptItem {
             (!action.equals("itemact"))) {
             return; 
         }
-        Coord c = ui.getScreenCenter();
+        Coord c = Utils.getScreenCenter();
         if (action.equals("itemact"))
             item.wdgmsg("itemact", mod);
         else
             item.wdgmsg(action, c);
     }
     
-    public int row() {
+    public int getRow() {
         return item.c.div(31).y;
     }
     
-    public int column() {
+    public int getColumn() {
         return item.c.div(31).x;
     }
     
-    public int width() {
+    public int getWidth() {
         return item.sz.div(30).x;
     }
     
-    public int height() {
+    public int getHeight() {
         return item.sz.div(30).y;
     }
     
-    public String name() {
+    public String getName() {
         return item.getResName();
     }
     
-    public int num() {
+    public int getNum() {
         return item.num;
     }
     
-    public int meter() {
+    public int getMeter() {
         return item.meter;
     }
     
-    public String tooltip() {
+    public String getTooltip() {
         String t = item.shorttip();
         return (t != null) ? t : "";
     }
     
-    public int quality() {
+    public int getQuality() {
         return item.q;
     }
     
     public boolean isName(String s) {
-        return name().indexOf(s) >= 0;
+        return this.name.indexOf(s) >= 0;
     }
     
     public boolean isTooltip(String s) {
-        return tooltip().indexOf(s) >= 0;
+        return this.tooltip.indexOf(s) >= 0;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ScriptItem) {
+            ScriptItem other = (ScriptItem)o;
+            return other.item == this.item;
+        }
+        return false;
     }
 }

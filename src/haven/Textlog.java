@@ -34,11 +34,12 @@ import java.util.List;
 public class Textlog extends Widget {
     static Tex texpap = Resource.loadtex("gfx/hud/texpap");
     static Tex schain = Resource.loadtex("gfx/hud/schain");
-    static Tex sflarp = Resource.loadtex("gfx/hud/sflarp");
+    protected static Tex sflarp = Resource.loadtex("gfx/hud/sflarp");
     static RichText.Foundry fnd = new RichText.Foundry(TextAttribute.FAMILY, "Sans Serif", TextAttribute.SIZE, 12, TextAttribute.FOREGROUND, Color.BLACK);
-    List<Text> lines;
-    int maxy, cury;
-    int margin = 3;
+    protected List<Text> lines;
+    protected int maxy;
+    protected int cury;
+    protected int margin = 3;
     boolean sdrag = false;
     public boolean drawbg = true;
     public Color defcolor = Color.BLACK;

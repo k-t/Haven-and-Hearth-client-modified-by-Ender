@@ -1,6 +1,6 @@
-package haven.scripting;
+package haven.scripting
 
-import haven.Buff;
+import haven.Buff
 
 public class ScriptBuff {
     private final Buff buff;
@@ -9,11 +9,11 @@ public class ScriptBuff {
         this.buff = buff;
     }
     
-    public String name() {
+    public String getName() {
         return buff.getName();
     }
     
-    public int meter() {
+    public int getMeter() {
         return buff.ameter;
     }
     

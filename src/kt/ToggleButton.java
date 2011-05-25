@@ -1,4 +1,8 @@
-package haven;
+package kt;
+
+import haven.Button;
+import haven.Coord;
+import haven.Widget;
 
 import java.awt.image.BufferedImage;
 
@@ -29,7 +33,7 @@ public class ToggleButton extends Button {
 		return a;
 	}
 	
-	public void settoggle(boolean value) {
+	public void settoggled(boolean value) {
 		a = value;
 	}
 	

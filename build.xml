@@ -85,7 +85,7 @@
     </copy>
   </target>
 
-  <target name="deftgt" depends="jars, appletview, doc" />
+  <target name="deftgt" depends="jars, appletview" />
   
   <target name="doc">
     <mkdir dir="build" />

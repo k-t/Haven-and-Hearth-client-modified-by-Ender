@@ -24,24 +24,31 @@
  *  Boston, MA 02111-1307 USA
  */
 
-package haven;
+package kt;
+
+
+import haven.Coord;
+import haven.GOut;
+import haven.Resource;
+import haven.Widget;
+import haven.Window;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-public class CustomWindow extends Window {
+public class TransparentWindow extends Window {
 	static final BufferedImage grip = Resource.loadimg("gfx/hud/gripbr");
     static final Coord gzsz = new Coord(16,17);
     private static final Coord minsz = new Coord(150, 125);
 
     boolean rsm = false;
 	
-    public CustomWindow(Coord c, Coord sz, Widget parent, String cap, Coord tlo, Coord rbo) {
+    public TransparentWindow(Coord c, Coord sz, Widget parent, String cap, Coord tlo, Coord rbo) {
     super(c, sz, parent, cap, tlo, rbo);
     pack();
     }
 	
-    public CustomWindow(Coord c, Coord sz, Widget parent, String cap) {
+    public TransparentWindow(Coord c, Coord sz, Widget parent, String cap) {
 	this(c, sz, parent, cap, new Coord(0, 0), new Coord(0, 0));
 	pack();
     }
@@ -49,10 +56,9 @@ public class CustomWindow extends Window {
     @Override
     public void draw(GOut og) {
 	GOut g = og.reclip(tlo, wsz);
-	Color c = g.getcolor();
 	g.chcolor(new Color(0, 0, 0, 120));
 	g.frect(Coord.z, sz);
-	g.chcolor(c);
+	g.chcolor();
 	cdraw(og.reclip(xlate(Coord.z, true), sz));
 	wbox.draw(g, Coord.z, wsz);
 	if(cap != null) {
@@ -68,7 +74,7 @@ public class CustomWindow extends Window {
 	Widget next;
 	for(Widget wdg = child; wdg != null; wdg = next) {
 	    next = wdg.next;
-	    if(!wdg.visible)
+	    if(!wdg.isVisible())
 		continue;
 	    Coord cc = xlate(wdg.c, true);
 	    wdg.draw(g.reclip(cc, wdg.sz));
@@ -109,7 +115,7 @@ public class CustomWindow extends Window {
 	parent.setfocus(this);
 	raise();
 	for(Widget wdg = lchild; wdg != null; wdg = wdg.prev) {
-	    if(!wdg.visible)
+	    if(!wdg.isVisible())
 		continue;
 	    Coord cc = xlate(wdg.c, true);
 	    if(c.isect(cc, (wdg.hsz == null)?wdg.sz:wdg.hsz)) {

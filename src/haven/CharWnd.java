@@ -32,10 +32,10 @@ import java.awt.font.TextAttribute;
 import java.util.*;
 
 public class CharWnd extends Window {
-    Widget cattr, skill, belief, study;
+    public Widget cattr, skill, belief, study;
     Worship ancw;
     Label cost, skcost;
-    Label explbl, snlbl;
+    public Label explbl, snlbl;
     int exp;
     int btime = 0;
     SkillList psk, nsk;

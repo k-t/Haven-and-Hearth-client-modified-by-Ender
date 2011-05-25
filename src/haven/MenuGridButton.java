@@ -1,0 +1,209 @@
+package haven;
+
+import haven.Resource.Image;
+
+import java.util.Collection;
+import java.util.HashSet;
+
+public abstract class MenuGridButton implements Comparable<MenuGridButton> {
+    protected final MenuGrid grid;
+    protected final MenuGridButton parent;
+    
+    public MenuGridButton(MenuGridButton parent, MenuGrid grid) {
+        this.parent = parent;
+        this.grid = grid;
+    }
+    
+    @Override
+    public int compareTo(MenuGridButton o) {
+        if (o == null)
+            return 1;
+        return String.CASE_INSENSITIVE_ORDER.compare(this.name(), o.name());
+    }
+    
+    public MenuGridButton parent() {
+        return parent;
+    }
+    
+    public Resource.Pagina pagina() {
+        return null;
+    }
+    
+    public abstract Tex tex();
+    public abstract String name();
+    public abstract char hk();
+    public abstract boolean hasTooltip();
+    public abstract MenuGridButton[] children();
+    public abstract void use();
+    
+    public static MenuGridButton fromResource(String resname) {
+        return new ResourceButton(Resource.load(resname), null, null);
+    }
+    
+    public static MenuGridButton fromResource(String resname, MenuGrid grid) {
+        return new ResourceButton(Resource.load(resname), null, grid);
+    }
+    
+    public static MenuGridButton fromResource(Resource res, MenuGrid grid) {
+        return new ResourceButton(res, null, grid);
+    }
+    
+    private static class ResourceButton extends MenuGridButton {
+        private final Resource res;
+        private Resource.AButton ad;
+        private Resource.Image img;
+        
+        public ResourceButton(Resource res, MenuGridButton parent, MenuGrid grid) {
+            super(parent, grid);
+            this.res = res;
+        }
+        
+        private Resource.AButton ad() {
+            if (ad == null)
+                ad = res.layer(Resource.action); 
+            return ad;
+        }
+        
+        private Resource.Image img() {
+            if (img == null)
+                img = res.layer(Resource.imgc);
+            return img;
+        }
+        
+        @Override
+        public Tex tex() {
+            Image img = img();
+            return img != null ? img.tex() : null;
+        }
+
+        @Override
+        public String name() {
+            return (ad() != null) ? ad().name : res.name;
+        }
+
+        @Override
+        public char hk() {
+            return (ad() != null) ? ad().hk : 0;
+        }
+
+        @Override
+        public boolean hasTooltip() {
+            return ad() != null;
+        }
+        
+        @Override
+        public Resource.Pagina pagina() {
+            return res.layer(Resource.pagina);
+        }
+
+        @Override
+        public MenuGridButton[] children() {
+            MenuGridButton[] bs = new MenuGridButton[0];
+            if (grid == null)
+                return bs;
+            Collection<MenuGridButton> tobe = new HashSet<MenuGridButton>();
+            for(Resource r : grid.resbuttons()) {
+                if(r.layer(Resource.action).parent == this.res)
+                tobe.add(new ResourceButton(r, this, grid));
+            }
+            return(tobe.toArray(bs));
+        }
+
+        @Override
+        public void use() {
+            if (grid == null || this.ad() == null)
+                return;
+            String [] ad = this.ad().ad;
+            if(ad[0].equals("@")) {
+                usecustom(ad);
+                // return to root menu
+                grid.gotoroot();
+//          } else if (ad[0].equals("declaim")){
+//          new DeclaimVerification(ui.root, ad);
+            } else {
+                int k = 0;
+                if (ad[0].equals("crime")){k = -1;}
+                if (ad[0].equals("tracking")){k = -2;}
+                if (ad[0].equals("swim")){k = -3;}
+                if(k<0){
+                    synchronized (grid.ui.sess.glob.buffs) {
+                    if(grid.ui.sess.glob.buffs.containsKey(k)){
+                        grid.ui.sess.glob.buffs.remove(k);
+                    } else {
+                        Buff buff = new Buff(k, res.indir());
+                        buff.major = true;
+                        grid.ui.sess.glob.buffs.put(k, buff);
+                    }
+                    }
+                }
+                grid.wdgmsg("act", (Object[])ad);
+            }
+        }
+        
+        private void usecustom(String[] list) {
+            if (grid == null)
+                return;
+            if(list[1].equals("radius")) {
+                Config.showRadius = !Config.showRadius;
+                String str = "Radius highlight is turned "+((Config.showRadius)?"ON":"OFF");
+                grid.ui.cons.out.println(str);
+                grid.ui.slen.error(str);
+                Config.saveOptions();
+            } else if(list[1].equals("hidden")) {
+                Config.showHidden = !Config.showHidden;
+                String str = "Hidden object highlight is turned "+((Config.showHidden)?"ON":"OFF");
+                grid.ui.cons.out.println(str);
+                grid.ui.slen.error(str);
+                Config.saveOptions();
+            } else if(list[1].equals("hide")) {
+                for(int i=2;i<list.length;i++){
+                String item = list[i];
+                if(Config.hideObjectList.contains(item)){
+                    Config.hideObjectList.remove(item);
+                } else {
+                    Config.hideObjectList.add(item);
+                }
+                }
+            } else if(list[1].equals("simple plants")) {
+                Config.simple_plants = !Config.simple_plants;
+                String str = "Simplified plants is turned "+((Config.simple_plants)?"ON":"OFF");
+                grid.ui.cons.out.println(str);
+                grid.ui.slen.error(str);
+                Config.saveOptions();
+            } else if(list[1].equals("timers")) {
+                TimerPanel.toggle();
+            } else if(list[1].equals("animal")) {
+                Config.showBeast = !Config.showBeast;
+                String str = "Animal highlight is turned "+((Config.showBeast)?"ON":"OFF");
+                grid.ui.cons.out.println(str);
+                grid.ui.slen.error(str);
+                Config.saveOptions();
+            } else if(list[1].equals("globalchat")) {
+                grid.ui.root.wdgmsg("gk", 3);
+            } else if(list[1].equals("wiki")) {
+                if(grid.ui.wiki == null) {
+                new WikiBrowser(MainFrame.getCenterPoint().sub(115, 75), Coord.z, grid.ui.root);
+                } else {
+                    grid.ui.wiki.wdgmsg(grid.ui.wiki.cbtn, "click");
+                }
+            }
+            }
+
+        @Override
+        public int compareTo(MenuGridButton o) {
+            if (o instanceof ResourceButton) {
+                ResourceButton a = (ResourceButton)o;
+                if (this.ad() != null && a.ad() != null) {
+                    Resource.AButton aa = this.ad();
+                    Resource.AButton ab = a.ad();
+                    if((aa.ad.length == 0) && (ab.ad.length > 0))
+                        return(-1);
+                    if((aa.ad.length > 0) && (ab.ad.length == 0))
+                        return(1);
+                    return (aa.name.compareTo(ab.name));
+                }
+            }
+            return super.compareTo(o);
+        }
+    }
+}

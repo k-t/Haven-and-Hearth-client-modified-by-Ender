@@ -40,7 +40,7 @@ public class Button extends Widget {
     public Text text;
     public BufferedImage cont;
     static Text.Foundry tf = new Text.Foundry(new Font("Serif", Font.PLAIN, 12), Color.YELLOW);
-    boolean a = false;
+    protected boolean a = false;
     public Color color = Color.YELLOW;
 	
     static {

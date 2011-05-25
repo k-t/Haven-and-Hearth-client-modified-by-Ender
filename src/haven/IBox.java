@@ -27,8 +27,8 @@
 package haven;
 
 public class IBox {
-    Tex ctl, ctr, cbl, cbr;
-    Tex bl, br, bt, bb;
+    public Tex ctl, ctr, cbl, cbr;
+    public Tex bl, br, bt, bb;
 	
     public IBox(Tex ctl, Tex ctr, Tex cbl, Tex cbr, Tex bl, Tex br, Tex bt, Tex bb) {
 	this.ctl = ctl;

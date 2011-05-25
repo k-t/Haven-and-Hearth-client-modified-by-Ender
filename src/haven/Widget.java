@@ -503,4 +503,6 @@ public class Widget {
     	    wdg.update(0);
     	}    	
     }
+    
+    public boolean isVisible() { return visible; }
 }

@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import kt.LogManager;
+
 import org.codehaus.groovy.control.*;
 import org.codehaus.groovy.control.customizers.*;
 
@@ -22,8 +24,6 @@ public class Engine {
         return instance;
     }
     
-    private ScriptGlobal glob;
-    
     private ScriptThread thread;
     private Binding binding;
     private CompilerConfiguration configuration;
@@ -36,10 +36,6 @@ public class Engine {
     private boolean hourglass = false;
 
     private Engine() { }
-    
-    public ScriptGlobal glob() {
-        return glob;
-    }
     
     public ILog log() {
         return LogManager.getlog("Messages");
@@ -86,12 +82,11 @@ public class Engine {
     }
 
     public void init() {
-        glob = new ScriptGlobal(this);
         binding = new Binding();
         binding.setVariable("Log", log());
-        binding.setVariable("Glob", glob);
         // configuration for the script execution
         configuration = new CompilerConfiguration();
+        configuration.setRecompileGroovySource(true);
         configuration.addCompilationCustomizers(new ASTTransformationCustomizer(ThreadInterrupt.class));
         configuration.setClasspathList(Arrays.asList(".", "./scripts"));
         // init engine for working with callback scripts
@@ -101,7 +96,6 @@ public class Engine {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
     }
     
     public boolean initialized() {
@@ -197,6 +191,12 @@ public class Engine {
             UI.instance.slen.error(msg);
             log().write(msg);
             thread = null;
+        }
+    }
+
+    public void recompile() {
+        if (initialized()) {
+            gse.getGroovyClassLoader().clearCache();
         }
     }
 }

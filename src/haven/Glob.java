@@ -90,6 +90,9 @@ public class Glob {
 	    setChanged();
 	    notifyObservers(null);
 	}
+	
+	public int getbase() { return base; }
+	public int getcomp() { return comp; }
     }
 	
     private static double defix(int i) {

@@ -1,24 +1,35 @@
-package haven;
+package kt;
+
+
+import haven.Button;
+import haven.Coord;
+import haven.GOut;
+import haven.RichText;
+import haven.Text;
+import haven.Textlog;
+import haven.Widget;
+import haven.RichText.Foundry;
+import haven.RichText.Parser;
 
 import java.awt.Color;
 import java.awt.font.TextAttribute;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class CustomLogWindow extends CustomWindow {
-	private CustomTextlog tl;
+public class LogWindow extends TransparentWindow {
+	private LogWidget tl;
 	private HashMap<String, ToggleButton> tabs;
 	private HashMap<String, LogManager.Log> logs;
 	private Button clearbtn;
 	private String currenttab;
 	
-	public CustomLogWindow(Coord c, Coord sz, Widget parent, String cap) {
+	public LogWindow(Coord c, Coord sz, Widget parent, String cap) {
 	    super(c, sz, parent, cap);
 	    
 	    tabs = new HashMap<String, ToggleButton>();
 	    logs = new HashMap<String, LogManager.Log>();
 	    // text log
-	    tl = new CustomTextlog(new Coord(0, 25), new Coord(0, 0), this);
+	    tl = new LogWidget(new Coord(0, 25), new Coord(0, 0), this);
 	    tl.drawbg = false;
 	    tl.defcolor = Color.WHITE;
 	    // clear button
@@ -66,7 +77,7 @@ public class CustomLogWindow extends CustomWindow {
 			for (Entry<String, ToggleButton> entry : tabs.entrySet()) {
 				String tab = entry.getKey();
 				ToggleButton btn = entry.getValue();
-				btn.settoggle(btn == tabbtn);
+				btn.settoggled(btn == tabbtn);
 				if (btn == tabbtn) {
 					currenttab = tab;
 					tl.setlog(logs.get(tab));
@@ -118,97 +129,4 @@ public class CustomLogWindow extends CustomWindow {
 	}
 	return(super.type(key, ev));
     }
-	
-	private static class CustomTextlog extends Textlog implements LogManager.LogView {
-		static RichText.Foundry fnd = new RichText.Foundry(TextAttribute.FAMILY, "Sans Serif", TextAttribute.SIZE, 10, TextAttribute.FOREGROUND, Color.WHITE);
-		
-		private boolean update = false;
-		private LogManager.Log log = null;
-
-		public CustomTextlog(Coord c, Coord sz, Widget parent) {
-	        super(c, sz, parent);
-        }
-		
-		@Override
-		public void append(String line, Color col) {
-			Text rl;
-			if(col == null)
-			    col = defcolor;
-			line = RichText.Parser.quote(line);
-			rl = fnd.render(line, sz.x - (margin * 2) - sflarp.sz().x);
-			synchronized(lines) {
-			    lines.add(rl);
-			}
-			if(cury == maxy)
-			    cury += rl.sz().y;
-			maxy += rl.sz().y;
-		}
-		
-		public void removefirst() {
-			synchronized(lines) {
-			    if (lines.size() == 0)
-			    	return;
-				Text rl = lines.get(0);
-				lines.remove(0);
-				maxy -= rl.sz().y;
-				if (cury > maxy)
-					cury = maxy;
-			}
-		}
-		
-		public void clear() {
-			lines.clear();
-			update();
-		}
-		
-		public void beginupdate() {
-			update = true;
-		}
-		
-		public void endupdate() {
-			update();
-			update = false;
-		}
-		
-	    @Override
-	    public void draw(GOut g) {
-	    	if (!update)
-	    		super.draw(g);
-	    	else {
-	    		g.chcolor(new Color(0, 0, 0, 120));
-	    		g.frect(new Coord(0, 0), sz.sub(margin + sflarp.sz().x, 0));
-	    	}
-	    }
-	    
-	    public void setlog(LogManager.Log log) {
-	    	if (this.log != null)
-	    		this.log.setview(null);
-	    	if (this.log == log)
-	    		return;
-	    	this.log = log;
-	    	beginupdate();
-	    	lines.clear();
-	    	for (String line : this.log.lines())
-	    		append(line);
-	    	endupdate();
-	    	this.log.setview(this);	    		
-	    }
-	    
-	    private void update() {
-			Text[] oldlines = new Text[lines.size()];
-			oldlines = lines.toArray(oldlines);
-			synchronized(lines) {
-				lines.clear();
-				cury = 0;
-				maxy = 0;
-				for (Text line : oldlines) {
-					Text rl = fnd.render(line.text, sz.x - (margin * 2) - sflarp.sz().x);
-				    lines.add(rl);
-					if(cury == maxy)
-					    cury += rl.sz().y;
-					maxy += rl.sz().y;
-				}
-			}
-	    }
-	}
 }

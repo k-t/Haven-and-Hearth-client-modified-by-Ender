@@ -1,4 +1,4 @@
-package haven.scripting;
+package haven.scripting
 
 import haven.Gob;
 import haven.Speaking;

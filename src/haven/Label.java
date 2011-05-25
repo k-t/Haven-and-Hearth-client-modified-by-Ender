@@ -86,4 +86,8 @@ public class Label extends Widget {
 	if(msg == "set")
 	    settext((String)args[0]);
     }
+    
+    public String gettext() {
+        return text != null ? this.text.text : "";
+    }
 }
