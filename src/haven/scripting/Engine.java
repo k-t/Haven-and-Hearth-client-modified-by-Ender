@@ -141,6 +141,13 @@ public class Engine {
         return false;
     }
     
+    public String[] getScripts() {
+        GroovyObject callback = getScriptCallbackObject();
+        if (callback != null)
+            return (String[])callback.invokeMethod("getScripts", new Object[0]);
+        return new String[0];
+    }
+    
     public void run(String scriptname) {
         if (!initialized())
             init();

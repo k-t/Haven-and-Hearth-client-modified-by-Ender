@@ -2,6 +2,8 @@ package haven;
 
 import haven.Resource.Image;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -29,12 +31,20 @@ public abstract class MenuGridButton implements Comparable<MenuGridButton> {
         return null;
     }
     
+    public abstract String id();
     public abstract Tex tex();
     public abstract String name();
     public abstract char hk();
     public abstract boolean hasTooltip();
     public abstract MenuGridButton[] children();
     public abstract void use();
+    
+    protected static MenuGridButton scriptroot;
+    public static MenuGridButton getScriptRootButton() {
+        if (scriptroot == null)
+            scriptroot = new ScriptRootButton();
+        return scriptroot;
+    }
     
     public static MenuGridButton fromResource(String resname) {
         return new ResourceButton(Resource.load(resname), null, null);
@@ -46,6 +56,88 @@ public abstract class MenuGridButton implements Comparable<MenuGridButton> {
     
     public static MenuGridButton fromResource(Resource res, MenuGrid grid) {
         return new ResourceButton(res, null, grid);
+    }
+    
+    public static MenuGridButton fromString(String id, MenuGrid grid) {
+        if (id.startsWith(ScriptRootButton.typeid))
+            return getScriptRootButton();
+        else if (id.startsWith(ScriptButton.typeid))
+            // make name of the script by elimination of the type information
+            return new ScriptButton(id.replace(ScriptButton.typeid, ""));
+        else
+            return fromResource(id, grid);
+    }
+    
+    private abstract static class BasicButton extends MenuGridButton {
+        private final Tex tex;
+        private final String name;
+        private final char hk;
+        
+        public BasicButton(MenuGridButton parent, MenuGrid grid, Tex tex, String name, char hk) {
+            super(parent, grid);
+            this.tex = tex;
+            this.name = name;
+            this.hk = hk;
+        }
+
+        @Override
+        public Tex tex() { return tex; }
+
+        @Override
+        public String name() { return name; }
+
+        @Override
+        public char hk() { return hk; }
+
+        @Override
+        public boolean hasTooltip() { return true; }
+
+        @Override
+        public MenuGridButton[] children() { return new MenuGridButton[0]; }
+
+        @Override
+        public void use() { }
+    }
+    
+    private static class ScriptRootButton extends BasicButton {
+        public final static String typeid = "['ScriptRoot]";
+        private static Tex tex = Resource.loadtex("gfx/hud/script");
+
+        public ScriptRootButton() {
+            super(null, null, tex, "Scripts", 'S');
+        }
+        
+        public String id() {
+            return typeid;
+        }
+
+        @Override
+        public MenuGridButton[] children() {
+            MenuGridButton[] ss = new MenuGridButton[0];
+            String[] scripts = haven.scripting.Engine.getInstance().getScripts();
+            ArrayList<MenuGridButton> bs = new ArrayList<MenuGridButton>();
+            for (String script : scripts)
+                bs.add(new ScriptButton(script));
+            return bs.toArray(ss);
+        }
+    }
+    
+    private static class ScriptButton extends BasicButton {
+        public final static String typeid = "['Script]";
+        private static Tex tex = Resource.loadtex("gfx/hud/groovy");
+
+        public ScriptButton(String scriptname) {
+            super(null, null, tex, scriptname, (char)0);
+        }
+        
+        public String id() {
+            return typeid + name();
+        }
+
+        @Override
+        public void use() {
+            haven.scripting.Engine.getInstance().run(name());
+        }
     }
     
     private static class ResourceButton extends MenuGridButton {
@@ -68,6 +160,11 @@ public abstract class MenuGridButton implements Comparable<MenuGridButton> {
             if (img == null)
                 img = res.layer(Resource.imgc);
             return img;
+        }
+        
+        @Override
+        public String id() {
+            return res.name;
         }
         
         @Override
@@ -201,6 +298,13 @@ public abstract class MenuGridButton implements Comparable<MenuGridButton> {
                     if((aa.ad.length > 0) && (ab.ad.length == 0))
                         return(1);
                     return (aa.name.compareTo(ab.name));
+                } else {
+                    if (this.ad() == a.ad())
+                        return this.name().compareTo(a.name());
+                    if (this.ad() == null)
+                        return 1;
+                    else if (a.ad() == null)
+                        return -1;
                 }
             }
             return super.compareTo(o);

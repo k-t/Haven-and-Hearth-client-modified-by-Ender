@@ -37,12 +37,14 @@ public class MenuGrid extends Widget {
     public final static Coord bgsz = bg.sz().add(-1, -1);
     public final static MenuGridButton next = MenuGridButton.fromResource("gfx/hud/sc-next");
     public final static MenuGridButton bk = MenuGridButton.fromResource("gfx/hud/sc-back");
-    public final static MenuGridButton script = MenuGridButton.fromResource("gfx/hud/script");
     public final static RichText.Foundry ttfnd = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, 10);
     private static Coord gsz = new Coord(4, 4);
     private MenuGridButton cur, pressed, dragging, layout[][] = new MenuGridButton[gsz.x][gsz.y];
     private int curoff = 0;
     private Map<Character, MenuGridButton> hotmap = new TreeMap<Character, MenuGridButton>();
+    public ToolbarWnd digitbar;
+    public ToolbarWnd functionbar;
+    public ToolbarWnd numpadbar;
 	
     static {
 	Widget.addtype("scm", new WidgetFactory() {
@@ -95,7 +97,7 @@ public class MenuGrid extends Widget {
 	    if(r.layer(Resource.action).parent == null)
 		tobe.add(MenuGridButton.fromResource(r, this));
 	}
-	tobe.add(script);
+	tobe.add(MenuGridButton.getScriptRootButton());
 	return(tobe.toArray(new MenuGridButton[0]));
     }
 	
@@ -104,8 +106,16 @@ public class MenuGrid extends Widget {
 	updlayout();
 	ui.mnu = this;
 	ToolbarWnd.loadBelts();
-	new ToolbarWnd(new Coord(0,300), ui.root, "toolbar1");
-	new ToolbarWnd(new Coord(50,300), ui.root, "toolbar2", 2, 12, new Coord(4, 10), KeyEvent.VK_F1);
+	digitbar = new ToolbarWnd(new Coord(0,300), ui.root, "toolbar1");
+	functionbar = new ToolbarWnd(new Coord(50,300), ui.root, "toolbar2", 2, KeyEvent.VK_F1, 12, new Coord(4, 10));
+	numpadbar = new ToolbarWnd(new Coord(100,300), ui.root, "toolbar3", 10, KeyEvent.VK_NUMPAD0){
+	    protected void nextBelt(){
+		loadBelt((belt+1)%5+10);
+	    }
+	    protected void prevBelt(){
+		loadBelt((belt-1)%5+10);
+	    }
+	};
     }
 	
     private void updlayout() {
