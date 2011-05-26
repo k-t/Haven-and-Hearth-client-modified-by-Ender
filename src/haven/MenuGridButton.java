@@ -2,10 +2,8 @@ package haven;
 
 import haven.Resource.Image;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
+import java.io.*;
+import java.util.*;
 
 public abstract class MenuGridButton implements Comparable<MenuGridButton> {
     protected final MenuGrid grid;
@@ -114,10 +112,18 @@ public abstract class MenuGridButton implements Comparable<MenuGridButton> {
         @Override
         public MenuGridButton[] children() {
             MenuGridButton[] ss = new MenuGridButton[0];
-            String[] scripts = haven.scripting.Engine.getInstance().getScripts();
+            File scriptdir = new File("./scripts/");
+            File[] scripts  = scriptdir.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".groovy");
+                }
+            });
             ArrayList<MenuGridButton> bs = new ArrayList<MenuGridButton>();
-            for (String script : scripts)
-                bs.add(new ScriptButton(script));
+            for (File script : scripts) {
+                String n = script.getName();
+                // add file name without extension
+                bs.add(new ScriptButton(n.substring(0, n.lastIndexOf("."))));
+            }
             return bs.toArray(ss);
         }
     }
@@ -284,7 +290,7 @@ public abstract class MenuGridButton implements Comparable<MenuGridButton> {
                     grid.ui.wiki.wdgmsg(grid.ui.wiki.cbtn, "click");
                 }
             }
-            }
+        }
 
         @Override
         public int compareTo(MenuGridButton o) {
@@ -297,14 +303,6 @@ public abstract class MenuGridButton implements Comparable<MenuGridButton> {
                         return(-1);
                     if((aa.ad.length > 0) && (ab.ad.length == 0))
                         return(1);
-                    return (aa.name.compareTo(ab.name));
-                } else {
-                    if (this.ad() == a.ad())
-                        return this.name().compareTo(a.name());
-                    if (this.ad() == null)
-                        return 1;
-                    else if (a.ad() == null)
-                        return -1;
                 }
             }
             return super.compareTo(o);

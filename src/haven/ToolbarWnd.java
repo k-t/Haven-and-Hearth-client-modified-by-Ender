@@ -387,6 +387,8 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
     public boolean dropthing(Coord c, Object thing) {
 	if ((!locked)&&(thing instanceof MenuGridButton)) {
 	    int slot = index(c);
+	    if (slot == -1)
+	        return false;
 	    MenuGridButton btn = (MenuGridButton)thing;
 	    setBeltSlot(slot, btn.id());
 	    layout[slot] = MenuGridButton.fromString(btn.id(), ui.mnu);

@@ -31,16 +31,12 @@ import java.awt.font.TextAttribute;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Textlog extends Widget {
+public class Textlog extends ScrollableWidget {
     static Tex texpap = Resource.loadtex("gfx/hud/texpap");
-    static Tex schain = Resource.loadtex("gfx/hud/schain");
-    protected static Tex sflarp = Resource.loadtex("gfx/hud/sflarp");
     static RichText.Foundry fnd = new RichText.Foundry(TextAttribute.FAMILY, "Sans Serif", TextAttribute.SIZE, 12, TextAttribute.FOREGROUND, Color.BLACK);
-    protected List<Text> lines;
-    protected int maxy;
-    protected int cury;
+    List<Text> lines;
     protected int margin = 3;
-    boolean sdrag = false;
+    protected int textsize = 12;
     public boolean drawbg = true;
     public Color defcolor = Color.BLACK;
 	
@@ -61,7 +57,7 @@ public class Textlog extends Widget {
 		}
 	    }
 	g.chcolor();
-	int y = -cury;
+	int y = -this.scrollposition;
 	synchronized(lines) {
 	    for(Text line : lines) {
 		int dy1 = sz.y + y;
@@ -71,43 +67,66 @@ public class Textlog extends Widget {
 		y += line.sz().y;
 	    }
 	}
-	if(maxy > sz.y) {
-	    int fx = sz.x - sflarp.sz().x;
-	    int cx = fx + (sflarp.sz().x / 2) - (schain.sz().x / 2);
-	    for(y = 0; y < sz.y; y += schain.sz().y - 1)
-		g.image(schain, new Coord(cx, y));
-	    double a = (double)(cury - sz.y) / (double)(maxy - sz.y);
-	    int fy = (int)((sz.y - sflarp.sz().y) * a);
-	    g.image(sflarp, new Coord(fx, fy));
-	}
+	super.draw(g);
     }
 	
     public Textlog(Coord c, Coord sz, Widget parent) {
 	super(c, sz, parent);
 	lines = new LinkedList<Text>();
-	maxy = cury = 0;
     }
     
-    public void append(String line, Color col) {
-	Text rl;
-	if(col == null)
-	    col = defcolor;
-	
+    public final void append(String line, Color col) {
 	line = RichText.Parser.quote(line);
 	if(Config.use_smileys){
 	    line = Config.mksmiley(line);
 	}
-	rl = fnd.render(line, sz.x - (margin * 2) - sflarp.sz().x, TextAttribute.FOREGROUND, col, TextAttribute.SIZE, 12);
-	synchronized(lines) {
-	    lines.add(rl);
-	}
-	if(cury == maxy)
-	    cury += rl.sz().y;
-	maxy += rl.sz().y;
+	add(line, col);
     }
         
-    public void append(String line) {
+    public final void append(String line) {
 	append(line, null);
+    }
+    
+    /** Appends line without processing. */
+    private void add(String line, Color col) {
+        Text rl;
+        if(col == null)
+            col = defcolor;
+        rl = fnd.render(line, sz.x - (margin * 2) - sflarp.sz().x, TextAttribute.FOREGROUND, col, TextAttribute.SIZE, textsize);
+        synchronized(lines) {
+            lines.add(rl);
+        }
+        if(scrollposition == scrollsize)
+            scrollposition += rl.sz().y;
+        scrollsize += rl.sz().y;
+    }
+    
+    /** Removes all lines. */
+    public final void clear() {
+        synchronized (lines) {
+            lines.clear();
+            scrollposition = 0;
+            scrollsize = 0;
+        }
+    }
+    
+    /** Returns count of lines in the text log. */
+    public final int linecount() {
+        return lines.size();
+    }
+    
+    
+    /** Removes the line specified by the given index. */
+    public final void removeat(int index) {
+        synchronized(lines) {
+            if (lines.size() <= index)
+                return;
+            Text rl = lines.get(index);
+            lines.remove(index);
+            scrollsize -= rl.sz().y;
+            if (scrollposition > scrollsize)
+                scrollposition = scrollsize;
+        }
     }
 	
     public void uimsg(String msg, Object... args) {
@@ -115,47 +134,19 @@ public class Textlog extends Widget {
 	    append((String)args[0]);
 	}
     }
-        
-    public boolean mousewheel(Coord c, int amount) {
-	cury += amount * 20;
-	if(cury < sz.y)
-	    cury = sz.y;
-	if(cury > maxy)
-	    cury = maxy;
-	return(true);
+    
+    public final void update() {
+        Text[] oldlines = new Text[lines.size()];
+        oldlines = lines.toArray(oldlines);
+        clear();
+        for (Text line : oldlines) {
+            add(line.text, null);
+        }
     }
         
     public boolean mousedown(Coord c, int button) {
 	if(button != 1)
 	    return(false);
-	int fx = sz.x - sflarp.sz().x;
-	int cx = fx + (sflarp.sz().x / 2) - (schain.sz().x / 2);
-	if((maxy > sz.y) && (c.x >= fx)) {
-	    sdrag = true;
-	    ui.grabmouse(this);
-	    mousemove(c);
-	    return(true);
-	}
-	return(false);
-    }
-        
-    public void mousemove(Coord c) {
-	if(sdrag) {
-	    double a = (double)(c.y - (sflarp.sz().y / 2)) / (double)(sz.y - sflarp.sz().y);
-	    if(a < 0)
-		a = 0;
-	    if(a > 1)
-		a = 1;
-	    cury = (int)(a * (maxy - sz.y)) + sz.y;
-	}
-    }
-        
-    public boolean mouseup(Coord c, int button) {
-	if((button == 1) && sdrag) {
-	    sdrag = false;
-	    ui.grabmouse(null);
-	    return(true);
-	}
-	return(false);
+	return super.mousedown(c, button);
     }
 }

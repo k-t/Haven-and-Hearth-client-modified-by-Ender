@@ -3,17 +3,10 @@ package kt;
 
 import haven.Button;
 import haven.Coord;
-import haven.GOut;
-import haven.RichText;
-import haven.Text;
-import haven.Textlog;
 import haven.Widget;
-import haven.RichText.Foundry;
-import haven.RichText.Parser;
 
 import java.awt.Color;
-import java.awt.font.TextAttribute;
-import java.util.*;
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class LogWindow extends TransparentWindow {
@@ -60,6 +53,7 @@ public class LogWindow extends TransparentWindow {
 		if (currenttab == null)
 			return;
 		logs.get(currenttab).clear();
+		tl.clear();
 	}
 	
 	@Override

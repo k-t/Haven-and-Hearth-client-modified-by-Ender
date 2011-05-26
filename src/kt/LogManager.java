@@ -82,22 +82,22 @@ public class LogManager {
 	
 	public static interface LogView {
 		void append(String message);
-		void clear();
-		void removefirst();
 	}
 	
 	public static class Log implements ILog {
 		private final LinkedList<String> lines = new LinkedList<String>();
 		private LogView view = null;
 		
-		public void clear() {
-			lines.clear();
-			if (view != null)
-				view.clear();
-		}
-		
 		public List<String> lines() {
 			return lines;
+		}
+		
+		public void clear() {
+		    lines.clear();
+		}
+		
+		public int maxsize() {
+		    return LogSize;
 		}
 		
 		public void setview(LogView view) {
@@ -113,8 +113,6 @@ public class LogManager {
 				if (lines.size() > LogSize) {
 					// delete first entry
 					lines.removeFirst();
-					if (view != null)
-						view.removefirst();
 				}
 			}
         }

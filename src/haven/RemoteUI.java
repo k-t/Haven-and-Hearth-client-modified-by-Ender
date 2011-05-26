@@ -99,12 +99,12 @@ public class RemoteUI implements UI.Receiver {
 	}
     }
     
-    private String argstostr(Object... args) {
-        StringBuilder sb = new StringBuilder();
-        for (Object arg : args)        
-            sb.append(arg).append(',');
-        if (sb.length() > 0)
-            sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
-    }
+//    private String argstostr(Object... args) {
+//        StringBuilder sb = new StringBuilder();
+//        for (Object arg : args)        
+//            sb.append(arg).append(',');
+//        if (sb.length() > 0)
+//            sb.deleteCharAt(sb.length() - 1);
+//        return sb.toString();
+//    }
 }

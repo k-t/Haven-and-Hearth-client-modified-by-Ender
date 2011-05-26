@@ -1,19 +1,20 @@
 package haven.scripting;
 
+import groovy.lang.Binding;
+import groovy.lang.GroovyObject;
+import groovy.transform.ThreadInterrupt;
+import groovy.util.*;
+import haven.ILog;
+import haven.UI;
+
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
 
 import kt.LogManager;
 
 import org.codehaus.groovy.control.*;
-import org.codehaus.groovy.control.customizers.*;
-
-import groovy.lang.*;
-import groovy.util.*;
-import groovy.transform.ThreadInterrupt;
-import haven.*;
+import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
 
 public class Engine {
     private static Engine instance = null;
@@ -139,13 +140,6 @@ public class Engine {
         if (callback != null)
             return (Boolean)callback.invokeMethod("handleConsoleCmd", new Object[] { cmdline });
         return false;
-    }
-    
-    public String[] getScripts() {
-        GroovyObject callback = getScriptCallbackObject();
-        if (callback != null)
-            return (String[])callback.invokeMethod("getScripts", new Object[0]);
-        return new String[0];
     }
     
     public void run(String scriptname) {
