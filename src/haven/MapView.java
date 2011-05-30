@@ -1343,7 +1343,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	GOut g = og.reclip(Coord.z, sz);
 	g.gl.glPushMatrix();
 	g.scale(getScale());
-//	try {
+	//try {
 	    if(((mask.amb = glob.amblight) == null) || Config.nightvision)
 		mask.amb = new Color(0, 0, 0, 0);
 	    drawmap(g);
@@ -1457,6 +1457,10 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     
     public int getPlayerGob() {
         return playergob;
+    }
+
+    public boolean isPlaceMode() {
+        return this.plob != null;
     }
  }
 

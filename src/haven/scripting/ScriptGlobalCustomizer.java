@@ -12,9 +12,9 @@ import org.codehaus.groovy.control.customizers.CompilationCustomizer;
 /** Adds to every compiled class a set of static methods that wrap public methods of ScriptGlobal instance.
  * It allows to imitate global functions in the scripts. 
  */
-public class CustomCustomizer extends CompilationCustomizer {
+public class ScriptGlobalCustomizer extends CompilationCustomizer {
 
-    public CustomCustomizer() {
+    public ScriptGlobalCustomizer() {
         super(CompilePhase.CANONICALIZATION);
     }
 

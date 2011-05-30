@@ -18,11 +18,11 @@ public class ScriptItem extends ScriptWidget {
         return item.c.div(31).x;
     }
     
-    public int getWidth() {
+    public int getColumnSize() {
         return item.sz.div(30).x;
     }
     
-    public int getHeight() {
+    public int getRowSize() {
         return item.sz.div(30).y;
     }
     
@@ -62,6 +62,10 @@ public class ScriptItem extends ScriptWidget {
             return other.item == this.item;
         }
         return false;
+    }
+    
+    public void interact() {
+       interact(0);
     }
     
     public void interact(int mod) {

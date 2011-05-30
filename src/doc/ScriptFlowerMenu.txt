@@ -1,11 +1,11 @@
-/** Flower menu.
- *
- * Wrapper for haven.FlowerMenu widget.
+/** Script wrapper for the haven.FlowerMenu class.
+ * @see @link page_global getContextMenu()@endlink
+ * @see ScriptItem.act()
  */
-class ScriptFlowerMenu {
+class ScriptFlowerMenu : ScriptWidget {
 
     /** Returns all available options. */
-    public String[] getOptions();
+    public String[] options { get; }
     
     /** Selects the specified option. */
     public void select(String option);    

@@ -10,23 +10,23 @@ public class ScriptGob {
         this.gob = gob;
     }
     
-    public int id() {
+    public int getId() {
         return gob.id;
     }
     
-    public int x() {
+    public int getX() {
         return gob.getc().x;
     }
     
-    public int y() {
+    public int getY() {
         return gob.getc().y;
     }
     
-    public String resname() {
+    public String getResname() {
         return gob.resname();
     }
     
-    public String speakingText() {
+    public String getSpeakingText() {
         Speaking speaking = gob.getattr(Speaking.class);
         return (speaking != null) ? speaking.text() : null;
     }

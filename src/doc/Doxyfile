@@ -37,7 +37,7 @@ PROJECT_NUMBER         =
 # for a project that appears at the top of each page and should give viewer 
 # a quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = "by k_t"
+PROJECT_BRIEF          = "by kt"
 
 # With the PROJECT_LOGO tag one can specify an logo or icon that is 
 # included in the documentation. The maximum height of the logo should not 
@@ -240,7 +240,7 @@ OPTIMIZE_OUTPUT_VHDL   = NO
 # (default is Fortran), use: inc=Fortran f=C. Note that for custom extensions 
 # you also need to set FILE_PATTERNS otherwise the files are not read by doxygen.
 
-EXTENSION_MAPPING      = txt=Java
+EXTENSION_MAPPING      = txt=CSharp
 
 # If you use STL classes (i.e. std::string, std::vector, etc.) but do not want 
 # to include (a tag file for) the STL sources as input, then you should 

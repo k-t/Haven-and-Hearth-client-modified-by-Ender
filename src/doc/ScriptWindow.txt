@@ -1,0 +1,18 @@
+/** Script wrapper for the haven.Window class.
+ * @see @link page_global findWindow(String...) @endlink
+ * @see @link page_global findWindows(String...) @endlink
+ */
+class ScriptWindow : ScriptWidget {
+    /** Closes the window. */
+    public void close();
+    
+    /** Returns the window caption text. */
+    public String caption { get; }
+    
+    /** Searches for a child build box within the window.
+     * @param  tooltip  Search string.
+     * @return The first build box with the tooltip that contains the specified search string, if found;
+     *         otherwise, @c null.
+     */
+    public ScriptISBox findBuildBox(String tooltip);
+}

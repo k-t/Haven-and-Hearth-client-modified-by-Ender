@@ -1,22 +1,27 @@
 /** Graphical object.
  *
- * Wrapper for haven.Gob class objects.
+ * Script wrapper for the haven.Gob class.
+ * @see @link page_global getGobs()@endlink
  */
 class ScriptGob {
 
     /** Returns the unique identifier of this object. */
-    public int id();
+    public int id { get; }
     
     /** Returns the x coordinate of this object. */
-    public int x();
+    public int x { get; }
     
     /** Returns the y coordinate of this object. */
-    public int y();
+    public int y { get; }
     
     /** Returns the name of the object resource. */
-    public String resname();
+    public String resname { get; }
     
-    /** Returns the speech text associated with this object. */
-    public String speakingText();
+    /** Returns the speech text associated with this object.
+     * @return The speaking text associated with the object, if any;
+     *         otherwise, @c null.
+
+     */
+    public String getSpeakingText();
 
 }

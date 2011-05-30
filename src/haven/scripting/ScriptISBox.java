@@ -19,6 +19,13 @@ public class ScriptISBox extends ScriptWidget {
         return isbox.label != null ? isbox.label.text : "";
     }
     
+    public String getTooltip() {
+        if (isbox.res == null)
+            return "";
+        Tooltip t = isbox.res.layer(Resource.tooltip);
+        return t != null ? t.t : "";
+    }
+    
     public int getRemaining() {
         return isbox.getremaining();
     }
@@ -29,13 +36,6 @@ public class ScriptISBox extends ScriptWidget {
     
     public int getBuilt() {
         return isbox.getbuilt();
-    }
-    
-    public String getTooltip() {
-        if (isbox.res == null)
-            return "";
-        Tooltip t = isbox.res.layer(Resource.tooltip);
-        return t != null ? t.t : "";
     }
     
     public void click() {

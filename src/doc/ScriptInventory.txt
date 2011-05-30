@@ -1,25 +1,39 @@
-/**
- * Inventory.
- *
- * Wrapper for haven.Inventory.
+/** Script wrapper for the haven.Inventory class.
+ * @see ScriptWidget.getInventory
+ * @see ScriptWidget.getInventories
  */
-class ScriptInventory {
-    
-    /** Drops the currently dragged item to a specified position inside this inventory. */
-    public void drop(int row, int col);
-    
+class ScriptInventory : ScriptWidget {
     /** Returns an array of all items inside this inventory. */
-    public ScriptItem[] getItems();
+    public ScriptItem[] items { get; }
     
     /** Returns a count of rows. */
-    public int rowCount();
+    public int rowCount { get; }
     
     /** Returns a count of columns. */
-    public int columnCount();
+    public int columnCount { get; }
     
-    /** Sends an action with the specified name to the item in the specified position. */
-    public void sendAction(int row, int col, String name);
+    /** Returns item in the specified slot in this inventory.
+     * @param row  Slot row.
+     * @param col  Slot column.
+     * @return The item in specified slot, if found;
+     *         otherwise, @c null.
+     */
+    public ScriptItem getItemAt(int row, int col);
     
-    /** Sends an action with the specified name to the item in the specified position. */
-    public void sendAction(int row, int col, String name, int mod);
+    /** Sends the transfer message to the inventory
+     *  which imitates mouse wheeling items from the inventory.
+     * @param mod Keyboard modifier.
+     */
+    public void transferFrom(int mod);
+    
+    /** Sends the transfer message to the inventory
+     * which imitates mouse wheeling items to the inventory.
+     * @param mod Keyboard modifier.
+     */
+    public void transferTo(int mod);
+    
+    /** Drops the currently dragged item to a specified position inside this inventory.
+     * @see @link page_global getDragItem()@endlink
+     */
+    public void drop(int row, int col);
 }

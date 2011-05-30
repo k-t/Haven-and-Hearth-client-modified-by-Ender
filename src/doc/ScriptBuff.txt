@@ -1,17 +1,16 @@
-/** Buff.
- *
- * Wrapper for haven.Buff objects.
+/** Script wrapper for the haven.Buff class.
+ * @see @link page_global getBuffs()@endlink
  */
-class ScriptBuff {
+class ScriptBuff : ScriptWidget {
 
     /** Returns the buff tooltip text. */
-    public String name();
+    public String name { get; };
     
     /** Returns the value of the buff meter. */
-    public int meter();
+    public int meter { get; };
     
     /** Returns the time left until this buff will expire. */
-    public int getTimeLeft();
+    public int timeLeft { get; };
     
     /** Checks whether the buff tooltip text contains a specified string. */ 
     public boolean isName(string s);

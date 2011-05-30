@@ -2,9 +2,29 @@
 
 @page page_changelog Changelog
 
-@par 2011/05/20
-- Added <i>getObjectBlob(int, int)</i> global function.
-- Added <i>handleConsoleCmd</i> function for handling client console commands with the scripts.
+@par 2011/05/30
+- Generally updated script wrapper interfaces to allow usage of properties instead of method calls.
+- Added ScriptWidget, ScriptButton, ScriptCharWindow, ScriptChatWindow, ScriptCraftWindow,
+  ScriptISBox, ScriptWindow wrappers.
+- Removed @c ScriptInventory.sendAction methods.
+- Added ScriptInventory.getItemAt method instead.
+- Added ScriptInventory.transferTo and ScriptInventory.transferFrom methods.
+- Removed @c ScriptItem.sendAction methods.
+- Added ScriptItem.interact, ScriptItem.take, ScriptItem.transfer, ScriptItem.drop, ScriptItem.act
+  methods instead.
+- @ref page_global :
+  - no need to use <i>import static glob.*</i> to use global functions;
+  - removed @c closeWindow function, use ScriptWindow.close instead;
+  - added <i>findChatWindow(String)</i> function;
+  - added <i>findWindow(String...)</i>, <i>findWindows(String...)</i> functions;
+  - added <i>getCharWindow()</i> function;
+  - added <i>getCraftWindow()</i> function;
+  - added <i>getEquipItem(int)</i> function;
+  - added <i>getObjectBlob(int, int)</i> function;
+  - added <i>getWindows()</i> function;
+  - added <i>mapPlace(int, int, int, int)</i> function;
+  - added <i>openCharWindow()</i>, <i>openEquipment</i> functions;
+  - added <i>say(String)</i> function.
 
 @par 2011/05/08
 - Initial release.

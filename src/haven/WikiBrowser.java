@@ -280,4 +280,8 @@ public class WikiBrowser extends Window implements DTarget, DropTarget, IHWindow
 	    b.c = btnc.add(bw * (i % k), ((int) i / k) * 20);
 	}
     }
+    
+    public HWindow[] getwnds() {
+        return wnds.toArray(new HWindow[wnds.size()]);
+    }
 }

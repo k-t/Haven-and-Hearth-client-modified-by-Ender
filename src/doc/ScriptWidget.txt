@@ -1,0 +1,54 @@
+/** Script wrapper for the haven.Widget class. */
+class ScriptWidget {
+    /** Returns widget id. */
+    public int id { get; }
+    
+    /** Returns underlying type name. */    
+    public int typeName { get; }
+    
+    /** Gets or sets the widget x-coordinate. */
+    public int x { get; set; }
+    
+    /** Gets or sets the widget y-coordinate. */
+    public int y { get; set; }
+    
+    /** Gets or sets the widget width. */
+    public int width { get; set; }
+    
+    /** Gets or sets the widget height. */
+    public int height { get; set; }
+    
+    /** Returns all child widgets. */
+    public ScriptWidget[] widgets { get; }
+    
+    /** Sends the widget message.
+     * Use it if you know Haven protocol for the widget you work with and the script wrapper
+     * doesn't implement needed function.
+     *
+     * Examples:
+     * @code
+     * widget.message("take", 0, 0)
+     * widget.message("drop", -1)
+     * @endcode
+     *
+     * @param msg  Message name.
+     * @param args Message arguments.
+     */
+    public void message(String msg, Object... args);
+    
+    /** Searches for a child button with the specified caption.
+     * @param  caption  Button caption.
+     * @return The first button with the caption that matches the specified caption, if found;
+     *         otherwise, @c null.
+     */
+    public ScriptButton findButton(String caption);
+    
+    /** Returns the first child inventory.
+     * @return The first inventory inside the widget, if any;
+     *         otherwise, @c null.
+     */
+    public ScriptInventory getInventory();
+    
+    /** Returns all child inventories. */
+    public ScriptInventory[] getInventories();
+}

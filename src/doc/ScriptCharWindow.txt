@@ -1,0 +1,13 @@
+/** Script wrapper for the haven.CharWnd class.
+ * @see @link page_global getCharWindow() @endlink
+ */
+class ScriptCharWindow : ScriptWidget {
+    /** Returns an object that allows interaction with the study inventory. */
+    public ScriptInventory studyInventory { get; }
+    
+    /** Returns player attention limit. */
+    public int attention { get; }
+    
+    /** Returns player used attention. */
+    public int usedAttention { get; }
+}

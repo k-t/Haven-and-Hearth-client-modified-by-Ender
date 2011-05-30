@@ -28,7 +28,8 @@
     <includes visible="$SHOW_INCLUDE_FILES"/>
     <inheritancegraph visible="$CLASS_GRAPH"/>
     <collaborationgraph visible="$COLLABORATION_GRAPH"/>
-    <allmemberslink visible="yes"/>
+    <detaileddescription title="Description"/>
+    <allmemberslink visible="no"/>
     <memberdecl>
       <nestedclasses visible="yes" title=""/>
       <publictypes title=""/>
@@ -61,7 +62,6 @@
       <related title="" subtitle=""/>
       <membergroups visible="yes"/>
     </memberdecl>
-    <detaileddescription title=""/>
     <memberdef>
       <typedefs title=""/>
       <enums title=""/>

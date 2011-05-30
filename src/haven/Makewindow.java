@@ -35,7 +35,6 @@ public class Makewindow extends HWindow {
     List<Widget> outputs;
     static Coord boff = new Coord(7, 9);
     public static final Text.Foundry nmf = new Text.Foundry(new Font("Serif", Font.PLAIN, 20));
-    boolean ready = false;
     String craftname;
 
     static {
@@ -59,7 +58,6 @@ public class Makewindow extends HWindow {
 	
     public void uimsg(String msg, Object... args) {
 	if(msg == "pop") {
-	    ready = true;
 	    final int xoff = 50;
 	    if(inputs != null) {
 		for(Widget w : inputs)
@@ -111,10 +109,6 @@ public class Makewindow extends HWindow {
 	    return(true);
 	}
 	return(super.globtype(ch, ev));
-    }
-    
-    public boolean isReady() {
-        return ready;
     }
     
     public String getCraftName() {

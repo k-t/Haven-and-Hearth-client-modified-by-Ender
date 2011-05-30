@@ -1,5 +1,6 @@
 package haven.scripting;
 
+import java.awt.event.KeyEvent;
 import java.util.*;
 
 import haven.*;
@@ -15,14 +16,6 @@ public class ScriptGlobal {
     }
     
     private ScriptGlobal() {
-    }
-    
-    private Engine getEngine() {
-        return Engine.getInstance();
-    }
-    
-    private Glob glob() {
-        return UI.instance.sess.glob;
     }
     
     public boolean checkHourglass() {
@@ -47,9 +40,24 @@ public class ScriptGlobal {
         }
     }
     
+    public void drop() {
+        drop(0);
+    }
+    
     public void drop(int mod) {
         if (UI.instance.mainview != null)
             UI.instance.mainview.wdgmsg("drop", mod);
+    }
+    
+    public ScriptChatWindow findChatWindow(String windowname) {
+        if (ChatHWPanel.instance == null)
+            return null;
+        for (HWindow wnd : ChatHWPanel.instance.getwnds()) {
+            if (wnd.title.contains(windowname) && wnd instanceof ChatHW) {
+                return new ScriptChatWindow((ChatHW)wnd);
+            }
+        }
+        return null;
     }
     
     public int findMapObject(String name, int radius, int x, int y) {
@@ -80,6 +88,29 @@ public class ScriptGlobal {
         return findMapObject(name, radius * 11, 0, 0);
     }
     
+    public ScriptWindow findWindow(String... windownames) {
+        ScriptWindow[] windows = findWindows(windownames);
+        if (windows.length > 0)
+            return windows[0];
+        else 
+            return null;
+    }
+    
+    public ScriptWindow[] findWindows(String... windownames) {
+        ArrayList<ScriptWindow> list = new ArrayList<ScriptWindow>();
+        for (Widget wdg = UI.instance.root.child; wdg != null; wdg = wdg.next) {
+            if (wdg instanceof Window) {
+                Window w = (Window)wdg;
+                for (String windowname : windownames)
+                    if (w.cap != null && w.cap.text != null && w.cap.text.contains(windowname)) {
+                        list.add(new ScriptWindow(w));
+                        break;
+                    }
+            }
+        }
+        return list.toArray(new ScriptWindow[list.size()]);
+    }
+    
     public ScriptBuff[] getBuffs() {
         ArrayList<ScriptBuff> list = new ArrayList<ScriptBuff>();
         synchronized(glob().buffs) {
@@ -90,11 +121,48 @@ public class ScriptGlobal {
         return arr;
     }
     
+    public ScriptCharWindow getCharWindow() {
+        for (Widget wdg = UI.instance.root.child; wdg != null; wdg = wdg.next)
+            if (wdg instanceof CharWnd)
+                return new ScriptCharWindow((CharWnd)wdg);
+        return null;
+    }
+    
     public ScriptFlowerMenu getContextMenu() {
         if (UI.flower_menu != null)
             return new ScriptFlowerMenu(UI.flower_menu);
         else
             return null;
+    }
+    
+    public ScriptCraftWindow getCraftWindow() {
+        for (HWindow wnd : ChatHWPanel.instance.getwnds()) {
+            if (wnd instanceof Makewindow) {
+                return new ScriptCraftWindow((Makewindow)wnd);
+            }
+        }
+        return null;
+    }
+    
+    public String getCursor() {
+        return getEngine().getCursor();
+    }
+    
+    public ScriptItem getDragItem() {
+        Item i = Utils.getDragItem();
+        return i != null ? new ScriptItem(i) : null;
+    }
+    
+    private Engine getEngine() {
+        return Engine.getInstance();
+    }
+    
+    public ScriptItem getEquipItem(int index) {
+        if (UI.equip != null) {
+            Item i = UI.equip.equed.get(index);
+            return i != null ? new ScriptItem(i) : null;
+        }
+        return null;
     }
     
     public ScriptGob[] getGobs() {
@@ -107,21 +175,12 @@ public class ScriptGlobal {
         return gobs.toArray(arr);
     }
     
-    public String getCursor() {
-        return getEngine().getCursor();
+    public int getHp() {
+        return getEngine().getHp();
     }
     
-    public ScriptItem getDragItem() {
-        Item i = Utils.getDragItem();
-        return i != null ? new ScriptItem(i) : null;
-    }
-   
-    public ScriptItem getEquipItem(int index) {
-        if (UI.equip != null) {
-            Item i = UI.equip.equed.get(index);
-            return i != null ? new ScriptItem(i) : null;
-        }
-        return null;
+    public int getHunger() {
+        return getEngine().getHunger();
     }
     
     public ScriptInventory getInventory(String windowname) {
@@ -141,19 +200,8 @@ public class ScriptGlobal {
         return (pl != null) ? pl.getc() : new Coord(0, 0);
     }
     
-    public int getStamina() {
-        return getEngine().getStamina();
-    }
-    
-    public int getHunger() {
-        return getEngine().getHunger();
-    }
-    
-    public int getHp() {
-        return getEngine().getHp();
-    }
-    
     public int getMyCoordX() { return getMyCoords().x; }
+    
     public int getMyCoordY() { return getMyCoords().y; }
     
     public int getObjectBlob(int id, int index) {
@@ -173,22 +221,11 @@ public class ScriptGlobal {
         return (UI.instance.mainview != null) ? UI.instance.mainview.getPlayerGob() : -1;
     }
     
-    public ScriptCharWindow getCharWindow() {
-        for (Widget wdg = UI.instance.root.child; wdg != null; wdg = wdg.next)
-            if (wdg instanceof CharWnd)
-                return new ScriptCharWindow((CharWnd)wdg);
-        return null;
+    public int getStamina() {
+        return getEngine().getStamina();
     }
     
-    public ScriptWindow findWindow(String... windownames) {
-        ScriptWindow[] windows = getWindows(windownames);
-        if (windows.length > 0)
-            return windows[0];
-        else 
-            return null;
-    }
-    
-    public ScriptWindow[] findWindows() {
+    public ScriptWindow[] getWindows() {
         ArrayList<ScriptWindow> list = new ArrayList<ScriptWindow>();
         for (Widget wdg = UI.instance.root.child; wdg != null; wdg = wdg.next)
             if (wdg instanceof Window)
@@ -196,23 +233,75 @@ public class ScriptGlobal {
         return list.toArray(new ScriptWindow[list.size()]);
     }
     
-    public ScriptWindow[] getWindows(String... windownames) {
-        ArrayList<ScriptWindow> list = new ArrayList<ScriptWindow>();
-        for (Widget wdg = UI.instance.root.child; wdg != null; wdg = wdg.next) {
-            if (wdg instanceof Window) {
-                Window w = (Window)wdg;
-                for (String windowname : windownames)
-                    if (w.cap != null && w.cap.text != null && w.cap.text.equals(windowname)) {
-                        list.add(new ScriptWindow(w));
-                        break;
-                    }
-            }
-        }
-        return list.toArray(new ScriptWindow[list.size()]);
+    private Glob glob() {
+        return UI.instance.sess.glob;
+    }
+    
+    public boolean hasContextMenu() {
+        return getContextMenu() != null;
+    }
+    
+    public boolean hasDragItem() {
+        return getDragItem() != null;
+    }
+    
+    public boolean hasInventory(String windowname) {
+        return Utils.getWindowInventory(windowname) != null;
     }
     
     public boolean isMoving() {
         return UI.instance.mainview.player_moving;
+    }
+    
+    // Click using absolute coords
+    public void mapAbsClick(int x, int y, int btn, int mod) {
+        Coord mc = new Coord(x,y);
+        getMapView().wdgmsg("click", Utils.getScreenCenter(), mc, btn, mod);               
+    }
+    
+    public void mapAbsInteractClick(int x, int y, int mod) {
+        MapView mv = getMapView();
+        Coord mc = new Coord(x,y);
+        mv.wdgmsg("itemact", Utils.getScreenCenter(), mc, mod);      
+    }
+    
+    // Click using relative coords
+    public void mapClick(int x, int y, int btn, int mod) {
+        MapView mv = getMapView();
+        Gob pgob;
+        synchronized(glob().oc) {
+            pgob = glob().oc.getgob(mv.getPlayerGob());
+        }
+        if (pgob == null) return;
+        Coord mc = MapView.tilify(pgob.getc());
+        Coord offset = new Coord(x,y).mul(MCache.tilesz);
+        mc = mc.add(offset);
+        mv.wdgmsg("click", Utils.getScreenCenter(), mc, btn, mod);
+    }
+    
+    public void mapInteractClick(int objid, int mod) {
+        MapView mv = getMapView();
+        Gob pgob, gob;
+        synchronized(glob().oc) {
+            pgob = glob().oc.getgob(mv.getPlayerGob());
+            gob = glob().oc.getgob(objid);
+        }
+        if (pgob == null || gob == null) return;
+        Coord mc = gob.getc();      
+        mv.wdgmsg("itemact", Utils.getScreenCenter(), mc, mod, objid, mc);      
+    }
+    
+    public void mapInteractClick(int x, int y, int mod) {
+        MapView mv = getMapView();
+        Gob pgob;
+        synchronized(glob().oc) {
+            pgob = glob().oc.getgob(mv.getPlayerGob());
+        }
+        if (pgob == null) return;
+        Coord mc = MapView.tilify(pgob.getc());
+        Coord offset = new Coord(x,y).mul(MCache.tilesz);
+        mc = mc.add( offset );
+        mv.wdgmsg("itemact", Utils.getScreenCenter(), mc, mod);      
     }
     
     // Move to specified object
@@ -250,109 +339,45 @@ public class ScriptGlobal {
         mv.wdgmsg("click", Utils.getScreenCenter(), mc, btn, modflags );                        
     }
     
-    /*public void mapPlace(int x, int y, int btn, int mod) {
+    public void mapPlace(int x, int y, int btn, int mod) {
         MapView mv = getMapView();
-        if (mv.plob != null) {
+        if (mv.isPlaceMode()) {
             Gob pgob;
-            synchronized(glob.oc) {
-                pgob = glob.oc.getgob(mv.getPlayerGob());
+            synchronized(glob().oc) {
+                pgob = glob().oc.getgob(mv.getPlayerGob());
             }
             if (pgob == null) return;
             Coord mc = MapView.tilify(pgob.getc());
-            Coord offset = new Coord(x,y).mul(tilesz);
+            Coord offset = new Coord(x,y).mul(MCache.tilesz);
             mc = mc.add( offset );          
             mv.wdgmsg("place", mc, btn, mod);
         }
-    }*/
-    
-    // Click using relative coords
-    public void mapClick(int x, int y, int btn, int mod) {
-        MapView mv = getMapView();
-        Gob pgob;
-        synchronized(glob().oc) {
-            pgob = glob().oc.getgob(mv.getPlayerGob());
-        }
-        if (pgob == null) return;
-        Coord mc = MapView.tilify(pgob.getc());
-        Coord offset = new Coord(x,y).mul(MCache.tilesz);
-        mc = mc.add(offset);
-        mv.wdgmsg("click", Utils.getScreenCenter(), mc, btn, mod);
-    }
-    
-    // Click using absolute coords
-    public void mapAbsClick(int x, int y, int btn, int mod) {
-        Coord mc = new Coord(x,y);
-        getMapView().wdgmsg("click", Utils.getScreenCenter(), mc, btn, mod);               
-    }
-    
-    public void mapInteractClick(int x, int y, int mod) {
-        MapView mv = getMapView();
-        Gob pgob;
-        synchronized(glob().oc) {
-            pgob = glob().oc.getgob(mv.getPlayerGob());
-        }
-        if (pgob == null) return;
-        Coord mc = MapView.tilify(pgob.getc());
-        Coord offset = new Coord(x,y).mul(MCache.tilesz);
-        mc = mc.add( offset );
-        mv.wdgmsg("itemact", Utils.getScreenCenter(), mc, mod);      
-    }
-    
-    public void mapAbsInteractClick(int x, int y, int mod) {
-        MapView mv = getMapView();
-        Gob pgob;
-        synchronized(glob().oc) {
-            pgob = glob().oc.getgob(mv.getPlayerGob());
-        }
-        if (pgob == null) return;
-        Coord mc = new Coord(x,y);
-        mv.wdgmsg("itemact", Utils.getScreenCenter(), mc, mod);      
-    }
-    
-    public void mapInteractClick(int objid, int mod) {
-        MapView mv = getMapView();
-        Gob pgob, gob;
-        synchronized(glob().oc) {
-            pgob = glob().oc.getgob(mv.getPlayerGob());
-            gob = glob().oc.getgob(objid);
-        }
-        if (pgob == null || gob == null) return;
-        Coord mc = gob.getc();      
-        mv.wdgmsg("itemact", Utils.getScreenCenter(), mc, mod, objid, mc);      
-    }
-    
-    public boolean hasContextMenu() {
-        return getContextMenu() != null;
-    }
-    
-    public boolean hasDragItem() {
-        return getDragItem() != null;
-    }
-    
-    public boolean hasInventory(String windowname) {
-        return Utils.getWindowInventory(windowname) != null;
     }
 
+    public void openCharWindow() {
+        UI.instance.root.wdgmsg("gk", KeyEvent.VK_CONTROL | KeyEvent.VK_T);
+    }
+    
+    public void openEquipment() {
+        UI.instance.root.wdgmsg("gk", KeyEvent.VK_CONTROL | KeyEvent.VK_E);
+    }
+    
     public void openInventory() {
         UI.instance.root.wdgmsg("gk", 9);
     }
     
-    public void openCharWindow() {
-        UI.instance.slen.wdgmsg("chr");
+    public void say(String message) {
+        ScriptChatWindow wnd = findChatWindow("Area Chat");
+        if (wnd != null)
+            wnd.say(message);
     }
     
-    public void sendAction(String action) {
+    public void sendAction(String... action) {
         if (UI.instance.mnu != null) {
-            if (action.equals("laystone"))
+            if (action.length == 1 && action[0].equals("laystone"))
                 UI.instance.mnu.wdgmsg("act", "stoneroad", "stone");
             else
-                UI.instance.mnu.wdgmsg("act", action);
-        }
-    }
-    
-    public void sendAction(String action1, String action2) {
-        if (UI.instance.mnu != null) {
-            UI.instance.mnu.wdgmsg("act", action1, action2);
+                UI.instance.mnu.wdgmsg("act", (Object[])action);
         }
     }
 }

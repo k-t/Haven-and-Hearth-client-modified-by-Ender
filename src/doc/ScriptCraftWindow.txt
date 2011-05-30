@@ -1,0 +1,13 @@
+/** Script wrapper for the haven.Makewindow class.
+ * @see @link page_global getCraftWindow() @endlink
+ */
+public class ScriptCraftWindow : ScriptWidget {
+    /** Returns the name of the craft. */
+    public String craftName { get; }
+    
+    /** Triggers the crafting of one item. */
+    public void craft();
+    
+    /** Triggers the crafting of all possible items. */
+    public void craftAll();
+}

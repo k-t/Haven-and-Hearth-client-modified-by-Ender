@@ -2,6 +2,7 @@ package haven.scripting;
 
 import java.lang.reflect.Array;
 import java.util.*;
+
 import haven.*;
 
 class ScriptWidget {
@@ -25,22 +26,14 @@ class ScriptWidget {
     public int getY() { return widget.c.y; }
     public void setY(int value) { widget.c.y = value; }
     
-    public int getWidth() { return widget.sz.x; }
-    public void setWidth(int value) { widget.sz.x = value; }
+    public final int getWidth() { return widget.sz.x; }
+    public final void setWidth(int value) { widget.sz.x = value; }
     
-    public int getHeight() { return widget.sz.y; }
-    public void setHeight(int value) { widget.sz.y = value; }
+    public final int getHeight() { return widget.sz.y; }
+    public final void setHeight(int value) { widget.sz.y = value; }
     
     public final void message(String msg, Object... args) {
         widget.wdgmsg(msg, args);
-    }
-    
-    public ScriptButton[] getButtons() {
-        Button[] buttons = getWidgets(Button.class);
-        ArrayList<ScriptButton> result = new ArrayList<ScriptButton>();
-        for (Button b : buttons)
-            result.add(new ScriptButton(b));
-        return result.toArray(new ScriptButton[result.size()]);
     }
     
     public ScriptWidget[] getWidgets() {
@@ -50,9 +43,9 @@ class ScriptWidget {
         return list.toArray(new ScriptWidget[list.size()]);
     }
     
-    public ScriptButton findButton(String name) {
+    public ScriptButton findButton(String caption) {
         for (Button b : getWidgets(Button.class)) {
-            if (b.text != null && b.text.text.equals(name))
+            if (b.text != null && b.text.text.equals(caption))
                 return new ScriptButton(b);
         }
         return null;
@@ -66,6 +59,19 @@ class ScriptWidget {
                 list.add((T)wdg);
         T[] arr = (T[])Array.newInstance(c, list.size());
         return list.toArray(arr);
+    }
+    
+    public ScriptInventory getInventory() {
+        ScriptInventory[] invs = getInventories();
+        return (invs.length > 0) ? invs[0] : null;
+    }
+    
+    public ScriptInventory[] getInventories() {
+        Inventory[] invs = getWidgets(Inventory.class);
+        ArrayList<ScriptInventory> result = new ArrayList<ScriptInventory>();
+        for (Inventory inv : invs)
+            result.add(new ScriptInventory(inv));
+        return result.toArray(new ScriptInventory[result.size()]);        
     }
 	
     @Override

@@ -569,4 +569,8 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     public Map<String, Console.Command> findcmds() {
 	return(cmdmap);
     }
+    
+    public HWindow[] getwnds() {
+        return wnds.toArray(new HWindow[wnds.size()]);
+    }
 }

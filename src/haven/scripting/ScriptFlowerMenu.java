@@ -2,10 +2,11 @@ package haven.scripting;
 
 import haven.FlowerMenu;
 
-public class ScriptFlowerMenu {
+public class ScriptFlowerMenu extends ScriptWidget {
     private final FlowerMenu menu;
     
     public ScriptFlowerMenu(FlowerMenu menu) {
+        super(menu);
         this.menu = menu;
     }
     

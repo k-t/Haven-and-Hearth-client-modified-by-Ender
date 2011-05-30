@@ -1,0 +1,7 @@
+/** Script wrapper for the haven.ChatHW class.
+ * @see @link page_global findChatWindow(String)@endlink
+ */
+public class ScriptChatWindow : ScriptWidget {
+    /** Sends the specified message to the chat. */
+    public void say(String message);
+}

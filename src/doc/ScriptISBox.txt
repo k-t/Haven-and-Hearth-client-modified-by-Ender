@@ -1,0 +1,45 @@
+/** Script wrapper for the haven.ISBox class.
+ * @see ScriptWindow.findBuildBox
+ */
+class ScriptISBox : ScriptWidget {
+    /** Returns the associated material resource name. */
+    public String name { get; }
+    
+    /** Returns the box label. */
+    public String label { get; }
+    
+    /** Returns the tooltip text. */
+    public String tooltip { get; }
+    
+    /** Returns the amount of remaining materials to complete a building . */
+    public int remaining { get; }
+    
+    /** Returns the amount of materials available for a building. */
+    public int available { get; }
+    
+    /** Returns the amount of already built materials. */
+    public int built { get; }
+    
+    /** Clicks on the box with the left mouse button. */
+    public void click();
+    
+    /** Drops the currently dragged item to the build box.
+     * @see @link page_global getDragItem()@endlink
+     */
+    public void drop();
+    
+    
+    /** Sends the transfer message which imitates <i>Shift+Left mouse button</i> click on the build box.
+     */
+    public void transferFrom();
+    
+    /** Sends the transfer message which imitates mouse wheeling items from the build box.
+     * @param mod Keyboard modifier.
+     */
+    public void transferFrom(int mod);
+    
+    /** Sends the transfer message which imitates mouse wheeling items to the build box.
+     * @param mod Keyboard modifier.
+     */
+    public void transferTo(int mod);
+}

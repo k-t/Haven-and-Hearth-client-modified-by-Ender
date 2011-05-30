@@ -88,12 +88,13 @@ public class Engine {
         configuration.setRecompileGroovySource(true);
         configuration.addCompilationCustomizers(
                 new ASTTransformationCustomizer(ThreadInterrupt.class),
-                new CustomCustomizer());
+                new ScriptGlobalCustomizer());
         configuration.setClasspathList(Arrays.asList(".", "./scripts"));
         try {
             gse = new GroovyScriptEngine(
                     new String[] { ".", "./scripts" },
                     new GroovyClassLoader(Thread.currentThread().getContextClassLoader(), configuration));
+            gse.setConfig(configuration);
         } catch (Exception e) {
             e.printStackTrace();
             gse = null;
@@ -180,11 +181,12 @@ public class Engine {
                 gse.run(filename, binding);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+            } finally {
+                thread = null;                
             }
             String msg = "Script finished";
             UI.instance.slen.error(msg);
             log().write(msg);
-            thread = null;
         }
     }
 }

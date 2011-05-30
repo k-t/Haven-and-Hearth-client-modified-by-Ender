@@ -1,54 +1,65 @@
-/**
- * Item.
- *
- * Wrapper for haven.Item widget.
+/** Script wrapper for the haven.Item class.
+ * @see ScriptInventory.items
+ * @see ScriptInventory.getItemAt
  */
-class ScriptItem {
-    /** Sends item action message.
-     * @param action Action name.
-     */
-    public void sendAction(String action);
+class ScriptItem : ScriptWidget {
+    /** Returns the item vertical position inside the inventory. */
+    public int row { get; }
     
-    /** Sends item action message.
-     * @param action Action name
-     * @param mod    Key modifier
-     */
-    public void sendAction(String action, int mod);
-    
-    /** Returns the item vertical position inside inventory. */
-    public int row();
-    
-    /** Returns the item horizontal position inside inventory. */
-    public int column();
+    /** Returns the item horizontal position inside the inventory. */
+    public int column { get; }
     
     /** Returns the number of rows which this item occupies. */
-    public int height();
+    public int rowSize { get; }
     
     /** Returns the number of columns which this item occupies. */
-    public int width();
+    public int columnSize { get; }
     
     /** Returns the name of the item resource. */
-    public String name();
+    public String name { get; }
     
     /** Returns a number associated with the item.
      *
      *  The property is used for things like number of ingredients needed for a craft,
      *  silkworm growth stage, etc.
      */
-    public int num();
+    public int num { get; }
     
     /** Returns a value which indicates progress on the item. */
-    public int meter();
+    public int meter { get; }
     
     /** Returns the item tooltip text. */
-    public String tooltip();
+    public String tooltip { get; }
     
-    /** Returns the item quality. */
-    public int quality();
+    /** Returns item quality. */
+    public int quality { get; }
     
     /** Checks whether the item resource name contains a specified string. */
     public boolean isName(String s);
     
     /** Checks whether the item tooltip text contains a specified string. */
     public boolean isTooltip(String s);
+    
+    /** Triggers the item interaction with the currenly dragged item.
+     * @see @link page_global getDragItem()@endlink
+     */
+    public void interact();
+    
+    /** Triggers the item interaction with the currenly dragged item.
+     * @param mod Keyboard modifier.
+     * @see @link page_global getDragItem()@endlink
+     */
+    public void interact(int mod);
+    
+    /** Takes the item from the inventory. */
+    public void take();
+    
+    /** Sends the transfer message to the item (<i>Shift+Left mouse button click</i>). */ 
+    public void transfer();
+    
+    /** Drops item to the ground. */
+    public void drop();
+    
+    /** Triggers the @c iact message (which usually shows a flower menu to interact with the item). */
+    public void act();
 }

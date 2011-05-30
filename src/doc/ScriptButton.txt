@@ -1,0 +1,10 @@
+/** Script wrapper for the haven.Button class.
+ * @see ScriptWidget.findButton
+ */
+public class ScriptButton : ScriptWidget {
+    /** Returns the button caption text. */
+    public String caption { get; }
+    
+    /** Clicks on the button. */
+    public void click();
+}

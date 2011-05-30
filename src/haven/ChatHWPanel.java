@@ -345,4 +345,8 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
 	}
 	return false;
     }
+    
+    public HWindow[] getwnds() {
+        return wnds.toArray(new HWindow[wnds.size()]);
+    }
 }
