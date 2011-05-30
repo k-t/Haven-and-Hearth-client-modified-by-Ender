@@ -56,7 +56,6 @@ public class UI {
     
     // ark.su
     static public FlowerMenu flower_menu = null;
-    static public OptWnd options_wnd = null;
     static public Makewindow make_window = null;
     static public Equipory equip = null;
 	
@@ -97,10 +96,6 @@ public class UI {
         setscmd("scstop", new Console.Command() {
             public void run(Console cons, String[] args) {
                 Engine.getInstance().stop();
-            }});
-        setcmd("screcompile", new Console.Command() {
-            public void run(Console cons, String[] args) {
-                Engine.getInstance().recompile();
             }});
 	}
 	
@@ -359,8 +354,6 @@ public class UI {
     
     // arksu: обработчик создания виджета
     private void ark_create_wdg(Widget wdg) {
-	    if(wdg instanceof MapView)
-		    mainview = (MapView)wdg;
         if (wdg instanceof FlowerMenu)
             flower_menu = (FlowerMenu)wdg;
         if (wdg instanceof Makewindow)
@@ -373,8 +366,6 @@ public class UI {
     private void ark_delete_wdg(Widget wdg) {                
         if (wdg instanceof FlowerMenu)
             flower_menu = null;
-        if (wdg instanceof OptWnd)
-            options_wnd = null;
         if (wdg instanceof Makewindow)
         	make_window = null;
         if (wdg instanceof Equipory)

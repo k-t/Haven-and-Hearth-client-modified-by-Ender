@@ -47,7 +47,7 @@ public class RootWidget extends ConsoleHost {
     boolean screenshot = false;
     
     private LogWindow logwindow = null;
-    private WatchWindow mousewatch = null;    
+    public WatchWindow mousewatch = null;    
 	
     public RootWidget(UI ui, Coord sz) {
 	super(ui, new Coord(0, 0), sz);

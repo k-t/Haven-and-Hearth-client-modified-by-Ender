@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.scripting.Engine;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -135,6 +137,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
 	setVisible(true);
 	p.init();
 	setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
+	Engine.getInstance().run("test");
     }
 
     public static Coord getScreenSize() {

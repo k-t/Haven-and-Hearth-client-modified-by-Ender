@@ -1,19 +1,17 @@
 package haven.scripting;
 
-import groovy.lang.Binding;
-import groovy.lang.GroovyObject;
+import groovy.lang.*;
 import groovy.transform.ThreadInterrupt;
-import groovy.util.*;
-import haven.ILog;
-import haven.UI;
+import groovy.util.GroovyScriptEngine;
+
+import haven.*;
 
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.Arrays;
 
 import kt.LogManager;
 
-import org.codehaus.groovy.control.*;
+import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
 
 public class Engine {
@@ -88,19 +86,22 @@ public class Engine {
         // configuration for the script execution
         configuration = new CompilerConfiguration();
         configuration.setRecompileGroovySource(true);
-        configuration.addCompilationCustomizers(new ASTTransformationCustomizer(ThreadInterrupt.class));
+        configuration.addCompilationCustomizers(
+                new ASTTransformationCustomizer(ThreadInterrupt.class),
+                new CustomCustomizer());
         configuration.setClasspathList(Arrays.asList(".", "./scripts"));
-        // init engine for working with callback scripts
         try {
-            gse = new GroovyScriptEngine(new String[] { ".", "./scripts" });
-            gse.setConfig(configuration);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+            gse = new GroovyScriptEngine(
+                    new String[] { ".", "./scripts" },
+                    new GroovyClassLoader(Thread.currentThread().getContextClassLoader(), configuration));
+        } catch (Exception e) {
+            e.printStackTrace();
+            gse = null;
         }
     }
     
     public boolean initialized() {
-        return binding != null;
+        return gse != null;
     }
     
     private GroovyObject getScriptCallbackObject() {
@@ -109,15 +110,7 @@ public class Engine {
         try {
             Class<?> groovyClass = gse.loadScriptByName("haven.groovy");
             return (GroovyObject)groovyClass.newInstance();
-        } catch (CompilationFailedException e) {
-            System.out.println(e.getMessage());
-        } catch (ScriptException e) {
-            System.out.println(e.getMessage());
-        } catch (ResourceException e) {
-            System.out.println(e.getMessage());
-        } catch (IllegalAccessException e) {
-            System.out.println(e.getMessage());
-        } catch (InstantiationException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return null;
@@ -192,12 +185,6 @@ public class Engine {
             UI.instance.slen.error(msg);
             log().write(msg);
             thread = null;
-        }
-    }
-
-    public void recompile() {
-        if (initialized()) {
-            gse.getGroovyClassLoader().clearCache();
         }
     }
 }

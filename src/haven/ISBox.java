@@ -29,8 +29,9 @@ package haven;
 public class ISBox extends Widget implements DTarget {
     static Tex bg = Resource.loadtex("gfx/hud/bosq");
     static Text.Foundry lf;
-    private Resource res;
-    private Text label;
+    public Resource res;
+    public Text label;
+    private int rem, av, bi;
     static {
         lf = new Text.Foundry(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 18), java.awt.Color.WHITE);
         lf.aa = true;
@@ -46,6 +47,9 @@ public class ISBox extends Widget implements DTarget {
     
     private void setlabel(int rem, int av, int bi) {
         label = lf.renderf("%d/%d/%d", rem, av, bi);
+        this.rem = rem;
+        this.av = av;
+        this.bi = bi;
     }
     
     public ISBox(Coord c, Widget parent, Resource res, int rem, int av, int bi) {
@@ -101,9 +105,16 @@ public class ISBox extends Widget implements DTarget {
     
     public void uimsg(String msg, Object... args) {
         if(msg == "chnum") {
-            setlabel((Integer)args[0], (Integer)args[1], (Integer)args[2]);
+            rem = (Integer)args[0];
+            av = (Integer)args[1];
+            bi = (Integer)args[2];
+            setlabel(rem, av, bi);
         } else {
             super.uimsg(msg, args);
         }
     }
+    
+    public int getremaining() { return rem; }
+    public int getavailable() { return av; }
+    public int getbuilt() { return bi; }
 }

@@ -40,6 +40,7 @@ public class RemoteUI implements UI.Receiver {
 	msg.adduint16(id);
 	msg.addstring(name);
 	msg.addlist(args);
+	kt.LogManager.getlog("Messages").write("<WDGMSG>" + name + " { " + argstostr(args) +  " }");
 	sess.queuemsg(msg);
     }
 	
@@ -99,12 +100,12 @@ public class RemoteUI implements UI.Receiver {
 	}
     }
     
-//    private String argstostr(Object... args) {
-//        StringBuilder sb = new StringBuilder();
-//        for (Object arg : args)        
-//            sb.append(arg).append(',');
-//        if (sb.length() > 0)
-//            sb.deleteCharAt(sb.length() - 1);
-//        return sb.toString();
-//    }
+    private String argstostr(Object... args) {
+        StringBuilder sb = new StringBuilder();
+        for (Object arg : args)        
+            sb.append(arg).append(',');
+        if (sb.length() > 0)
+            sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
 }
