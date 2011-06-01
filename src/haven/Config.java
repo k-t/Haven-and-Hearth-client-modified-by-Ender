@@ -26,16 +26,24 @@
 
 package haven;
 
+import static haven.Utils.getprop;
+
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.io.*;
 import java.util.Properties;
 import java.util.regex.Pattern;
-import java.net.URL;
-import java.io.PrintStream;
 
 import ender.GoogleTranslator;
-import static haven.Utils.getprop;
 
 public class Config {
     public static byte[] authck;
@@ -76,11 +84,13 @@ public class Config {
     public static boolean showBeast = false;
     public static boolean showDirection;
     public static boolean showNames;
+    public static boolean showOtherNames;
     public static boolean fastFlowerAnim;
     public static boolean sshot_compress;
     public static boolean sshot_noui;
+    public static boolean sshot_nonames;
     public static boolean newclaim;
-    public static boolean showQuality = false;
+    public static boolean showq;
     
     // ark.su options
     public static String bot_name1 = "";
@@ -258,6 +268,7 @@ public class Config {
         isSoundOn = options.getProperty("sound_on", "true").equals("true");
         showDirection = options.getProperty("show_direction", "true").equals("true");
         showNames = options.getProperty("showNames", "true").equals("true");
+        showOtherNames = options.getProperty("showOtherNames", "false").equals("true");
         showBeast = options.getProperty("showBeast", "false").equals("true");
         showRadius = options.getProperty("showRadius", "false").equals("true");
         showHidden = options.getProperty("showHidden", "false").equals("true");
@@ -265,7 +276,9 @@ public class Config {
         fastFlowerAnim = options.getProperty("fastFlowerAnim", "false").equals("true");
         sshot_compress = options.getProperty("sshot_compress", "false").equals("true");
         sshot_noui = options.getProperty("sshot_noui", "false").equals("true");
+        sshot_nonames = options.getProperty("sshot_nonames", "false").equals("true");
         newclaim = options.getProperty("newclaim", "true").equals("true");
+        showq = options.getProperty("showq", "true").equals("true");
         sfxVol = Integer.parseInt(options.getProperty("sfx_vol", "100"));
         musicVol = Integer.parseInt(options.getProperty("music_vol", "100"));
         hideObjectList.clear();
@@ -279,7 +292,6 @@ public class Config {
         timestamp = options.getProperty("timestamp","false").equals("true");
         bot_name1 = options.getProperty("bot_name1", "");
         bot_name2 = options.getProperty("bot_name2", "");
-        showQuality = options.getProperty("showQuality", "false").equals("true");
     }
 
     public static synchronized void setWindowOpt(String key, String value) {
@@ -321,6 +333,7 @@ public class Config {
         options.setProperty("sound_on", isSoundOn?"true":"false");
         options.setProperty("show_direction", showDirection?"true":"false");
         options.setProperty("showNames", showNames?"true":"false");
+        options.setProperty("showOtherNames", showOtherNames?"true":"false");
         options.setProperty("showBeast", showBeast?"true":"false");
         options.setProperty("showRadius", showRadius?"true":"false");
         options.setProperty("showHidden", showHidden?"true":"false");
@@ -328,11 +341,12 @@ public class Config {
         options.setProperty("fastFlowerAnim", fastFlowerAnim?"true":"false");
         options.setProperty("sshot_compress", sshot_compress?"true":"false");
         options.setProperty("sshot_noui", sshot_noui?"true":"false");
+        options.setProperty("sshot_nonames", sshot_nonames?"true":"false");
         options.setProperty("newclaim", newclaim?"true":"false");
+        options.setProperty("showq", showq?"true":"false");
         
         options.setProperty("bot_name1", bot_name1);
         options.setProperty("bot_name2", bot_name2);
-        options.setProperty("showQuality", showQuality ? "true" : "false");
         try {
             options.store(new FileOutputStream("haven.conf"), "Custom config options");
         } catch (IOException e) {

@@ -26,12 +26,16 @@
 
 package haven;
 
-import java.awt.image.BufferedImage;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Item extends Widget implements DTarget {
     static Coord shoff = new Coord(1, 3);
+    static Map<Integer, Tex> qmap;
     static Resource missing = Resource.load("gfx/invobjs/missing");
+    static Color outcol = new Color(8,8,8,255);
     public boolean dm = false;
     public int q;
     boolean hq;
@@ -67,6 +71,7 @@ public class Item extends Widget implements DTarget {
 		}
 	    });
 	missing.loadwait();
+	qmap = new HashMap<Integer, Tex>();
     }
 	
     private void fixsize() {
@@ -105,12 +110,9 @@ public class Item extends Widget implements DTarget {
 		g.frect(new Coord(sz.x-5,(int) ((1-a)*sz.y)), new Coord(5,(int) (a*sz.y)));
 		g.chcolor();
 	    }
-	    // don't show number if q display is enabled and object has q (!craft ingredient)
-	    if(num >= 0 && (!Config.showQuality || q < 0)) {
-		g.chcolor(Color.WHITE);
-		g.atext(Integer.toString(num), tex.sz(), 1, 1);
-	    } else if (q >= 0 && Config.showQuality && !dm) {
-		g.atext(Color.WHITE, new Color(0, 0, 0, 100), Integer.toString(q), tex.sz(), 1, 1);
+	    if(Config.showq && (q > 0)){
+		tex = getqtex(q);
+		g.aimage(tex, sz.sub(1,1), 1, 1);
 	    }
 	    ttres = res.get();
 	}
@@ -127,6 +129,20 @@ public class Item extends Widget implements DTarget {
 	}
     }
 
+    static Tex getqtex(int q){
+	synchronized (qmap) {
+	    if(qmap.containsKey(q)){
+		return qmap.get(q);
+	    } else {
+		BufferedImage img = Text.render(Integer.toString(q)).img;
+		img = Utils.outline2(img, outcol);
+		Tex tex = new TexI(img);
+		qmap.put(q, tex);
+		return tex;
+	    }
+	}
+    }
+    
     static Tex makesh(Resource res) {
 	BufferedImage img = res.layer(Resource.imgc).img;
 	Coord sz = Utils.imgsz(img);
@@ -248,7 +264,7 @@ public class Item extends Widget implements DTarget {
 	    if(wdg == this)
 		continue;
 	    Coord cc = w.xlate(wdg.c, true);
-	    if(c.isect(cc, wdg.sz)) {
+	    if(c.isect(cc, (wdg.hsz == null)?wdg.sz:wdg.hsz)) {
 		if(dropon(wdg, c.add(cc.inv())))
 		    return(true);
 	    }
@@ -265,7 +281,7 @@ public class Item extends Widget implements DTarget {
 	    if(wdg == this)
 		continue;
 	    Coord cc = w.xlate(wdg.c, true);
-	    if(c.isect(cc, wdg.sz)) {
+	    if(c.isect(cc, (wdg.hsz == null)?wdg.sz:wdg.hsz)) {
 		if(interact(wdg, c.add(cc.inv())))
 		    return(true);
 	    }
@@ -341,7 +357,7 @@ public class Item extends Widget implements DTarget {
 	return(true);
     }
     
-    // arksu получить координаты вещи
+    // arksu РїРѕР»СѓС‡РёС‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµС‰Рё
     public int coord_x() { return c.div(31).x; }
     public int coord_y() { return c.div(31).y; }
     

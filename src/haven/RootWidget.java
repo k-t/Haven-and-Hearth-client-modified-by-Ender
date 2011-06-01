@@ -26,7 +26,6 @@
 
 package haven;
 
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +39,8 @@ public class RootWidget extends ConsoleHost {
     Logout logout = null;
     Profile gprof;
     boolean afk = false;
-    boolean screenshot = false;
+    public static boolean screenshot = false;
+    public static boolean names_ready = false;
     public CustomLogWindow logwindow = null;
 	
     public RootWidget(UI ui, Coord sz) {
@@ -99,7 +99,7 @@ public class RootWidget extends ConsoleHost {
 	    } else if (code == KeyEvent.VK_Y && ctrl) {
 	    	Config.render_enable = !Config.render_enable;
 	    } else if (code == KeyEvent.VK_Q && ctrl) {
-	    	Config.showQuality = !Config.showQuality;
+	    	Config.showq = !Config.showq;
 	    	Config.saveOptions();
 	    } else if (code == KeyEvent.VK_M && ctrl) {
 	    	Window mw = UI.instance.slen.getMinimapWindow();
@@ -123,7 +123,7 @@ public class RootWidget extends ConsoleHost {
 	if(screenshot&&Config.sshot_noui){visible = false;}
 	super.draw(g);
 	drawcmd(g, new Coord(20, 580));
-	if(screenshot){
+	if(screenshot && (!Config.sshot_nonames || names_ready)){
 	    visible = true;
 	    screenshot = false;
 	    try {
