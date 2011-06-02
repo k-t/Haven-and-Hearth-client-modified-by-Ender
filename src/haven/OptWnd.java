@@ -204,13 +204,6 @@ public class OptWnd extends Window {
 		}
 	    }).a = ui.mnu.numpadbar.visible;
 	    
-	    (new CheckBox(new Coord(10, 310), tab, "Show item quality") {
-			public void changed(boolean val) {
-			    Config.showq = val;
-			    Config.saveOptions();
-			}
-		    }).a = Config.showq;
-	    
 	    Widget editbox = new Frame(new Coord(310, 30), new Coord(90, 100), tab);
 	    new Label(new Coord(20, 10), editbox, "Edit mode:");
 	    RadioGroup editmode = new RadioGroup(editbox) {

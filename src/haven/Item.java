@@ -35,7 +35,7 @@ public class Item extends Widget implements DTarget {
     static Coord shoff = new Coord(1, 3);
     static Map<Integer, Tex> qmap;
     static Resource missing = Resource.load("gfx/invobjs/missing");
-    static Color outcol = new Color(8,8,8,255);
+    static Color outcol = new Color(0,0,0,255);
     public boolean dm = false;
     public int q;
     boolean hq;
@@ -100,6 +100,10 @@ public class Item extends Widget implements DTarget {
 	    } else {
 		g.image(tex, Coord.z);
 	    }
+	    if(num >= 0) {
+		g.chcolor(Color.WHITE);
+		g.atext(Integer.toString(num), tex.sz(), 1, 1);
+	    }
 	    if(meter > 0) {
 		double a = ((double)meter) / 100.0;
 		int r = (int) ((1-a)*255);
@@ -135,7 +139,7 @@ public class Item extends Widget implements DTarget {
 		return qmap.get(q);
 	    } else {
 		BufferedImage img = Text.render(Integer.toString(q)).img;
-		img = Utils.outline2(img, outcol);
+		img = Utils.outline2(img, outcol, true);
 		Tex tex = new TexI(img);
 		qmap.put(q, tex);
 		return tex;
