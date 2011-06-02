@@ -90,7 +90,7 @@ Searches for a chat window which title contains the specified string.
 @par
 Searches for the object with the specified name inside the specified area.
 @param  name   Object resource name
-@param  radius Radius of the area (in tiles)
+@param  radius Radius of the area (in map points)
 @param  x, y   Offset from the player position which determines the area center (in map points)
 @return Object ID. 0, if such object not found.
 
