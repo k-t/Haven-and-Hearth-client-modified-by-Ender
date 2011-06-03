@@ -103,7 +103,7 @@ public class RootWidget extends ConsoleHost {
 	    } else if (code == KeyEvent.VK_Y && ctrl) {
 	    	Config.render_enable = !Config.render_enable;
 	    } else if (code == KeyEvent.VK_Q && ctrl) {
-	    	Config.showQuality = !Config.showQuality;
+	    	Config.showq = !Config.showq;
 	    	Config.saveOptions();
 	    } else if (code == KeyEvent.VK_M && ctrl) {
 	    	Window mw = UI.instance.slen.getMinimapWindow();
