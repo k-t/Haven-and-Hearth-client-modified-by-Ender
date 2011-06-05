@@ -91,6 +91,8 @@ public class Config {
     public static boolean sshot_nonames;
     public static boolean newclaim;
     public static boolean showq;
+    public static boolean autospeed = true;
+    public static AutoSpeedMode autospeedmode = AutoSpeedMode.Run;
     
     // ark.su options
     public static String bot_name1 = "";
@@ -292,6 +294,8 @@ public class Config {
         timestamp = options.getProperty("timestamp","false").equals("true");
         bot_name1 = options.getProperty("bot_name1", "");
         bot_name2 = options.getProperty("bot_name2", "");
+        autospeed = options.getProperty("autospeed", "true").equals("true");
+        autospeedmode = AutoSpeedMode.fromInteger(Integer.parseInt(options.getProperty("autospeedmode", "2")));
     }
 
     public static synchronized void setWindowOpt(String key, String value) {
@@ -344,6 +348,8 @@ public class Config {
         options.setProperty("sshot_nonames", sshot_nonames?"true":"false");
         options.setProperty("newclaim", newclaim?"true":"false");
         options.setProperty("showq", showq?"true":"false");
+        options.setProperty("autospeed", autospeed?"true":"false");
+        options.setProperty("autospeedmode", Integer.toString(autospeedmode.getValue()));
         
         options.setProperty("bot_name1", bot_name1);
         options.setProperty("bot_name2", bot_name2);

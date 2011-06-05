@@ -26,20 +26,29 @@
 
 package haven;
 
+import java.awt.Color;
+
+import haven.Resource.Image;
+
 public class Speedget extends Widget {
     public static final Tex imgs[][];
+    public static final Tex outlines[];
     public static final Coord tsz;
     private int cur, max;
     
     static {
 	imgs = new Tex[4][3];
+	outlines = new Tex[4];
 	String[] names = {"crawl", "walk", "run", "sprint"};
 	String[] vars = {"dis", "off", "on"};
 	int w = 0;
 	for(int i = 0; i < 4; i++) {
-	    for(int o = 0; o < 3; o++)
-		imgs[i][o] = Resource.loadtex("gfx/hud/meter/rmeter/" + names[i] + "-" + vars[o]);
-	    w += imgs[i][0].sz().x;
+	    for(int o = 0; o < 3; o++) {
+	        Image img = Resource.load("gfx/hud/meter/rmeter/" + names[i] + "-" + vars[o]).layer(Resource.imgc);
+	        imgs[i][o] = img.tex();
+	        // outlines[i] = 
+	        w += imgs[i][0].sz().x;
+	    }
 	}
 	tsz = new Coord(w, imgs[0][0].sz().y);
 	
@@ -62,6 +71,7 @@ public class Speedget extends Widget {
     public void draw(GOut g) {
 	int x = 0;
 	for(int i = 0; i < 4; i++) {
+	    Coord p = new Coord(x, 0);
 	    Tex t;
 	    if(i == cur)
 		t = imgs[i][2];
@@ -69,7 +79,13 @@ public class Speedget extends Widget {
 		t = imgs[i][0];
 	    else
 		t = imgs[i][1];
-	    g.image(t, new Coord(x, 0));
+	    g.image(t, p);
+	    // draw outline
+        if (Config.autospeed && i == Config.autospeedmode.getValue()) {
+            g.chcolor(Color.yellow);
+            g.fellipse(new Coord(x + t.sz().x / 2, t.sz().y), new Coord(2, 2));
+            g.chcolor();
+        }
 	    x += t.sz().x;
 	}
     }
@@ -77,8 +93,13 @@ public class Speedget extends Widget {
     public void uimsg(String msg, Object... args) {
 	if(msg == "cur")
 	    cur = (Integer)args[0];
-	else if(msg == "max")
+	else if(msg == "max") {
 	    max = (Integer)args[0];
+	    int auto = Config.autospeedmode.getValue();
+	    if (Config.autospeed && cur != auto) {
+	        wdgmsg("set", auto);
+	    }
+	}
     }
     
     public boolean mousedown(Coord c, int button) {

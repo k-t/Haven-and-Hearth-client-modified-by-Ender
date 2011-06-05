@@ -3,6 +3,8 @@ package haven.scripting;
 import groovy.lang.*;
 import groovy.transform.ThreadInterrupt;
 import groovy.util.GroovyScriptEngine;
+import groovy.util.ResourceException;
+import groovy.util.ScriptException;
 
 import haven.*;
 
@@ -27,6 +29,7 @@ public class Engine {
     private Binding binding;
     private CompilerConfiguration configuration;
     private GroovyScriptEngine gse;
+    private GroovyObject callback;
     
     private String cursor = null;
     private int hp = 0;
@@ -99,22 +102,28 @@ public class Engine {
             e.printStackTrace();
             gse = null;
         }
+        if (initialized()) {
+            initcallback();
+        }
     }
     
+    private void initcallback() {
+        try {
+            Class<?> groovyClass = gse.loadScriptByName("haven.groovy");
+            callback = (GroovyObject)groovyClass.newInstance();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public boolean initialized() {
         return gse != null;
     }
     
     private GroovyObject getScriptCallbackObject() {
         if (!initialized())
-            init();        
-        try {
-            Class<?> groovyClass = gse.loadScriptByName("haven.groovy");
-            return (GroovyObject)groovyClass.newInstance();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
+            init();
+        return callback;
     }
     
     public boolean handleKeyEvent(KeyEvent ev) {

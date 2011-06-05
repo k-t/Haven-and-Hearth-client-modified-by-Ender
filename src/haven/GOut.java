@@ -176,21 +176,6 @@ public class GOut {
 	checkerr();
     }
     
-    public void atext(Color tc, Color bc, String text, Coord c, double ax, double ay) {
-	Text t = Text.render(text);
-	Tex T = t.tex();
-	Coord sz = t.sz();
-	Coord p = c.add((int)((double)sz.x * -ax), (int)((double)sz.y * -ay));
-	Color cur = color;
-	chcolor(bc);
-    frect(p.add(-1, 0), sz.add(2, 0));
-    chcolor(tc);
-	image(T, p);
-	chcolor(cur);
-	T.dispose();
-	checkerr();
-    }
-    
     public void frect(Coord ul, Coord sz) {
 	glcolor();
 	texsel(-1);

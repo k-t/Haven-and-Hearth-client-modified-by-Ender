@@ -60,6 +60,7 @@ public class RootWidget extends ConsoleHost {
 	    int code = ev.getKeyCode();
 	    boolean ctrl = ev.isControlDown();
 	    boolean alt = ev.isAltDown();
+	    boolean shift = ev.isShiftDown();
 	    
 	    if(Config.profile && (key == '`')) {
 		new Profwnd(ui.slen, ui.mainview.prof, "MV prof");
@@ -73,13 +74,13 @@ public class RootWidget extends ConsoleHost {
 		Config.xray = !Config.xray;
 	    } else if((code == KeyEvent.VK_H)&&ctrl) {
 		Config.hide = !Config.hide;
-	    } else if((code == KeyEvent.VK_Q)&&alt) {
+	    } else if((code == KeyEvent.VK_Q)&&alt&&!shift) {
 		ui.spd.wdgmsg("set", 0);
-	    } else if((code == KeyEvent.VK_W)&&alt) {
+	    } else if((code == KeyEvent.VK_W)&&alt&&!shift) {
 		ui.spd.wdgmsg("set", 1);
-	    } else if((code == KeyEvent.VK_E)&&alt) {
+	    } else if((code == KeyEvent.VK_E)&&alt&&!shift) {
 		ui.spd.wdgmsg("set", 2);
-	    } else if((code == KeyEvent.VK_R)&&alt) {
+	    } else if((code == KeyEvent.VK_R)&&alt&&!shift) {
 		ui.spd.wdgmsg("set", 3);
 	    } else if((code == KeyEvent.VK_G)&&ctrl) {
 		Config.grid = !Config.grid;
@@ -124,6 +125,18 @@ public class RootWidget extends ConsoleHost {
 	            } else {
 	                mousewatch.show();
 	            }
+	    } else if (code == KeyEvent.VK_Q && alt && shift) {
+	        Config.autospeedmode = AutoSpeedMode.Crawl;
+	        Config.saveOptions();
+	    } else if (code == KeyEvent.VK_W && alt && shift) {
+	        Config.autospeedmode = AutoSpeedMode.Walk;
+	        Config.saveOptions();
+        } else if (code == KeyEvent.VK_E && alt && shift) {
+            Config.autospeedmode = AutoSpeedMode.Run;
+            Config.saveOptions();
+        } else if (code == KeyEvent.VK_R && alt && shift) {
+            Config.autospeedmode = AutoSpeedMode.Sprint;
+            Config.saveOptions();
 	    } else if(key != 0) {
 	        wdgmsg("gk", (int)key);
 	    } else {
