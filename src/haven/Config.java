@@ -299,10 +299,12 @@ public class Config {
     }
 
     public static synchronized void setWindowOpt(String key, String value) {
-	String prev_val =window_props.getProperty(key); 
-	if((prev_val != null)&&prev_val.equals(value))
-	    return;
-	window_props.setProperty(key, value);
+	synchronized (window_props) {
+	    String prev_val =window_props.getProperty(key); 
+	    if((prev_val != null)&&prev_val.equals(value))
+		return;
+	    window_props.setProperty(key, value);
+	}
 	saveWindowOpt();
     }
     
@@ -311,10 +313,12 @@ public class Config {
     }
     
     public static void saveWindowOpt() {
-	try {
-	    window_props.store(new FileOutputStream("windows.conf"), "Window config options");
-	} catch (IOException e) {
-	    System.out.println(e);
+	synchronized (window_props) {
+	    try {
+		window_props.store(new FileOutputStream("windows.conf"), "Window config options");
+	    } catch (IOException e) {
+		System.out.println(e);
+	    }
 	}
     }
     
