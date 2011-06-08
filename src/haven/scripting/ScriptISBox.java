@@ -43,7 +43,7 @@ public class ScriptISBox extends ScriptWidget {
     }
     
     public void drop() {
-        isbox.drop(Coord.z, Coord.z, null);
+        isbox.drop(Coord.z, Coord.z);
     }
     
     public void transferFrom() {
