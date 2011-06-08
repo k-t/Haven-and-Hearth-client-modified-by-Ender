@@ -314,9 +314,9 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 	    error((String) args[0]);
 	} else if (msg == "setbelt") {
 		if (args.length < 2) {
-		    //ToolbarWnd.setbelt((Integer) args[0], null);
+		    ToolbarWnd.setbelt((Integer) args[0], null);
 		} else {
-		    //ToolbarWnd.setbelt((Integer) args[0], ui.sess.getres((Integer) args[1]));
+		    ToolbarWnd.setbelt((Integer) args[0], ui.sess.getres((Integer) args[1]));
 		}
 	} else {
 	    super.uimsg(msg, args);

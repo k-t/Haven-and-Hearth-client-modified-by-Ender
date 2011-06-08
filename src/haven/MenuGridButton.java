@@ -308,59 +308,5 @@ public abstract class MenuGridButton implements Comparable<MenuGridButton> {
             return super.compareTo(o);
         }
     }
-
-    private static class ItemButton extends MenuGridButton {
-        private int slot;
-        private Resource res;
-        
-        public ItemButton(MenuGridButton parent, MenuGrid grid, int slot) {
-            super(parent, grid);
-            this.slot = slot;
-        }
-
-        @Override
-        public String id() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public Tex tex() {
-            if (res == null) {
-                Indir<Resource> indir = null; // getbelt(slot);
-                if (indir == null) {
-                    res = null;
-                } else {
-                    res = indir.get();
-                }
-            }
-            if (res != null)
-                return res.layer(Resource.imgc).tex();
-            else 
-                return null;
-        }
-
-        @Override
-        public String name() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public char hk() { return 0; }
-
-        @Override
-        public boolean hasTooltip() { return true; }
-
-        @Override
-        public MenuGridButton[] children() { return new MenuGridButton[0]; }
-
-        @Override
-        public void use() {
-            if (slot >= 0) {
-                UI.instance.slen.wdgmsg("belt", slot, 1, UI.instance.modflags());
-            }
-        }
-    }
 }
 

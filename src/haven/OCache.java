@@ -26,6 +26,8 @@
 
 package haven;
 
+import haven.minimap.Radar;
+
 import java.util.*;
 
 public class OCache implements Iterable<Gob> {
@@ -35,15 +37,18 @@ public class OCache implements Iterable<Gob> {
     private Map<Integer, Integer> deleted = new TreeMap<Integer, Integer>();
     private Glob glob;
     long lastctick = 0;
+    public final Radar radar;
 	
     public OCache(Glob glob) {
 	this.glob = glob;
+	this.radar = new Radar(Config.radar);
     }
 	
     public synchronized void remove(int id, int frame) {
 	    if(objs.containsKey(id)) {
 		objs.remove(id);
 		deleted.put(id, frame);
+		radar.remove(id);
 	    }
 	}
 	
@@ -126,6 +131,7 @@ public class OCache implements Iterable<Gob> {
 	if((d == null) || (d.res != res) || (d.sdt.blob.length > 0) || (sdt.blob.length > 0)) {
 	    g.setattr(new ResDrawable(g, res, sdt));
 	}
+	radar.add(g);
     }
 	
     public synchronized void linbeg(int id, int frame, Coord s, Coord t, int c) {
@@ -177,6 +183,7 @@ public class OCache implements Iterable<Gob> {
 	    g.setattr(lay);
 	}
 	lay.setlayers(layers);
+	radar.add(g);
     }
 	
     public synchronized void avatar(int id, int frame, List<Indir<Resource>> layers) {
@@ -301,5 +308,6 @@ public class OCache implements Iterable<Gob> {
 		b.update(name, group, type);
 	    }
 	}
+	radar.setcolor(id, BuddyWnd.gc[group]);
     }
 }

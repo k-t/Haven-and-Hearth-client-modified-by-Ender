@@ -76,23 +76,34 @@ public class MinimapPanel extends Window {
 	    }
 	};
 	
-	new IButton(new Coord(88, 12), this, Resource.loadimg("gfx/hud/charsh/plusup"), Resource.loadimg("gfx/hud/charsh/plusdown")) {
+   new IButton(new Coord(85, 8), this, Resource.loadimg("gfx/hud/buttons/dispradius"), Resource.loadimg("gfx/hud/buttons/dispradiusd")) {
+        public void click() {
+        BufferedImage tmp = down;
+        down = up;
+        up = tmp;
+        hover = tmp;
+        mm.showviewradius = !mm.showviewradius;
+        }
+    };
+	
+	new IButton(new Coord(108, 12), this, Resource.loadimg("gfx/hud/charsh/plusup"), Resource.loadimg("gfx/hud/charsh/plusdown")) {
 	    public void click() {
 		mm.setScale(mm.scale+1);
 	    }
 	};
 	
-	new IButton(new Coord(103, 12), this, Resource.loadimg("gfx/hud/charsh/minusup"), Resource.loadimg("gfx/hud/charsh/minusdown")) {
+	new IButton(new Coord(123, 12), this, Resource.loadimg("gfx/hud/charsh/minusup"), Resource.loadimg("gfx/hud/charsh/minusdown")) {
 	    public void click() {
 		mm.setScale(mm.scale-1);
 	    }
 	};
 	
-	btncave = new IButton(new Coord(121, 8), this, Resource.loadimg("gfx/hud/buttons/saveu"), Resource.loadimg("gfx/hud/buttons/saved")) {
+	btncave = new IButton(new Coord(141, 8), this, Resource.loadimg("gfx/hud/buttons/saveu"), Resource.loadimg("gfx/hud/buttons/saved")) {
 	    public void click() {
 		mm.saveCaveMaps();
 	    }
 	};
+	
 	pack();
 	this.c = new Coord( MainFrame.getInnerSize().x - this.sz.x, 7);
 	loadpos();

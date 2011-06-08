@@ -408,6 +408,18 @@ public class Utils {
 	}
     }
     
+    static byte[] readall(File file) throws IOException {
+        byte[] buffer = new byte[(int)file.length()];
+        BufferedInputStream f = null;
+        try {
+            f = new BufferedInputStream(new FileInputStream(file));
+            f.read(buffer);
+        } finally {
+            if (f != null) try { f.close(); } catch (IOException ignored) { }
+        }
+        return buffer;
+    }
+    
     private static void dumptg(ThreadGroup tg, PrintWriter out, int indent) {
 	for(int o = 0; o < indent; o++)
 	    out.print("\t");

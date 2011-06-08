@@ -29,7 +29,9 @@ package haven;
 import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
 import haven.MCache.Grid;
+import haven.minimap.Marker;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,11 +65,12 @@ public class MiniMap extends Widget {
     public static final Tex nomap = Resource.loadtex("gfx/hud/mmap/nomap");
     public static final Resource plx = Resource.load("gfx/hud/mmap/x");
     public Coord off, doff;
-    boolean hidden = false, grid=false;;
+    boolean hidden = false, grid = false;
     MapView mv;
     boolean dm = false;
     public int scale = 4;
     double scales[] = {0.5, 0.66, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2};
+    boolean showviewradius = false;
     
     public double getScale() {
         return scales[scale];
@@ -370,17 +373,43 @@ public class MiniMap extends Widget {
 	}
 	//end of grid
 	
-	if((!plx.loading)&&(!hidden)) {
+	if(!hidden) {
 	    synchronized(ui.sess.glob.party.memb) {
-		for(Party.Member m : ui.sess.glob.party.memb.values()) {
-		    Coord ptc = m.getc();
-		    if(ptc == null)
-			continue;
-		    ptc = ptc.div(tilesz).add(tc.inv()).add(hsz.div(2));
-		    g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 128);
-		    g.image(plx.layer(Resource.imgc).tex(), ptc.add(plx.layer(Resource.negc).cc.inv()));
-		    g.chcolor();
-		}
+	        if (Config.isRadarOn) {
+    	        // draw custom markers
+    	        for (Marker mark : ui.sess.glob.oc.radar.getmarkers()) {
+    	            if (!mark.visible() ||
+    	                ui.sess.glob.party.memb.containsKey(mark.gobid())) // do not display party members
+    	                continue;
+                    Coord ptc = mark.getc();
+                    if(ptc == null)
+                        continue;
+                    ptc = ptc.div(tilesz).add(tc.inv()).add(hsz.div(2));
+                    g.chcolor(mark.color);
+                    g.image(mark.tex(), ptc.add(-mark.negc().x, -mark.negc().y));
+                    g.chcolor();
+                }
+	        }
+	        if (!plx.loading) {
+        		for(Party.Member m : ui.sess.glob.party.memb.values()) {
+        		    Coord ptc = m.getc();
+        		    if(ptc == null)
+        		        continue;
+        		    ptc = ptc.div(tilesz).add(tc.inv()).add(hsz.div(2));
+        		    g.chcolor(m.col.getRed(), m.col.getGreen(), m.col.getBlue(), 128);
+        		    g.image(plx.layer(Resource.imgc).tex(), ptc.add(plx.layer(Resource.negc).cc.inv()));
+        		    g.chcolor();
+        		    if (this.showviewradius && m.gobid == mv.playergob) {
+        		        Coord rc = ptc.add((int)(-500 / tilesz.x * scale), (int)(-500 / tilesz.y * scale));
+        		        Coord rs = new Coord((int)(1000 / tilesz.x * scale), (int)(1000 / tilesz.y * scale)); 
+        		        g.chcolor(new Color(0, 0, 0, 30));
+        		        g.frect(rc, rs);
+        		        g.chcolor(new Color(0, 0, 0, 90));
+        		        g.rect(rc, rs);
+        		        g.chcolor();
+        		    }
+        		}
+    	    }
 	    }
 	}
 	g.gl.glPopMatrix();

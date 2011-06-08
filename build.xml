@@ -63,7 +63,7 @@
       <fileset dir="build/classes-lib" />
       <manifest>
         <attribute name="Main-Class" value="haven.MainFrame" />
-        <attribute name="Class-Path" value="jogl.jar gluegen-rt.jar haven-res.jar groovy-all-1.8.0.jar" />
+        <attribute name="Class-Path" value="jogl.jar gluegen-rt.jar haven-res.jar groovy-all-1.8.0.jar kthaven-res.jar" />
       </manifest>
     </jar>
     <chmod file="build/haven.jar" perm="a+x" />

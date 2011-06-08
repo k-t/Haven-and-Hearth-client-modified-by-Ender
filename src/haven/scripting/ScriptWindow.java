@@ -1,7 +1,5 @@
 package haven.scripting;
 
-import java.util.ArrayList;
-
 import haven.*;
 
 public class ScriptWindow extends ScriptWidget {

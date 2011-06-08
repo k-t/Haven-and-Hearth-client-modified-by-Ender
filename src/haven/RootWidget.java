@@ -28,7 +28,6 @@ package haven;
 
 import haven.scripting.Engine;
 
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +46,6 @@ public class RootWidget extends ConsoleHost {
     boolean screenshot = false;
     
     private LogWindow logwindow = null;
-    public WatchWindow mousewatch = null;    
 	
     public RootWidget(UI ui, Coord sz) {
 	super(ui, new Coord(0, 0), sz);
@@ -118,13 +116,6 @@ public class RootWidget extends ConsoleHost {
 	    		cp.folded = !cp.folded;
 	    } else if (code == KeyEvent.VK_F11 && alt) {
 	    	Config.debug_flag =  !Config.debug_flag;
-	          if (mousewatch == null) {
-	              mousewatch = new WatchWindow(new Coord(10, 10), new Coord(200, 200), this, "Debug");
-	            } else if (mousewatch.isVisible()) {
-	                mousewatch.hide();
-	            } else {
-	                mousewatch.show();
-	            }
 	    } else if (code == KeyEvent.VK_Q && alt && shift) {
 	        Config.autospeedmode = AutoSpeedMode.Crawl;
 	        Config.saveOptions();

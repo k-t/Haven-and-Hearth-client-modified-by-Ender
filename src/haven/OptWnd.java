@@ -162,55 +162,62 @@ public class OptWnd extends Window {
 		}
 	    }).a = Config.fastFlowerAnim;
 	    
-	    (new CheckBox(new Coord(220, 165), tab, "Compress screenshots") {
+	    (new CheckBox(new Coord(220, 160), tab, "Compress screenshots") {
 		public void changed(boolean val) {
 		    Config.sshot_compress = val;
 		    Config.saveOptions();
 		}
 	    }).a = Config.sshot_compress;
 	    
-	    (new CheckBox(new Coord(220, 200), tab, "Exclude UI from screenshot") {
+	    (new CheckBox(new Coord(220, 190), tab, "Exclude UI from screenshot") {
 		public void changed(boolean val) {
 		    Config.sshot_noui = val;
 		    Config.saveOptions();
 		}
 	    }).a = Config.sshot_noui;
 	    
-	    (new CheckBox(new Coord(220, 235), tab, "Exclude names from screenshot") {
+	    (new CheckBox(new Coord(220, 220), tab, "Exclude names from screenshot") {
 		public void changed(boolean val) {
 		    Config.sshot_nonames = val;
 		    Config.saveOptions();
 		}
 	    }).a = Config.sshot_nonames;
 	    
-	    (new CheckBox(new Coord(220, 270), tab, "Use optimized claim higlighting") {
+	    (new CheckBox(new Coord(220, 250), tab, "Use optimized claim higlighting") {
 		public void changed(boolean val) {
 		    Config.newclaim = val;
 		    Config.saveOptions();
 		}
 	    }).a = Config.newclaim;
 	    
-	    (new CheckBox(new Coord(220, 305), tab, "Show digit toolbar") {
+	    (new CheckBox(new Coord(220, 280), tab, "Show digit toolbar") {
 		public void changed(boolean val) {
 		    ui.mnu.digitbar.visible = val;
 		    Config.setWindowOpt(ui.mnu.digitbar.name, val);
 		}
 	    }).a = ui.mnu.digitbar.visible;
 	    
-	    (new CheckBox(new Coord(220, 340), tab, "Show F-button toolbar") {
+	    (new CheckBox(new Coord(220, 310), tab, "Show F-button toolbar") {
 		public void changed(boolean val) {
 		    ui.mnu.functionbar.visible = val;
 		    Config.setWindowOpt(ui.mnu.functionbar.name, val);
 		}
 	    }).a = ui.mnu.functionbar.visible;
 	    
-	    (new CheckBox(new Coord(220, 375), tab, "Show numpad toolbar") {
+	    (new CheckBox(new Coord(220, 340), tab, "Show numpad toolbar") {
 		public void changed(boolean val) {
 		    ui.mnu.numpadbar.visible = val;
 		    Config.setWindowOpt(ui.mnu.numpadbar.name, val);
 		}
 	    }).a = ui.mnu.numpadbar.visible;
 	    
+       (new CheckBox(new Coord(220, 370), tab, "Enable radar") {
+       public void changed(boolean val) {
+           Config.isRadarOn = val;
+           Config.saveOptions();
+       }
+       }).a = Config.isRadarOn;
+
 	    Widget editbox = new Frame(new Coord(310, 30), new Coord(90, 100), tab);
 	    new Label(new Coord(20, 10), editbox, "Edit mode:");
 	    RadioGroup editmode = new RadioGroup(editbox) {
