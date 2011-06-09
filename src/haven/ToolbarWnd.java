@@ -151,6 +151,7 @@ public class ToolbarWnd extends Window implements DTarget, DropTarget {
 	String configFileName = "belts_" + Config.currentCharName.replaceAll("[^a-zA-Z()]", "_") + ".conf";
 	try {
 	    synchronized (beltsConfig) {
+	    beltsConfig.clear();
 		beltsConfig.load(new FileInputStream(configFileName));
 	    }
 	} catch (FileNotFoundException e) {

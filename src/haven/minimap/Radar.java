@@ -54,9 +54,11 @@ public class Radar {
         return undefined.containsKey(g.id) || markers.containsKey(g.id);
     }
     
-    public Iterable<Marker> getmarkers() {
+    public Marker[] getmarkers() {
         checkundefined();
-        return markers.values();
+        synchronized (markers) {
+            return markers.values().toArray(new Marker[markers.size()]);
+        }
     }
     
     public synchronized void remove(int gobid) {
