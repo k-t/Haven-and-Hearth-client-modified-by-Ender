@@ -131,27 +131,29 @@ public class Fightview extends Widget {
         comwdg.c.x = MainFrame.centerPoint.x - 85;
         c.x = MainFrame.innerSize.width - 10 - bg.sz().x;
         int y = 0;
+        synchronized (lsrel) {
         for(Relation rel : lsrel) {
             if(rel == current) {
-		rel.show(false);
+                rel.show(false);
                 continue;
-	    }
+            }
             g.image(bg, new Coord(0, y));
             rel.ava.c = new Coord(25, ((bg.sz().y - rel.ava.sz.y) / 2) + y);
-	    rel.give.c = new Coord(5, 4 + y);
-	    rel.show(true);
-	    Tex name = rel.name();
-	    if(name != null){
-		g.image(name, new Coord(65, y-2));
-	    }
-	    String str = String.format("$img[gfx/hud/combat/bal]%d/%d $img[gfx/hud/combat/ip]%d/%d\n",rel.bal, rel.intns, rel.ip, rel.oip);
-	    str += "$img[gfx/hud/combat/off]"+((int)rel.off/100);
-	    str += " $img[gfx/hud/combat/def]"+((int)rel.def/100);
-	    Tex text = RichText.render(str, 0).tex();
-	    g.image(text, new Coord(65, y + 10));
-	    text.dispose();
-            //g.text(String.format("%d %d %d/%d", rel.bal, rel.intns, new Coord(65, y + 10));
-            y += bg.sz().y + ymarg;
+    	    rel.give.c = new Coord(5, 4 + y);
+    	    rel.show(true);
+    	    Tex name = rel.name();
+    	    if(name != null){
+    		g.image(name, new Coord(65, y-2));
+    	    }
+    	    String str = String.format("$img[gfx/hud/combat/bal]%d/%d $img[gfx/hud/combat/ip]%d/%d\n",rel.bal, rel.intns, rel.ip, rel.oip);
+    	    str += "$img[gfx/hud/combat/off]"+((int)rel.off/100);
+    	    str += " $img[gfx/hud/combat/def]"+((int)rel.def/100);
+    	    Tex text = RichText.render(str, 0).tex();
+    	    g.image(text, new Coord(65, y + 10));
+    	    text.dispose();
+                //g.text(String.format("%d %d %d/%d", rel.bal, rel.intns, new Coord(65, y + 10));
+                y += bg.sz().y + ymarg;
+        }
         }
         super.draw(g);
     }
@@ -166,25 +168,31 @@ public class Fightview extends Widget {
     }
     
     private Relation getrel(int gobid) {
+        synchronized (lsrel) {
         for(Relation rel : lsrel) {
             if(rel.gobid == gobid)
                 return(rel);
+        }
         }
         throw(new Notfound(gobid));
     }
     
     public void wdgmsg(Widget sender, String msg, Object... args) {
         if(sender instanceof Avaview) {
+            synchronized (lsrel) {
             for(Relation rel : lsrel) {
                 if(rel.ava == sender)
                     wdgmsg("click", rel.gobid, args[0]);
             }
+            }
             return;
         }
 	if(sender instanceof GiveButton) {
-            for(Relation rel : lsrel) {
+            synchronized (lsrel) {
+	        for(Relation rel : lsrel) {
                 if(rel.give == sender)
                     wdgmsg("give", rel.gobid, args[0]);
+            }
             }
             return;
 	}
@@ -202,17 +210,17 @@ public class Fightview extends Widget {
             Relation rel = new Relation((Integer)args[0]);
             rel.bal = (Integer)args[1];
             rel.intns = (Integer)args[2];
-	    rel.give((Integer)args[3]);
+            rel.give((Integer)args[3]);
             rel.ip = (Integer)args[4];
             rel.oip = (Integer)args[5];
             rel.off = (Integer)args[6];
             rel.def = (Integer)args[7];
-            lsrel.addFirst(rel);
+            synchronized (lsrel) { lsrel.addFirst(rel); }
             return;
         } else if(msg == "del") {
             Relation rel = getrel((Integer)args[0]);
 	    rel.remove();
-            lsrel.remove(rel);
+            synchronized (lsrel) { lsrel.remove(rel); }
             return;
         } else if(msg == "upd") {
             Relation rel = getrel((Integer)args[0]);
@@ -230,14 +238,16 @@ public class Fightview extends Widget {
         } else if(msg == "cur") {
             try {
                 Relation rel = getrel((Integer)args[0]);
+                synchronized (lsrel) {
                 lsrel.remove(rel);
                 lsrel.addFirst(rel);
-		current = rel;
-		curgive.state = rel.give.state;
-		curava.avagob = rel.gobid;
+                }
+                current = rel;
+                curgive.state = rel.give.state;
+                curava.avagob = rel.gobid;
             } catch(Notfound e) {
-		current = null;
-	    }
+                current = null;
+            }
             return;
         } else if(msg == "atkc") {
 	    atkc = System.currentTimeMillis() + (((Integer)args[0]) * 60);
