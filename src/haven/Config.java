@@ -97,6 +97,7 @@ public class Config {
     public static AutoSpeedMode autospeedmode = AutoSpeedMode.Run;
     public static boolean isRadarOn = true;
     public static final RadarConfig radar = new RadarConfig("radar.xml");
+    public static boolean saveMaps = true;
     
     // ark.su options
     public static String bot_name1 = "";
@@ -302,6 +303,7 @@ public class Config {
         autospeedmode = AutoSpeedMode.fromInteger(Integer.parseInt(options.getProperty("autospeedmode", "2")));
         autospeed = options.getProperty("autospeed", "true").equals("true");
         isRadarOn = options.getProperty("radar_on", "true").equals("true");
+        saveMaps = options.getProperty("save_maps", "true").equals("true");
     }
 
     public static synchronized void setWindowOpt(String key, String value) {
@@ -361,6 +363,7 @@ public class Config {
         options.setProperty("autospeed", autospeed?"true":"false");
         options.setProperty("autospeedmode", Integer.toString(autospeedmode.getValue()));
         options.setProperty("radar_on", isRadarOn?"true":"false");
+        options.setProperty("save_maps", saveMaps?"true":"false");
         
         options.setProperty("bot_name1", bot_name1);
         options.setProperty("bot_name2", bot_name2);

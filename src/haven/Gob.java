@@ -163,41 +163,51 @@ public class Gob implements Sprite.Owner {
         hide = false;
 	Coord dro = drawoff();
 	for(Overlay ol : ols) {
-            if (ol.spr != null) {
-		ol.spr.setup(drawer, dc, dro);
+	    if (ol.spr != null)
+	        ol.spr.setup(drawer, dc, dro);
 	}
-        }
-        if (Config.hide) {
-            for (String objectName : Config.hideObjectList) {
-                if (resourceName.contains(objectName)&&(!resourceName.contains("door"))) {
-                    hide = true;
-                }
+    if (Config.hide) {
+        for (String objectName : Config.hideObjectList) {
+            if (resourceName.contains(objectName)&&(!resourceName.contains("door"))) {
+                hide = true;
             }
         }
-        if (d != null && !hide) {
-	    d.setup(drawer, dc, dro);
     }
+    if (d != null && !hide)
+        d.setup(drawer, dc, dro);
     }
     
     public String resname() {
-	Resource res;
-	ResDrawable dw = getattr(ResDrawable.class);
-	String name = "";
-	if(dw != null){
-	    res = dw.res.get();
-	    if(res != null) {
-		name = res.name;
-	    }
-	} else {
-	    Layered ld = getattr(Layered.class);
-	    if((ld != null)&&(ld.layers.size()>0)) {
-		res = ld.layers.get(0).get();
-		if(res != null)
-		    name = res.name;
-	    }
-	}
-	//return (dw != null && dw.res.get() != null ? dw.res.get().name : "");
-	return name;
+        Resource res = null;
+        Drawable d = getattr(Drawable.class);
+        if (d instanceof ResDrawable) {
+            ResDrawable rd = (ResDrawable)d;
+            res = rd.res.get();
+        } else if (d instanceof Layered) {
+            Layered l = (Layered)d;
+            if (l.layers.size() > 0) {
+                res = l.layers.get(0).get();
+            }
+        }
+        return res != null ? res.name : "";
+    }
+    
+    public String[] resnames() {
+        ArrayList<String> names = new ArrayList<String>();
+        Drawable d = getattr(Drawable.class);
+        if (d instanceof ResDrawable) {
+            ResDrawable rd = (ResDrawable)d;
+            Resource res = rd.res.get();
+            if (res != null) names.add(res.name);
+        } else if (d instanceof Layered) {
+            Layered l = (Layered)d;
+            if (l != null)
+                for (Indir<Resource> layer : l.layers) {
+                    Resource res = layer.get();
+                    if (res != null) names.add(res.name);
+                }
+        }
+        return names.toArray(new String[names.size()]);        
     }
     
     public Random mkrandoom() {
@@ -225,8 +235,7 @@ public class Gob implements Sprite.Owner {
 	return(null);
     }
     
-    // получить байт из мессаги
-    public byte getBlob(int index) {
+    public byte getblob(int index) {
         Drawable d = getattr(Drawable.class);
         ResDrawable dw = getattr(ResDrawable.class);
         if (dw != null && d != null) {

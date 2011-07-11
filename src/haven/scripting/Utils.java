@@ -2,7 +2,15 @@ package haven.scripting;
 
 import haven.*;
 
-public class Utils {
+class Utils {
+    public static boolean isObjectName(Gob gob, String... names) {
+        String objname = gob.resname();
+        for (String name : names)
+            if ((name.length() > 0 && objname.contains(name)) || name.length() == 0)
+                return true;
+        return false;
+    }
+    
     public static Item getDragItem() {
         for (Widget wdg = UI.instance.root.child; wdg != null; wdg = wdg.next)
             if ((wdg instanceof Item) && (((Item)wdg).dm))

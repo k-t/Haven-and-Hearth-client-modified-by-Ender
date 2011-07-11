@@ -129,9 +129,10 @@ public class OCache implements Iterable<Gob> {
 	    return;
 	ResDrawable d = (ResDrawable)g.getattr(Drawable.class);
 	if((d == null) || (d.res != res) || (d.sdt.blob.length > 0) || (sdt.blob.length > 0)) {
-	    g.setattr(new ResDrawable(g, res, sdt));
+	    d = new ResDrawable(g, res, sdt);
+	    g.setattr(d);
+	    radar.add(g);
 	}
-	radar.add(g);
     }
 	
     public synchronized void linbeg(int id, int frame, Coord s, Coord t, int c) {
@@ -181,9 +182,9 @@ public class OCache implements Iterable<Gob> {
 	if((lay == null) || (lay.base != base)) {
 	    lay = new Layered(g, base);
 	    g.setattr(lay);
+	    radar.add(g);
 	}
 	lay.setlayers(layers);
-	radar.add(g);
     }
 	
     public synchronized void avatar(int id, int frame, List<Indir<Resource>> layers) {

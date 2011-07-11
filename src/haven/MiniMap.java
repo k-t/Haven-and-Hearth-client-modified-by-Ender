@@ -71,6 +71,7 @@ public class MiniMap extends Widget {
     public int scale = 4;
     double scales[] = {0.5, 0.66, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2};
     boolean showviewradius = false;
+    static boolean sessionstarted = false;
     
     public double getScale() {
         return scales[scale];
@@ -155,20 +156,24 @@ public class MiniMap extends Widget {
 			BufferedImage img;
 			try {
 			    img = ImageIO.read(in);
-			    if ((!cached)&(mappingSession > 0)) {
-				String fileName;
-				if (gridsHashes.containsKey(grid)) {
-				    Coord coordinates = gridsHashes.get(grid);
-				    fileName = "tile_" + coordinates.x + "_"
-					    + coordinates.y;
-				} else {
-				    fileName = grid;
-				}
-				
-				File outputfile = new File("map/"
-					+ Utils.sessdate(mappingSession) + "/" + fileName
-					+ ".png");
-				ImageIO.write(img, "png", outputfile);
+			    if ((!cached) && Config.saveMaps) {
+                    if (!sessionstarted)
+                        // start delayed session
+                        newMappingSession();
+                    if (mappingSession > 0) {
+    			        String fileName;
+        				if (gridsHashes.containsKey(grid)) {
+        				    Coord coordinates = gridsHashes.get(grid);
+        				    fileName = "tile_" + coordinates.x + "_"
+        					    + coordinates.y;
+        				} else {
+        				    fileName = grid;
+        				}
+        				File outputfile = new File("map/"
+        					+ Utils.sessdate(mappingSession) + "/" + fileName
+        					+ ".png");
+        				ImageIO.write(img, "png", outputfile);
+                    }
 			    }
 			} finally {
 			    Utils.readtileof(in);
@@ -214,6 +219,11 @@ public class MiniMap extends Widget {
     }
     
     public static void newMappingSession() {
+    if (!Config.saveMaps) {
+        // delay session start
+        sessionstarted = false;
+        return;
+    }
 	long newSession = System.currentTimeMillis();
 	String date = Utils.sessdate(newSession);
 	try {
@@ -224,6 +234,7 @@ public class MiniMap extends Widget {
 	    mappingSession = newSession;
 	    gridsHashes.clear();
 	    coordHashes.clear();
+	    sessionstarted = true;
 	} catch (IOException ex) {
 	}
     }
@@ -385,7 +396,7 @@ public class MiniMap extends Widget {
                     if(ptc == null)
                         continue;
                     ptc = ptc.div(tilesz).add(tc.inv()).add(hsz.div(2));
-                    g.chcolor(mark.color);
+                    g.chcolor(ui.sess.glob.oc.radar.getcolor(mark));
                     g.image(mark.tex(), ptc.add(-mark.negc().x, -mark.negc().y));
                     g.chcolor();
                 }

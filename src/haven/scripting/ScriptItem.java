@@ -27,7 +27,7 @@ public class ScriptItem extends ScriptWidget {
     }
     
     public String getName() {
-        return item.getResName();
+        return item.resname();
     }
     
     public int getNum() {

@@ -24,7 +24,17 @@ public class RadarConfig {
         try { load(); } catch (Exception e) { System.out.println(e.getMessage()); }
     }
     
-    public synchronized MarkerClass getmarker(String resname) {
+    public synchronized MarkerClass getmarker(Gob gob) {
+        for (String name : gob.resnames()) {
+            MarkerClass mc = getmarker(name);
+            // return first matched marker
+            if (mc != null)
+                return mc;
+        }
+        return null;                        
+    }
+    
+    private synchronized MarkerClass getmarker(String resname) {
         if (unknowncache.contains(resname)) return null;
         // try to get already created marker
         MarkerClass m = markercache.get(resname);
@@ -51,7 +61,7 @@ public class RadarConfig {
     
     private MarkerClass newmarker(String resname, MarkerConfig mi) {
         Tex tex = mi.isgenerated() ? Utils.generatemarkertex(resname) : Resource.loadtex(mi.res);
-        return new MarkerClass(tex, mi.show);
+        return new MarkerClass(tex, mi.show, resname.startsWith("gfx/borka/body"));
     }
     
     /** Loads marker configuration. */

@@ -59,13 +59,8 @@ public abstract class ImageSprite extends Sprite {
 		drawol(g);
 	    } else {
 		g.image(img.tex(), sc().add(img.o));
-		if(Config.highlight){
-		    Gob mg = UI.instance.mainview.onmouse;
-		    Gob og = (Gob)owner;
-		    if((mg != null)&&(og!=null)&&(og.id == mg.id)){
+		if(UI.instance.mainview.highlighted((Gob)owner))
 			drawol(g, Color.GREEN);
-		    }
-		}
 	    }
 	}
 	

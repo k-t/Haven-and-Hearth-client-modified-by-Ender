@@ -26,6 +26,10 @@ public class ScriptGob {
         return gob.resname();
     }
     
+    public String[] getResnames() {
+        return gob.resnames();
+    }
+    
     public String getSpeakingText() {
         Speaking speaking = gob.getattr(Speaking.class);
         return (speaking != null) ? speaking.text() : null;

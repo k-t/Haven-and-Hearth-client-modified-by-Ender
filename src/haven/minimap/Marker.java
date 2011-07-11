@@ -1,14 +1,11 @@
 package haven.minimap;
 
-import java.awt.Color;
-
 import haven.*;
 
 public class Marker {
     private final Gob gob;
     private final MarkerClass mclass;
     private final Coord negc;
-    public Color color = Color.WHITE;
     
     public Marker(Gob gob, MarkerClass mclass) {
         this.gob = gob;
@@ -34,6 +31,10 @@ public class Marker {
     
     public boolean visible() {
         return mclass.visible();
+    }
+    
+    public boolean isplayer() {
+        return mclass.isplayer();
     }
 }
 

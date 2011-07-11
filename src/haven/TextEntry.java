@@ -69,7 +69,7 @@ public class TextEntry extends Widget {
 	    for(int i = 0; i < buf.line.length(); i++)
 		dtext += "*";
 	} else {
-	    dtext = buf.line;
+	    dtext = buf != null ? buf.line : "";
 	}
 	g.frect(Coord.z, sz);
 	if((tcache == null) || !tcache.text.equals(dtext))

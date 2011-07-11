@@ -9,6 +9,7 @@ public class Radar {
     private final RadarConfig config;
     private final Map<Integer, Marker> markers = Collections.synchronizedMap(new HashMap<Integer, Marker>());
     private final Map<Integer, Gob> undefined = Collections.synchronizedMap(new HashMap<Integer, Gob>());
+    private final Map<Integer, Color> colors = Collections.synchronizedMap(new HashMap<Integer, Color>());
     
     public Radar(RadarConfig config) {
         this.config = config;
@@ -16,18 +17,18 @@ public class Radar {
     
     public void add(Gob g) {
         if (this.contains(g)) return;
-        String rn = g.resname();
-        if (rn != null && rn.equals("")) {
+        String[] names = g.resnames();
+        if (names.length == 0) {
             // resource isn't loaded yet? 
             undefined.put(g.id, g);
         } else {
-            add(rn, g);
+            add(names, g);
         }
     }
     
-    private boolean add(String rn, Gob gob) {
-        if (rn == null) return false;
-        MarkerClass m = config.getmarker(rn);
+    private boolean add(String[] names, Gob gob) {
+        if (names.length == 0) return false;
+        MarkerClass m = config.getmarker(gob);
         if (m != null) {
             markers.put(gob.id, new Marker(gob, m));
             return true;
@@ -41,9 +42,9 @@ public class Radar {
                 return;
             Gob[] gs = undefined.values().toArray(new Gob[undefined.size()]);
             for (Gob gob : gs) {
-                String rn = gob.resname();
-                if (rn != null && !rn.equals("")) {
-                    add(rn, gob);
+                String[] names = gob.resnames();
+                if (names.length > 0) {
+                    add(names, gob);
                     undefined.remove(gob.id);
                 }
             }
@@ -66,9 +67,17 @@ public class Radar {
         undefined.remove(gobid);
     }
     
+    public Color getcolor(Marker m) {
+        Color c = colors.get(m.gobid());
+        if (c != null)
+            return c;
+        else {
+            // use red marker for unknown players
+            return m.isplayer() ? Color.RED : Color.WHITE;
+        }
+    }
+    
     public void setcolor(int gobid, Color c) {
-        Marker m = markers.get(gobid);
-        if (m != null)
-            m.color = c;
+        colors.put(gobid, c);
     }
 }

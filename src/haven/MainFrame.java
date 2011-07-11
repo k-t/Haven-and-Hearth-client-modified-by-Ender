@@ -35,6 +35,7 @@ import java.util.*;
 
 @SuppressWarnings("serial")
 public class MainFrame extends Frame implements Runnable, FSMan {
+    private static final String TITLE = "Haven and Hearth (modified by Ender v12.06.11)";
     HavenPanel p;
     ThreadGroup g;
     DisplayMode fsmode = null, prefs = null;
@@ -42,6 +43,7 @@ public class MainFrame extends Frame implements Runnable, FSMan {
     public static Dimension innerSize;
     public static Point centerPoint;
     public static Coord screenSZ;
+    public static MainFrame instance;
 	
     static {
 	try {
@@ -122,8 +124,19 @@ public class MainFrame extends Frame implements Runnable, FSMan {
 	setIconImage(icon);
     }
 
+    @Override
+    public void setTitle(String charname) {
+	String str = TITLE;
+	if(charname != null){
+	    str = charname+" - "+str;
+	}
+	super.setTitle(str);
+    }
+
     public MainFrame(int w, int h) {
-	super("Haven and Hearth (modified by Ender v06.06.11)");
+	super("");
+	setTitle(null);
+	instance = this;
 	innerSize = new Dimension(w, h);
 	centerPoint = new Point(innerSize.width / 2, innerSize.height / 2);
 	screenSZ = new Coord(Toolkit.getDefaultToolkit().getScreenSize());

@@ -3,8 +3,6 @@ package haven.scripting;
 import groovy.lang.*;
 import groovy.transform.ThreadInterrupt;
 import groovy.util.GroovyScriptEngine;
-import groovy.util.ResourceException;
-import groovy.util.ScriptException;
 
 import haven.*;
 
@@ -15,6 +13,7 @@ import kt.LogManager;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer;
+import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
 public class Engine {
     private static Engine instance = null;
@@ -86,10 +85,17 @@ public class Engine {
     public void init() {
         binding = new Binding();
         binding.setVariable("Log", log());
+        // import some basic classes for all scripts
+        ImportCustomizer ic = new ImportCustomizer();
+        ic.addImports(haven.Coord.class.getName());
+        ic.addImports(haven.scripting.Area.class.getName());
+        ic.addImports(haven.scripting.Direction.class.getName());
+        ic.addImports(haven.scripting.Position.class.getName());
         // configuration for the script execution
         configuration = new CompilerConfiguration();
         configuration.setRecompileGroovySource(true);
         configuration.addCompilationCustomizers(
+                ic,
                 new ASTTransformationCustomizer(ThreadInterrupt.class),
                 new ScriptGlobalCustomizer());
         configuration.setClasspathList(Arrays.asList(".", "./scripts"));

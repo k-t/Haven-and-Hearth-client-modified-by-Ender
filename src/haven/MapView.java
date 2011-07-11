@@ -40,9 +40,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class MapView extends Widget implements DTarget, Console.Directory {
@@ -79,10 +81,8 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     double scales[] = {0.5, 0.66, 0.8, 0.9, 1, 1.25, 1.5, 1.75, 2};
     Map<String, Integer> radiuses;
     int beast_check_delay = 0;
-    
-    // ark.su
     public boolean player_moving = false;
-    public boolean mode_select_object = false;
+    final Set<Gob> highlights = Collections.synchronizedSet(new HashSet<Gob>()); 
 
     public double getScale() {
         return Config.zoom?_scale:1;
@@ -585,12 +585,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	Coord c0 = c;
 	c = new Coord((int)(c.x/getScale()), (int)(c.y/getScale()));
 	Gob hit = gobatpos(c);
-	// arksu: если мы в режиме выбора объекта - возвращаем его и выходим
-	if (mode_select_object) {
-		onmouse = hit;
-		mode_select_object = false;
-		return true;
-	}
+	onmouse = hit;
 	Coord mc = s2m(c.add(viewoffset(sz, this.mc).inv()));
 	if(grab != null) {
 	    grab.mmousedown(mc, button);
@@ -871,9 +866,6 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	synchronized (glob.oc) {
 	    for (Gob tg : glob.oc) {
 		name = tg.resname();
-		if(name == "") {
-		    System.out.println(name);
-		}
 		if ((tg.sc!=null)&&(name.indexOf("/cdv")<0)&&((name.indexOf("kritter/boar")>=0)
 			|| (name.indexOf("kritter/bear")>=0))) {
 		    drawradius(g, tg.sc, 100);
@@ -1348,7 +1340,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	    		g.atext("Gob on mouse: id = [" + onmouse.id +
 	    				"] coord = " + onmouse.getc()+
 	    				" res = [" + onmouse.resname()+ 
-	    				"] msg = [" + onmouse.getBlob(0) + "]", 
+	    				"] msg = [" + onmouse.getblob(0) + "]", 
 	    				new Coord(10, ay), 0, 1);
 	    		ay += margin;
 	    	} else {
@@ -1447,12 +1439,28 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	return(cmdmap);
     }
     
-    public int getPlayerGob() {
+    public int getplayergob() {
         return playergob;
     }
 
-    public boolean isPlaceMode() {
+    public boolean isplacemode() {
         return this.plob != null;
+    }
+    
+    public void highlight(Gob gob) {
+        this.highlights.add(gob);
+    }
+    
+    public void unhighlight(Gob gob) {
+        this.highlights.remove(gob);
+    }
+    
+    public boolean highlighted(Gob gob) {
+        if (Config.highlight) {
+            if ((onmouse != null) && (gob != null) && (onmouse.id == gob.id))
+                return true;
+        }
+        return this.highlights.contains(gob);
     }
  }
 

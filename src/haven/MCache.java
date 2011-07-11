@@ -59,7 +59,7 @@ public class MCache {
     static {
 	colors.put(0, new Color(0x3152a2));	//deep water
 	colors.put(1, new Color(0x4480c8));	//shallow water
-	//colors.put(5, new Color(125,125,125));	//mountain
+	colors.put(5, new Color(112,116,112));	//mountain
 	colors.put(8, new Color(160,160,160));	//stone paving
 	colors.put(9, new Color(200,200,200));	//plowed
 	colors.put(10, new Color(0x497937));	//coniferous forest
@@ -268,16 +268,7 @@ public class MCache {
     }
 	
     public Tile[] gettrans(Coord tc) {
-	Grid g;
-	synchronized(grids) {
-	    Coord gc = tc.div(cmaps);
-	    if((last != null) && last.gc.equals(gc))
-		g = last;
-	    else
-		last = g = grids.get(gc);
-	}
-	if(g == null)
-	    return(null);
+	Grid g = getgrid(tc);
 	Coord gtc = tc.mod(cmaps);
 	if(g.tcache[gtc.x][gtc.y] == null) {
 	    int tr[][] = new int[3][3];
@@ -324,15 +315,20 @@ public class MCache {
 	return(g.tcache[gtc.x][gtc.y]);
     }
 
+    public Grid getgrid(Coord tc) {
+        Grid g;
+        synchronized(grids) {
+            Coord gc = tc.div(cmaps);
+            if((last != null) && last.gc.equals(gc))
+            g = last;
+            else
+            last = g = grids.get(gc);
+        }
+        return g;
+    }
+    
     public Tile getground(Coord tc) {
-	Grid g;
-	synchronized(grids) {
-	    Coord gc = tc.div(cmaps);
-	    if((last != null) && last.gc.equals(gc))
-		g = last;
-	    else
-		last = g = grids.get(gc);
-	}
+	Grid g = getgrid(tc);
 	if(g == null)
 	    return(null);
 	Coord gtc = tc.mod(cmaps);
@@ -344,14 +340,7 @@ public class MCache {
     }
 
     public int gettilen(Coord tc) {
-	Grid g;
-	synchronized(grids) {
-	    Coord gc = tc.div(cmaps);
-	    if((last != null) && last.gc.equals(gc))
-		g = last;
-	    else
-		last = g = grids.get(gc);
-	}
+	Grid g = getgrid(tc);
 	if(g == null)
 	    return(-1);
 	return(g.gettile(tc.mod(cmaps)));
@@ -365,14 +354,7 @@ public class MCache {
     }
 	
     public int getol(Coord tc) {
-	Grid g;
-	synchronized(grids) {
-	    Coord gc = tc.div(cmaps);
-	    if((last != null) && last.gc.equals(gc))
-		g = last;
-	    else
-		last = g = grids.get(gc);
-	}
+	Grid g = getgrid(tc);
 	if(g == null)
 	    return(-1);
 	int ol = g.getol(tc.mod(cmaps));

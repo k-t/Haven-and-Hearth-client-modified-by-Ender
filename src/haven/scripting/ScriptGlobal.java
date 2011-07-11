@@ -61,7 +61,16 @@ public class ScriptGlobal {
     }
     
     public int findMapObject(String name, int radius, int x, int y) {
-        Coord my = getMyCoords();
+        ScriptGob gob = findObjectByNames(radius, x, y, name);
+        return (gob != null) ? gob.getId() : 0;
+    }
+    
+    public ScriptGob findObjectByNames(int radius, String... names) {
+        return findObjectByNames(radius * 11, 0, 0, names);
+    }
+    
+    public ScriptGob findObjectByNames(int radius, int x, int y, String... names) {
+        Coord my = getMyCoord().toCoord();
         my = MapView.tilify(my);
         Coord offset = new Coord(x, y).mul(MCache.tilesz);
         my = my.add(offset);
@@ -70,7 +79,7 @@ public class ScriptGlobal {
         synchronized (glob().oc) {
             for (Gob gob : glob().oc) {
                 double len = gob.getc().dist(my);
-                boolean m = ((name.length() > 0) && (gob.resname().indexOf(name) >= 0)) || (name.length() < 1);
+                boolean m = Utils.isObjectName(gob, names);
                 if ((m) && (len < min)) {
                     min = len;
                     mingob = gob;
@@ -78,10 +87,9 @@ public class ScriptGlobal {
             }
         }
         if (mingob != null)
-            return mingob.id;
+            return new ScriptGob(mingob);
         else
-            return 0;
-
+            return null;
     }
     
     public int findObjectByName(String name, int radius) {
@@ -192,24 +200,24 @@ public class ScriptGlobal {
         return UI.instance.mainview;
     }
     
-    private Coord getMyCoords() {
+    public Position getMyCoord() {
         Gob pl;
         synchronized (glob().oc) {
             pl = glob().oc.getgob(getPlayerId());
         }
-        return (pl != null) ? pl.getc() : new Coord(0, 0);
+        return new Position((pl != null) ? pl.getc() : new Coord(0, 0));
     }
     
-    public int getMyCoordX() { return getMyCoords().x; }
+    public int getMyCoordX() { return getMyCoord().getX(); }
     
-    public int getMyCoordY() { return getMyCoords().y; }
+    public int getMyCoordY() { return getMyCoord().getY(); }
     
     public int getObjectBlob(int id, int index) {
         int r = 0;
         synchronized (glob().oc) {
             for (Gob gob : glob().oc) {
                 if (gob.id == id) {
-                    r = gob.getBlob(index);
+                    r = gob.getblob(index);
                     break;
                 }
             }
@@ -218,11 +226,21 @@ public class ScriptGlobal {
     }
     
     public int getPlayerId() {
-        return (UI.instance.mainview != null) ? UI.instance.mainview.getPlayerGob() : -1;
+        return (UI.instance.mainview != null) ? UI.instance.mainview.getplayergob() : -1;
     }
     
     public int getStamina() {
         return getEngine().getStamina();
+    }
+    
+    public int getTileType(int tx, int ty) {
+        Coord tc = new Coord(tx, ty);
+        haven.MCache.Grid grid = glob().map.getgrid(tc);
+        return grid != null ? grid.gettile(tc.mod(haven.MCache.cmaps)) : -1;
+    }
+    
+    public int getTileType(Position p) {
+        return getTileType(p.getTileX(), p.getTileY());
     }
     
     public ScriptWindow[] getWindows() {
@@ -270,7 +288,7 @@ public class ScriptGlobal {
         MapView mv = getMapView();
         Gob pgob;
         synchronized(glob().oc) {
-            pgob = glob().oc.getgob(mv.getPlayerGob());
+            pgob = glob().oc.getgob(mv.getplayergob());
         }
         if (pgob == null) return;
         Coord mc = MapView.tilify(pgob.getc());
@@ -283,7 +301,7 @@ public class ScriptGlobal {
         MapView mv = getMapView();
         Gob pgob, gob;
         synchronized(glob().oc) {
-            pgob = glob().oc.getgob(mv.getPlayerGob());
+            pgob = glob().oc.getgob(mv.getplayergob());
             gob = glob().oc.getgob(objid);
         }
         if (pgob == null || gob == null) return;
@@ -295,7 +313,7 @@ public class ScriptGlobal {
         MapView mv = getMapView();
         Gob pgob;
         synchronized(glob().oc) {
-            pgob = glob().oc.getgob(mv.getPlayerGob());
+            pgob = glob().oc.getgob(mv.getplayergob());
         }
         if (pgob == null) return;
         Coord mc = MapView.tilify(pgob.getc());
@@ -330,7 +348,7 @@ public class ScriptGlobal {
         int modflags = 0;
         MapView mv = getMapView();
         synchronized(glob().oc) {
-            pgob = glob().oc.getgob(mv.getPlayerGob());
+            pgob = glob().oc.getgob(mv.getplayergob());
         }
         if (pgob == null) return;
         Coord mc = MapView.tilify(pgob.getc());
@@ -341,10 +359,10 @@ public class ScriptGlobal {
     
     public void mapPlace(int x, int y, int btn, int mod) {
         MapView mv = getMapView();
-        if (mv.isPlaceMode()) {
+        if (mv.isplacemode()) {
             Gob pgob;
             synchronized(glob().oc) {
-                pgob = glob().oc.getgob(mv.getPlayerGob());
+                pgob = glob().oc.getgob(mv.getplayergob());
             }
             if (pgob == null) return;
             Coord mc = MapView.tilify(pgob.getc());
@@ -370,6 +388,47 @@ public class ScriptGlobal {
         ScriptChatWindow wnd = findChatWindow("Area Chat");
         if (wnd != null)
             wnd.say(message);
+    }
+    
+    public Area selectArea(String text) throws InterruptedException {
+        AreaGrabber grabber = new AreaGrabber(text, new Coord(100, 100), UI.instance.root);
+        try {
+            while (!grabber.destroyed()) {
+                Thread.sleep(100);
+            }
+        } finally {
+            if (!grabber.destroyed())
+                grabber.close();
+        }
+        return grabber.area();
+    }
+    
+    public ScriptGob selectObject(String text) throws InterruptedException {
+        GobGrabber grabber = new GobGrabber(text, new Coord(100, 100), UI.instance.root);
+        try {
+            while (!grabber.destroyed()) {
+                Thread.sleep(100);
+            }
+        } finally {
+            if (!grabber.destroyed())
+                grabber.close();
+
+        }
+        Gob selection = grabber.selectedobject();
+        return (selection != null) ? new ScriptGob(selection) : null;
+    }
+    
+    public Position selectTile(String text) throws InterruptedException {
+        TileGrabber grabber = new TileGrabber(text, new Coord(100, 100), UI.instance.root);
+        try {
+            while (!grabber.destroyed()) {
+                Thread.sleep(100);
+            }
+        } finally {
+            if (!grabber.destroyed())
+                grabber.close();
+        }
+        return grabber.tile();
     }
     
     public void sendAction(String... action) {

@@ -14,7 +14,7 @@ public class PropertyGrid extends ScrollableWidget {
         values = new HashMap<Text, Text>();
         
         setproperty("Cursor", haven.scripting.Engine.getInstance().getCursor());
-        setproperty("Player", UI.instance.mainview.getPlayerGob());
+        setproperty("Player", UI.instance.mainview.getplayergob());
         setproperty("1", 1);
         setproperty("2dadjaskjdklasjdlkajsdkljaslkdjaskljdl", 2);
     }
