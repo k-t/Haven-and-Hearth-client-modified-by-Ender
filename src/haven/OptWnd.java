@@ -63,9 +63,9 @@ public class OptWnd extends Window {
     }
 
     public OptWnd(Coord c, Widget parent) {
-	super(c, new Coord(400, 440), parent, "Options");
+	super(c, new Coord(400, 445), parent, "Options");
 
-	body = new Tabs(Coord.z, new Coord(400, 430), this) {
+	body = new Tabs(Coord.z, new Coord(400, 445), this) {
 	    public void changed(Tab from, Tab to) {
 		Utils.setpref("optwndtab", to.btn.text.text);
 		from.btn.c.y = 0;
@@ -154,6 +154,13 @@ public class OptWnd extends Window {
            Config.saveOptions();
        }
        }).a = Config.autospeed;
+       
+       (new CheckBox(new Coord(10, 400), tab, "Show player path") {
+       public void changed(boolean val) {
+           Config.showpath = val;
+           Config.saveOptions();
+       }
+       }).a = Config.showpath;
 	    
 	    (new CheckBox(new Coord(220, 130), tab, "Fast menu") {
 		public void changed(boolean val) {
@@ -217,6 +224,13 @@ public class OptWnd extends Window {
            Config.saveOptions();
        }
        }).a = Config.isRadarOn;
+       
+       (new CheckBox(new Coord(220, 400), tab, "Enable mapping") {
+           public void changed(boolean val) {
+               Config.saveMaps = val;
+               Config.saveOptions();
+           }
+           }).a = Config.saveMaps;
 
 	    Widget editbox = new Frame(new Coord(310, 30), new Coord(90, 100), tab);
 	    new Label(new Coord(20, 10), editbox, "Edit mode:");
@@ -403,9 +417,9 @@ public class OptWnd extends Window {
 
 		    public void changed(boolean val) {
 			if (val) {
-			    Config.hideObjectList.add(checkbox[1]);
+			    Config.addhide(checkbox[1]);
 			} else {
-			    Config.hideObjectList.remove(checkbox[1]);
+			    Config.remhide(checkbox[1]);
 			}
 			Config.saveOptions();
 		    }

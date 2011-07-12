@@ -1,5 +1,48 @@
 Change log
 
+11.07.11
+ * added tooltip to day cycle widget. it shows current day, time and moon phase
+
+08.07.11
+ * added reset button to Character Sheet  it resets all unspent LPs from numeric skills
+ * holding SHIFT while pressing + or - buttons at numeric skills changes them by 10
+ * holding CTRL while clicking on + button at numeric skill sets it to maximum that can be 
+   bought with current unspent LP
+ * holding CTRL while clicking on - button at numeric skill resets unspent LP from this skill
+
+22.06.11
+ * fixed rare crash when changing location with path highlighting turned on.
+ * update item tooltips when meter changes
+ * reverse-quality transfer now works with CTRL+ALT+Mousewheel, SHIFT is unnecessary.
+   This should fix some problems on linux systems.
+ * Alt Gr now can be used instead of ALT
+ * added displaying of total AC to Equipment screen
+
+21.06.11
+ * small fixes
+ * chat focuses input field if clicked everywhere on chat panel
+ * chat now does not grab input it cannot handle. As a result it's now possible to 
+   toggle nightvision/x-ray/hide or use F-hotkeys whet chat has focus
+ * added separate study window. Accessible through X->Y
+
+18.06.11
+ * optimized object hiding
+ * optimized hidden object highlight
+ * fixed bug with hidden object not being highlighted if it has not been drawn at least once
+
+16.06.11
+ * various small optimization
+
+14.06.11
+ * fixed inability to place objects aligned to grid
+ * fixed item popup resizing when hover for more then half second
+ * few small improvements
+
+13.06.11
+ * movement speed now automatically returns to value set by player when possible
+ * added movement queuing with SHIFT
+ * added option to show player path
+
 12.06.11
  * Window title now shows current character name
  * attention limit now correctly updates with change of INT

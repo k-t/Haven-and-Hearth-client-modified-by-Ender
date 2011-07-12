@@ -262,9 +262,9 @@ public abstract class MenuGridButton implements Comparable<MenuGridButton> {
                 for(int i=2;i<list.length;i++){
                 String item = list[i];
                 if(Config.hideObjectList.contains(item)){
-                    Config.hideObjectList.remove(item);
+                    Config.remhide(item);
                 } else {
-                    Config.hideObjectList.add(item);
+                    Config.addhide(item);
                 }
                 }
             } else if(list[1].equals("simple plants")) {
@@ -281,11 +281,13 @@ public abstract class MenuGridButton implements Comparable<MenuGridButton> {
                 grid.ui.cons.out.println(str);
                 grid.ui.slen.error(str);
                 Config.saveOptions();
+            } else if(list[1].equals("study")) {
+                grid.ui.study.toggle();
             } else if(list[1].equals("globalchat")) {
                 grid.ui.root.wdgmsg("gk", 3);
             } else if(list[1].equals("wiki")) {
                 if(grid.ui.wiki == null) {
-                new WikiBrowser(MainFrame.getCenterPoint().sub(115, 75), Coord.z, grid.ui.root);
+                    new WikiBrowser(MainFrame.getCenterPoint().sub(115, 75), Coord.z, grid.ui.root);
                 } else {
                     grid.ui.wiki.wdgmsg(grid.ui.wiki.cbtn, "click");
                 }

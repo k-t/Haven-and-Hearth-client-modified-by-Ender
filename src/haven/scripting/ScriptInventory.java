@@ -28,11 +28,11 @@ public class ScriptInventory extends ScriptWidget {
     }
     
     public int getRowCount() {
-        return inventory.getSize().y;
+        return inventory.getsize().y;
     }
     
     public int getColumnCount() {
-        return inventory.getSize().x;
+        return inventory.getsize().x;
     }
     
     public ScriptItem getItemAt(int row, int col) {

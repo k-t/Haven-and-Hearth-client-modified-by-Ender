@@ -110,8 +110,8 @@ public class TextEntry extends Widget {
     }
 	
     public boolean keydown(KeyEvent e) {
-	buf.key(e);
-	return(true);
+	buf.key(e); 
+	return true;
     }
 	
     public boolean mousedown(Coord c, int button) {

@@ -40,9 +40,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import ender.GoogleTranslator;
@@ -72,7 +74,7 @@ public class Config {
     public static boolean noborders;
     public static boolean new_minimap;
     public static boolean simple_plants = false;
-    public static HashSet<String> hideObjectList;
+    public static Set<String> hideObjectList;
     public static HashMap<Pattern, String> smileys;
     public static boolean nightvision;
     public static String currentCharName;
@@ -93,6 +95,7 @@ public class Config {
     public static boolean sshot_nonames;
     public static boolean newclaim;
     public static boolean showq;
+    public static boolean showpath;
     public static boolean autospeed = true;
     public static AutoSpeedMode autospeedmode = AutoSpeedMode.Run;
     public static boolean isRadarOn = true;
@@ -138,7 +141,7 @@ public class Config {
 	    currentCharName = "";
 	    options = new Properties();
 	    window_props = new Properties();
-	    hideObjectList = new HashSet<String>();
+	    hideObjectList = Collections.synchronizedSet(new HashSet<String>());
 	    loadOptions();
 	    loadWindowOptions();
 	    loadSmileys();
@@ -286,6 +289,7 @@ public class Config {
         sshot_nonames = options.getProperty("sshot_nonames", "false").equals("true");
         newclaim = options.getProperty("newclaim", "true").equals("true");
         showq = options.getProperty("showq", "true").equals("true");
+        showpath = options.getProperty("showpath", "false").equals("true");
         sfxVol = Integer.parseInt(options.getProperty("sfx_vol", "100"));
         musicVol = Integer.parseInt(options.getProperty("music_vol", "100"));
         hideObjectList.clear();
@@ -296,6 +300,7 @@ public class Config {
                 }
             }
         }
+        Resource.checkhide();
         timestamp = options.getProperty("timestamp","false").equals("true");
         bot_name1 = options.getProperty("bot_name1", "");
         bot_name2 = options.getProperty("bot_name2", "");
@@ -330,6 +335,16 @@ public class Config {
 	}
     }
     
+    public static void addhide(String str){
+	hideObjectList.add(str);
+	Resource.checkhide();
+    }
+    
+    public static void remhide(String str){
+	hideObjectList.remove(str);
+	Resource.checkhide();
+    }
+    
     public static void saveOptions() {
         String hideObjects = "";
         for (String objectName : hideObjectList) {
@@ -360,6 +375,7 @@ public class Config {
         options.setProperty("sshot_nonames", sshot_nonames?"true":"false");
         options.setProperty("newclaim", newclaim?"true":"false");
         options.setProperty("showq", showq?"true":"false");
+        options.setProperty("showpath", showpath?"true":"false");
         options.setProperty("autospeed", autospeed?"true":"false");
         options.setProperty("autospeedmode", Integer.toString(autospeedmode.getValue()));
         options.setProperty("radar_on", isRadarOn?"true":"false");

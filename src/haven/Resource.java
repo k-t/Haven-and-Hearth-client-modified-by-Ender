@@ -52,6 +52,7 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
     public static Class<AButton> action = AButton.class;
     public static Class<Audio> audio = Audio.class;
     public static Class<Tooltip> tooltip = Tooltip.class;
+    public boolean hide = false, once = false, skiphighlight = false, skiphide = false;
 
     static {
 	try {
@@ -97,8 +98,29 @@ public class Resource implements Comparable<Resource>, Prioritized, Serializable
 	this.ver = ver;
 	error = null;
 	loading = true;
+	skiphighlight = name.contains("wald") || name.contains("flavobjs");
+	skiphide = name.contains("door");
+	checkhidden();
     }
-	
+    
+    public static void checkhide(){
+	synchronized (cache) {
+	    for(Resource res : cache.values()){
+		res.checkhidden();
+	    }
+	}
+    }
+    
+    public void checkhidden(){
+	hide = false;
+	for(String item : Config.hideObjectList){
+	    if(name.contains(item)){
+		hide = true;
+		break;
+	    }
+	}
+    }
+    
     public static void addcache(ResCache cache) {
 	CacheSource src = new CacheSource(cache);
 	prscache = src;

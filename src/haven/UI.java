@@ -26,6 +26,7 @@
 
 package haven;
 
+import haven.CharWnd.Study;
 import haven.scripting.Engine;
 
 import java.util.*;
@@ -39,6 +40,7 @@ public class UI {
     public SlenHud slen;
     public MenuGrid mnu;
     public Speedget spd;
+    public Study study;
     public WikiBrowser wiki;
     private Widget keygrab, mousegrab;
     public Map<Integer, Widget> widgets = new TreeMap<Integer, Widget>();
@@ -213,9 +215,9 @@ public class UI {
 	    mousegrab = null;
 	if((keygrab != null) && keygrab.hasparent(wdg))
 	    keygrab = null;
-	removeid(wdg);
 	wdg.destroy();
 	wdg.unlink();
+	removeid(wdg);
     }
     
     public void destroy(int id) {
@@ -254,7 +256,7 @@ public class UI {
 	int mod = ev.getModifiersEx();
 	modshift = (mod & InputEvent.SHIFT_DOWN_MASK) != 0;
 	modctrl = (mod & InputEvent.CTRL_DOWN_MASK) != 0;
-	modmeta = (mod & InputEvent.ALT_DOWN_MASK) != 0;
+	modmeta = (mod & (InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK)) != 0;
 	/*
  	modsuper = (mod & InputEvent.SUPER_DOWN_MASK) != 0;
 	*/
@@ -351,7 +353,6 @@ public class UI {
 	       (modsuper?8:0));
     }
     
-    // arksu: обработчик создания виджета
     private void ark_create_wdg(Widget wdg) {
         if (wdg instanceof FlowerMenu)
             flower_menu = (FlowerMenu)wdg;
@@ -359,7 +360,6 @@ public class UI {
         	equip = (Equipory)wdg;    	
     }
     
-    // arksu : обработчик удаления виджета
     private void ark_delete_wdg(Widget wdg) {                
         if (wdg instanceof FlowerMenu)
             flower_menu = null;

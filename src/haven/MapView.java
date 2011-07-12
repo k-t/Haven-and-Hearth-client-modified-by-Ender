@@ -1,7 +1,7 @@
 /*
  *  This file is part of the Haven & Hearth game client.
  *  Copyright (C) 2009 Fredrik Tolf <fredrik@dolda2000.com>, and
- *                     Bjorn Johannessen <johannessen.bjorn@gmail.com>
+ *                     Björn Johannessen <johannessen.bjorn@gmail.com>
  *
  *  Redistribution and/or modification of this file is subject to the
  *  terms of the GNU Lesser General Public License, version 3, as
@@ -75,6 +75,7 @@ public class MapView extends Widget implements DTarget, Console.Directory {
     public Text polownert = null;
     public String polowner = null;
     public Gob onmouse;
+    public Coord moveto = null;
     long polchtm = 0;
     int si = 4;
     double _scale = 1;
@@ -597,9 +598,15 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 		gob = g;
 	    wdgmsg("place", gob.rc, button, ui.modflags());
 	} else {
-	    if(hit == null)
-		wdgmsg("click", c0, mc, button, ui.modflags());
-	    else
+	    if(hit == null){
+		if(ui.modshift && (button == 1)){
+		    glob.oc.enqueue(mc);
+		    glob.oc.checkqueue();
+		} else {
+		    glob.oc.clearqueue();
+		    wdgmsg("click", c0, mc, button, ui.modflags());
+		}
+	    } else
 		wdgmsg("click", c0, mc, button, ui.modflags(), hit.id, hit.getc());
 	}
 	return(true);
@@ -1106,29 +1113,15 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 		g.chcolor(255, 0, 0, 128);
 		synchronized(glob.oc) {
 		    for(Gob gob : glob.oc) {
-			Drawable d = gob.getattr(Drawable.class);
-			Resource.Neg neg;
-			String name = gob.resname();
-			if(!gob.hide || (name.indexOf("wald")>-1) || (name.indexOf("flavobjs")>-1))
+			Resource res = gob.getres();
+			if(!gob.hide || ((res != null)&&(res.skiphighlight)))
 			    continue;
-			if(d instanceof ResDrawable) {
-			    ResDrawable rd = (ResDrawable)d;
-			    if(rd.spr == null)
-				continue;
-			    if(rd.spr.res == null)
-				continue;
-			    neg = rd.spr.res.layer(Resource.negc);
-			} else if(d instanceof Layered) {
-			    Layered lay = (Layered)d;
-			    if(lay.base.get() == null)
-				continue;
-			    neg = lay.base.get().layer(Resource.negc);
-			} else {
+			Resource.Neg neg = gob.getneg();
+			if(neg == null)
 			    continue;
-			}
 			if((neg.bs.x > 0) && (neg.bs.y > 0)) {
 			    Coord c1 = gob.getc().add(neg.bc);
-			    Coord c2 = gob.getc().add(neg.bc).add(neg.bs);
+			    Coord c2 = c1.add(neg.bs);
 			    g.frect(m2s(c1).add(oc),
 				    m2s(new Coord(c2.x, c1.y)).add(oc),
 				    m2s(c2).add(oc),
@@ -1324,6 +1317,12 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 
     public void draw(GOut og) {
     long now = System.currentTimeMillis();
+	if(moveto != null){
+	    wdgmsg("click", moveto, moveto, 1, 0);
+	    moveto = null;
+	}
+	hsz = MainFrame.getInnerSize();
+	sz = hsz.mul(1/getScale());
 	GOut g = og.reclip(Coord.z, sz);
 	g.gl.glPushMatrix();
 	g.scale(getScale());
@@ -1331,6 +1330,30 @@ public class MapView extends Widget implements DTarget, Console.Directory {
 	    if(((mask.amb = glob.amblight) == null) || Config.nightvision)
 		mask.amb = new Color(0, 0, 0, 0);
 	    drawmap(g);
+	    
+	    //movement highlight
+	    if(Config.showpath){
+		Coord oc = viewoffset(sz, mc);
+		Coord pc, cc;
+		Gob player = glob.oc.getgob(playergob);
+		if(player != null){
+		    Moving m = player.getattr(Moving.class);
+		    g.chcolor(Color.GREEN);
+		    if((m != null) && (m instanceof LinMove)){
+			LinMove lm = (LinMove)m;
+			pc = m2s(lm.t).add(oc);
+			g.line(player.sc, pc, 2);
+			for(Coord c:glob.oc.movequeue){
+			    cc = m2s(c).add(oc);
+			    g.line(pc, cc, 2);
+			    pc = cc;
+			}
+		    }
+		    g.chcolor();
+		}
+	    }
+	    //###############
+	    
 	    drawarrows(g);
 	    g.chcolor(Color.WHITE);
 	    if (Config.debug_flag) {

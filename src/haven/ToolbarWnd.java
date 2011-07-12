@@ -1,5 +1,6 @@
 package haven;
 
+import haven.Resource.Image;
 import haven.Resource.Pagina;
 import haven.Resource.Tooltip;
 

@@ -29,12 +29,15 @@ package haven;
 import haven.minimap.Radar;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class OCache implements Iterable<Gob> {
     /* XXX: Use weak refs */
     private Collection<Collection<Gob>> local = new LinkedList<Collection<Gob>>();
     private Map<Integer, Gob> objs = new TreeMap<Integer, Gob>();
     private Map<Integer, Integer> deleted = new TreeMap<Integer, Integer>();
+    public ConcurrentLinkedQueue<Coord> movequeue = new ConcurrentLinkedQueue<Coord>();
+    private boolean ismoving = false;
     private Glob glob;
     long lastctick = 0;
     public final Radar radar;
@@ -134,16 +137,44 @@ public class OCache implements Iterable<Gob> {
 	    radar.add(g);
 	}
     }
-	
+    
+    public void enqueue(Coord c){
+	movequeue.add(c);
+    }
+    
+    public void clearqueue(){
+	movequeue.clear();
+    }
+    
+    public void checkqueue(){
+	if(!ismoving && !movequeue.isEmpty()){
+	    ismoving = true;
+	    UI.instance.mainview.moveto = movequeue.poll();
+	    movequeue.remove(0);
+	}
+    }
+    
+    public boolean isplayerid(int id){
+	if((UI.instance != null)
+		&& (UI.instance.mainview != null)
+		&& (UI.instance.mainview.playergob == id)){
+	    return true;
+	}
+	return false;
+    }
+    
     public synchronized void linbeg(int id, int frame, Coord s, Coord t, int c) {
 	Gob g = getgob(id, frame);
 	if(g == null)
 	    return;
 	LinMove lm = new LinMove(g, s, t, c);
 	g.setattr(lm);
+	if(isplayerid(id))
+	    ismoving = true;
     }
 	
     public synchronized void linstep(int id, int frame, int l) {
+	boolean isplayer = isplayerid(id);
 	Gob g = getgob(id, frame);
 	if(g == null)
 	    return;
@@ -151,10 +182,18 @@ public class OCache implements Iterable<Gob> {
 	if((m == null) || !(m instanceof LinMove))
 	    return;
 	LinMove lm = (LinMove)m;
-	if((l < 0) || (l >= lm.c))
+	if((l < 0) || (l >= lm.c)) {
 	    g.delattr(Moving.class);
-	else
+	    if(isplayer){
+		ismoving = false;
+		checkqueue();
+	    }
+	} else {
 	    lm.setl(l);
+	    if(isplayer){
+		ismoving = true;
+	    }
+	}
     }
 	
     public synchronized void speak(int id, int frame, Coord off, String text) {

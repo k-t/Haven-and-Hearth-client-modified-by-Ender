@@ -20,11 +20,6 @@ public class ScriptCharWindow extends ScriptWidget {
     }
     
     public int getUsedAttention() {
-        String att = wnd.snlbl.gettext(); 
-        try {
-            return att != null ? Integer.parseInt(att) : 0;
-        } catch (NumberFormatException e) {
-            return 0;
-        }
+        return wnd.study.getattnused(); 
     }
 }

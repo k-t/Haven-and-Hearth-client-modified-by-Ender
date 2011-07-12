@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 
 public class Item extends Widget implements DTarget {
     static Coord shoff = new Coord(1, 3);
-    static Pattern patt = Pattern.compile("quality (\\d+) ");
+    static final Pattern patt = Pattern.compile("quality (\\d+) ", Pattern.CASE_INSENSITIVE);
     static Map<Integer, Tex> qmap;
     static Resource missing = Resource.load("gfx/invobjs/missing");
     static Color outcol = new Color(0,0,0,255);
@@ -69,25 +69,29 @@ public class Item extends Widget implements DTarget {
 		    if(args.length > ca)
 			num = (Integer)args[ca++];
 		    Item item = new Item(c, res, q, parent, drag, num);
-		    item.tooltip = tooltip;
-		    item.q2 = -1;
-		    if(tooltip != null){
-			try{
-			    Matcher m =patt.matcher(tooltip); 
-			    if(m.find()){
-				item.q2 = Integer.parseInt(m.group(1));
-			    }
-			} catch(IllegalStateException e){
-			    System.out.println(e.getMessage());
-			}
-		    }
+		    item.settip(tooltip);
 		    return(item);
 		}
 	    });
 	missing.loadwait();
 	qmap = new HashMap<Integer, Tex>();
     }
-	
+    
+    public void settip(String t){
+	tooltip = t;
+	q2 = -1;
+	if(tooltip != null){
+	    try{
+		Matcher m =patt.matcher(tooltip); 
+		while(m.find()){
+		    q2 = Integer.parseInt(m.group(1));
+		}
+	    } catch(IllegalStateException e){
+		System.out.println(e.getMessage());
+	    }
+	}
+    }
+    
     private void fixsize() {
 	if(res.get() != null) {
 	    Tex tex = res.get().layer(Resource.imgc).tex();
@@ -214,7 +218,9 @@ public class Item extends Widget implements DTarget {
 	long now = System.currentTimeMillis();
 	if(!again)
 	    hoverstart = now;
-	if((now - hoverstart) < 500) {
+	Resource res = this.res.get();
+	Resource.Pagina pg = (res!=null)?res.layer(Resource.pagina):null;
+	if(((now - hoverstart) < 500)||(pg == null)) {
 	    if(shorttip == null) {
 		String tt = shorttip();
 		if(tt != null) {
@@ -226,9 +232,7 @@ public class Item extends Widget implements DTarget {
 	    }
 	    return(shorttip);
 	} else {
-	    Resource res = this.res.get();
 	    if((longtip == null) && (res != null)) {
-		Resource.Pagina pg = res.layer(Resource.pagina);
 		String tip = shorttip();
 		if(tip == null)
 		    return(null);
@@ -343,12 +347,14 @@ public class Item extends Widget implements DTarget {
 	    olcol = (Color)args[0];
 	} else if(name == "tt") {
 	    if((args.length > 0) && (((String)args[0]).length() > 0))
-		tooltip = (String)args[0];
+		settip((String)args[0]);
 	    else
-		tooltip = null;
+		settip(null);
 	    resettt();
 	} else if(name == "meter") {
 	    meter = (Integer)args[0];
+	    shorttip = null;
+	    longtip = null;
 	}
     }
 	
