@@ -1,0 +1,20 @@
+/** Represents a rectangular area on the world map.
+ *
+ * @see @link page_global selectArea() @endlink
+ *
+ */
+class Area {
+
+    /** The area north bound (or bottom on <i>y</i>-axis) in map points. */
+    public int north;
+    
+    /** The area south bound (or top on @c <i>y</i>-axis) in map points. */
+    public int south;
+    
+    /** The area west bound (or left on @c <i>x</i>-axis) in map points. */
+    public int west;
+    
+    /** The area east bound (or right on @c <i>x</i>-axis) in map points. */
+    public int east;
+
+}

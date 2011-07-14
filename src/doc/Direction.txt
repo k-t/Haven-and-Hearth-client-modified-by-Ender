@@ -1,0 +1,16 @@
+/** Direction */
+class Direction {
+    public static Direction NORTH { get; }
+    public static Direction EAST  { get; }
+    public static Direction SOUTH { get; } 
+    public static Direction WEST  { get; }
+    
+    /** Reverses direction. */
+    public Direction reverse();
+    
+    /** Changes direction counter clockwise. */
+    public Direction turnLeft();
+    
+    /** Changes direction clockwise. */
+    public Direction turnRight();
+}

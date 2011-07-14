@@ -48,6 +48,7 @@ public class UI {
     Receiver rcvr;
     public Coord mc, lcc = Coord.z;
     public Session sess;
+    public IHWindowParent chat;
     public MapView mainview;
     public boolean modshift, modctrl, modmeta, modsuper;
     long lastevent = System.currentTimeMillis();

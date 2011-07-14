@@ -95,6 +95,10 @@ public class Textlog extends ScrollableWidget {
         rl = fnd.render(line, sz.x - (margin * 2) - sflarp.sz().x, TextAttribute.FOREGROUND, col, TextAttribute.SIZE, textsize);
         synchronized(lines) {
             lines.add(rl);
+            if(lines.size() > 150){
+                Text tl = lines.remove(0);
+                scrollsize -= tl.sz().y;
+            }
         }
         if(scrollposition == scrollsize)
             scrollposition += rl.sz().y;

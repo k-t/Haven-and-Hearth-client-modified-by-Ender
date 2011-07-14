@@ -1,0 +1,63 @@
+/** Represents a position on the world map. */
+class Position {
+
+    /** Creates new class instance from the Coord object. */
+    public Position(Coord c);
+    
+    /** Creates new class instance from the specified coordinates (in map points). */
+    public Position(int x, int y) {
+        this(new Coord(x, y));
+    }
+    
+    public int x { get; }
+    public int y { get; }
+    
+    public int tileX { get; }
+    public int tileY { get; }
+    
+    /** Creates new class instance from the Coord object with tile coordinates. */ 
+    public static Position fromTileCoord(Coord c);
+    
+    /** Creates new class instance from tile coordinates. */ 
+    public static Position fromTileCoord(int tx, int ty);
+    
+    public Coord toCoord();
+    
+    /** Returns the position with the offset in tiles relative to this position. */
+    public Position offset(int tx, int ty) {
+        return new Position(x + tx * MCache.tilesz.x, y + ty * MCache.tilesz.y);        
+    }
+    
+    /** Returns the position to 1 tile in the specified direction from this position. */
+    public Position offset(Direction dir) {
+        return offset(dir, 1);
+    }
+    
+    /** Returns the position with the offset in the specified direction from this position. */
+    public Position offset(Direction dir, int off) {
+        switch (dir) {
+        case NORTH : return north(off);
+        case WEST  : return west(off);
+        case SOUTH : return south(off);
+        case EAST  : return east(off);
+        }
+        throw new IllegalArgumentException();
+    }
+    
+    /** Returns the position 1 tile to north. */
+    public Position north()        { return north(1); }
+    public Position north(int off) { return offset(0, -off); }
+    
+    /** Returns the position 1 tile to south. */
+    public Position south()        { return south(1); }
+    public Position south(int off) { return offset(0, off); }
+    
+    /** Returns the position 1 tile to east. */
+    public Position east()        { return east(1); }
+    public Position east(int off) { return offset(off, 0); }
+    
+    /** Returns the position 1 tile to west. */
+    public Position west()        { return west(1); }
+    public Position west(int off) { return offset(-off, 0); }
+
+}

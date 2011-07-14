@@ -176,7 +176,7 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
 	if(Config.new_chat)
 	    chatwnd = new ChatHWPanel(new Coord(0,MainFrame.getInnerSize().y-300), new Coord(350,300), ui.root);
 	else
-	    ChatHWPanel.instance = this;
+	    ui.chat = this;
 	dy = -sz.y;
 	//new Img(fc, flarps, this);
 	new Img(mc, mbg, this);
@@ -401,6 +401,11 @@ public class SlenHud extends ConsoleHost implements DTarget, DropTarget, Console
     
     public void setawnd(HWindow wnd) {
 	setawnd(wnd, false);
+    }
+    
+    @Override
+    public HWindow getawnd() {
+	return awnd;
     }
     
     public void addwnd(final HWindow wnd) {
