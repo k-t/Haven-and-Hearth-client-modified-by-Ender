@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 
 import haven.*;
 
-public abstract class ScriptGrabber extends Window implements MapView.Grabber {
+abstract class ScriptGrabber extends Window implements MapView.Grabber {
     private final Label text;
     private final Widget btn;
     private boolean destroyed;

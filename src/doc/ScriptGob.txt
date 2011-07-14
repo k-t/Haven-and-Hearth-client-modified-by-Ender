@@ -17,6 +17,9 @@ class ScriptGob {
     /** Returns the name of the object resource. */
     public String resname { get; }
     
+    /** Returns the array of names of the object resource. */
+    public String[] resnames { get; }
+    
     /** Returns the speech text associated with this object.
      * @return The speaking text associated with the object, if any;
      *         otherwise, @c null.

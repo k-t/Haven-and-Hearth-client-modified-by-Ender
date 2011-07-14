@@ -218,6 +218,8 @@ public class MiniMap extends Widget {
     }
     
     public static void newMappingSession() {
+    gridsHashes.clear();
+    coordHashes.clear();
     if (!Config.saveMaps) {
         // delay session start
         sessionstarted = false;
@@ -231,8 +233,6 @@ public class MiniMap extends Widget {
 	    currentSessionFile.write("var currentSession = '" + date + "';\n");
 	    currentSessionFile.close();
 	    mappingSession = newSession;
-	    gridsHashes.clear();
-	    coordHashes.clear();
 	    sessionstarted = true;
 	} catch (IOException ex) {
 	}

@@ -2,7 +2,7 @@ package haven.scripting;
 
 import haven.*;
 
-public final class GobGrabber extends ScriptGrabber {
+final class GobGrabber extends ScriptGrabber {
     private static final String title = "Object selection";
     private static final String defaulttext = "Select object:";
     private Gob gob;

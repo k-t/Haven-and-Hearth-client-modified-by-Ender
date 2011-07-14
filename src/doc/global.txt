@@ -8,41 +8,50 @@ Set of functions that can be used anywhere in the user scripts.
 
 @section sec_func Function List
 - @ref sec_gbgeneral
-  - @ref fn_checkHourglass    "checkHourglass()"
-  - @ref fn_doClick           "doClick(int objid, int btn, int modflags)"
-  - @ref fn_drop_2            "drop()"
-  - @ref fn_drop              "drop(int mod)"
-  - @ref fn_findchatwindow    "findChatWindow(String windowname)"
-  - @ref fn_findmapobject     "findMapObject(String name, int radius, int x, int y)"
-  - @ref fn_findobjectbyname  "findObjectByName(String name, int radius)"
-  - @ref fn_findwindow        "findWindow(String... windownames)"
-  - @ref fn_findwindows       "findWindows(String... windownames)"
-  - @ref fn_getbuffs          "getBuffs()"
-  - @ref fn_getcharwindow     "getCharWindow()"
-  - @ref fn_getcontextmenu    "getContextMenu()"
-  - @ref fn_getcraftwindow    "getCraftWindow()"
-  - @ref fn_getcursor         "getCursor()"
-  - @ref fn_getdragitem       "getDragItem()"
-  - @ref fn_getequipitem      "getEquipItem(int slot)"
-  - @ref fn_getgobs           "getGobs()"
-  - @ref fn_gethp             "getHp()"
-  - @ref fn_gethunger         "getHunger()"
-  - @ref fn_getmycoordx       "getMyCoordX()"
-  - @ref fn_getmycoordy       "getMyCoordY()"
-  - @ref fn_getobjectblob     "getObjectBlob(int id, int index)"
-  - @ref fn_getplayerid       "getPlayerId()"
-  - @ref fn_getstamina        "getStamina()"
-  - @ref fn_getwindows        "getWindows()"
-  - @ref fn_hascontextmenu    "hasContextMenu()"
-  - @ref fn_hasdragitem       "hasDragItem()"
-  - @ref fn_ismoving          "isMoving()"
-  - @ref fn_opencharwindow    "openCharWindow()"
-  - @ref fn_openequipment     "openEquipment()"
-  - @ref fn_say               "say(String message)"
+  - @ref fn_checkHourglass      "checkHourglass()"
+  - @ref fn_doClick             "doClick(int objid, int btn, int modflags)"
+  - @ref fn_drop_2              "drop()"
+  - @ref fn_drop                "drop(int mod)"
+  - @ref fn_findchatwindow      "findChatWindow(String windowname)"
+  - @ref fn_findmapobject       "findMapObject(String name, int radius, int x, int y)"
+  - @ref fn_findobjectbyname    "findObjectByName(String name, int radius)"
+  - @ref fn_findobjectbynames   "findObjectByNames(int radius, String... names)"
+  - @ref fn_findobjectbynames_2 "findObjectByNames(int radius, int x, int y, String... names)"
+  - @ref fn_findwindow          "findWindow(String... windownames)"
+  - @ref fn_findwindows         "findWindows(String... windownames)"
+  - @ref fn_getbuffs            "getBuffs()"
+  - @ref fn_getcharwindow       "getCharWindow()"
+  - @ref fn_getcontextmenu      "getContextMenu()"
+  - @ref fn_getcraftwindow      "getCraftWindow()"
+  - @ref fn_getcursor           "getCursor()"
+  - @ref fn_getdragitem         "getDragItem()"
+  - @ref fn_getequipitem        "getEquipItem(int slot)"
+  - @ref fn_getgobs             "getGobs()"
+  - @ref fn_gethp               "getHp()"
+  - @ref fn_gethunger           "getHunger()"
+  - @ref fn_getmycoord          "getMyCoord()"
+  - @ref fn_getmycoordx         "getMyCoordX()"
+  - @ref fn_getmycoordy         "getMyCoordY()"
+  - @ref fn_getobjectblob       "getObjectBlob(int id, int index)"
+  - @ref fn_getplayerid         "getPlayerId()"
+  - @ref fn_getstamina          "getStamina()"
+  - @ref fn_gettiletype         "getTileType(int tx, int ty)"
+  - @ref fn_gettiletype_2       "getTileType(Position p)"
+  - @ref fn_getwindows          "getWindows()"
+  - @ref fn_hascontextmenu      "hasContextMenu()"
+  - @ref fn_hasdragitem         "hasDragItem()"
+  - @ref fn_ismoving            "isMoving()"
+  - @ref fn_opencharwindow      "openCharWindow()"
+  - @ref fn_openequipment       "openEquipment()"
+  - @ref fn_say                 "say(String message)"
+  - @ref fn_selectarea          "selectArea(String text)"
+  - @ref fn_selectobject        "selectObject(String text)"
+  - @ref fn_selecttile          "selectTile(String text)"
+  - @ref fn_sendaction          "sendAction(String... action)"
 - @ref sec_inv
-  - @ref fn_getinventory      "getInventory(String windowname)"
-  - @ref fn_hasinventory      "hasInventory(String windowname)"
-  - @ref fn_openinventory     "openInventory()"
+  - @ref fn_getinventory        "getInventory(String windowname)"
+  - @ref fn_hasinventory        "hasInventory(String windowname)"
+  - @ref fn_openinventory       "openInventory()"
 - @ref sec_mapinterac
   - @ref fn_mapabsclick          "mapAbsClick(int x, int y, int btn, int mod)"
   - @ref fn_mapabsinteractclick  "mapAbsInteractClick(int x, int y, int mod)"
@@ -102,6 +111,23 @@ Searches for the object with the specified name inside the specified radius from
 @param  radius Radius of the search area (in tiles)
 @return Object ID. 0, if such object not found.
 
+@anchor fn_findobjectbynames
+@code ScriptGob findObjectByNames(int radius, String... names) @endcode
+@par
+Searches for the object with the specified names inside the specified radius from the player.
+@param  radius Radius of the search area (in tiles)
+@param  names  Array of names to match object's name
+@return Object. @c null, if such object not found.
+
+@anchor fn_findobjectbynames_2
+@code ScriptGob findObjectByNames(int radius, int x, int y, String... names) @endcode
+@par
+Searches for the object with the specified names inside the specified area.
+@param  radius Radius of the area (in map points)
+@param  x, y   Offset from the player position which determines the area center (in map points)
+@param  names  Array of names to match object's name
+@return Object. @c null, if such object not found.
+
 @anchor fn_findwindow
 @code ScriptWindow findWindow(String... windownames) @endcode
 @par
@@ -155,15 +181,20 @@ Returns all graphical objects currently visible on the map.
 @code int getHunger() @endcode
 @par
 
+@anchor fn_getmycoord
+@code Position getMyCoord() @endcode
+@par
+Returns the player position.
+
 @anchor fn_getmycoordx
 @code int getMyCoordX() @endcode
 @par
-Returns the player world map position.
+Returns the player position.
 
 @anchor fn_getmycoordy
 @code int getMyCoordY() @endcode
 @par
-Returns the player world map position.
+Returns the player position.
 
 @anchor fn_getobjectblob
 @code int getObjectBlob(int id, int index) @endcode
@@ -181,9 +212,20 @@ Returns the player ID.
 @code int getStamina() @endcode
 @par
 
+@anchor fn_gettiletype
+@code int getTileType(int tx, int ty) @endcode
+@par
+Returns tile type in the specified position.
+
+@anchor fn_gettiletype_2
+@code int getTileType(Position p) @endcode
+@par
+Returns tile type in the specified position.
+
 @anchor fn_getwindows
 @code ScriptWindow[] getWindows() @endcode
 @par
+Returns all currently opened windows (more precisely, widgets of the @c Window or derived classes).
 
 @anchor fn_hascontextmenu
 @code boolean hasContextMenu() @endcode
@@ -214,6 +256,27 @@ Opens the equipment window.
 @code void say(String message)@endcode
 @par
 Sends message to the Area chat.
+
+@anchor fn_selectarea
+@code Area selectArea(String text) @endcode
+@par
+Opens window with area selection and returns selected area.
+@param  text Prompt text
+@return Selected area. @c null, if not selected.
+
+@anchor fn_selectobject
+@code ScriptGob selectObject(String text) @endcode
+@par
+Asks user to select a map object and returns it.
+@param  text Prompt text
+@return Selected object. @c null, if not selected.
+
+@anchor fn_selecttile
+@code Position selectTile(String text) @endcode
+@par
+Asks user to select a single tile and returns it's position.
+@param  text Prompt text
+@return Selected tile. @c null, if not selected.
 
 @anchor fn_sendaction
 @code void sendAction(String... action) @endcode

@@ -2,6 +2,20 @@
 
 @page page_changelog Changelog
 
+@par 2011/07/12
+- Added Area class.
+- Added Coord class.
+- Added Direction class.
+- Added Position class.
+- Added ScriptGob.resnames property.
+- @ref page_global :
+  - added <i>findObjectByNames(...)</i> functions which allows to match multiple names for the single object;
+  - added <i>getMyCoord()</i>;
+  - added <i>getTileType(...)</i> functions which allows to determine tile type for the specified positions;
+  - added <i>selectArea(String)</i> function;
+  - added <i>selectObject(String)</i> function;
+  - added <i>selectTile(String)</i> function.
+
 @par 2011/05/30
 - Generally updated script wrapper interfaces to allow usage of properties instead of method calls.
 - Added ScriptWidget, ScriptButton, ScriptCharWindow, ScriptChatWindow, ScriptCraftWindow,

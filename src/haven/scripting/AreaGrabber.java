@@ -2,7 +2,7 @@ package haven.scripting;
 
 import haven.*;
 
-public class AreaGrabber extends ScriptGrabber {
+class AreaGrabber extends ScriptGrabber {
     static final String title = "Area selection";
     static final String defaulttext = "Select area:";
     boolean dm = false;

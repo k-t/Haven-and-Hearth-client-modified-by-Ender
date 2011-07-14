@@ -2,7 +2,7 @@ package haven.scripting;
 
 import haven.*;
 
-public final class TileGrabber extends ScriptGrabber {
+final class TileGrabber extends ScriptGrabber {
     static final String title = "Tile selection";
     static final String defaulttext = "Select tile:";
     Position tile;
