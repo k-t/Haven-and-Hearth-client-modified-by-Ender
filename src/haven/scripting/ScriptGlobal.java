@@ -50,9 +50,9 @@ public class ScriptGlobal {
     }
     
     public ScriptChatWindow findChatWindow(String windowname) {
-        if (ChatHWPanel.instance == null)
+        if (UI.instance.chat == null)
             return null;
-        for (HWindow wnd : ChatHWPanel.instance.getwnds()) {
+        for (HWindow wnd : UI.instance.chat.getwnds()) {
             if (wnd.title.contains(windowname) && wnd instanceof ChatHW) {
                 return new ScriptChatWindow((ChatHW)wnd);
             }
@@ -144,7 +144,7 @@ public class ScriptGlobal {
     }
     
     public ScriptCraftWindow getCraftWindow() {
-        for (HWindow wnd : ChatHWPanel.instance.getwnds()) {
+        for (HWindow wnd : UI.instance.chat.getwnds()) {
             if (wnd instanceof Makewindow) {
                 return new ScriptCraftWindow((Makewindow)wnd);
             }

@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ChatHWPanel extends Widget implements IHWindowParent {
-
-    public static ChatHWPanel instance;
     static BufferedImage[] fbtni = new BufferedImage[] {
 	    Resource.loadimg("gfx/hud/fbtn"),
 	    Resource.loadimg("gfx/hud/fbtnd"),
@@ -46,7 +44,7 @@ public class ChatHWPanel extends Widget implements IHWindowParent {
     
     public ChatHWPanel(Coord c, Coord sz, Widget parent) {
 	super(c, sz, parent);
-	ui.chat = instance = this;
+	ui.chat = this;
 	btnc = sz.sub(sz.x, btnh);
 	sub = new Button(new Coord(300, 260), sbtnw, this,
 		Resource.loadimg("gfx/hud/slen/sau")) {

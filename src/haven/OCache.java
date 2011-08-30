@@ -48,7 +48,7 @@ public class OCache implements Iterable<Gob> {
     }
 	
     public synchronized void remove(int id, int frame) {
-	    if(objs.containsKey(id)) {
+        if(objs.containsKey(id)) {
 		objs.remove(id);
 		deleted.put(id, frame);
 		radar.remove(id);
