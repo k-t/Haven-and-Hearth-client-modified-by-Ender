@@ -41,6 +41,14 @@
     <copy todir="build/res" >
       <fileset dir="resources/res"/>
     </copy>
+    <mkdir dir="build/scripts" />
+    <copy todir="build/scripts" >
+      <fileset dir="scripts"/>
+    </copy>
+    <mkdir dir="build/doc" />
+    <copy file="doc/ScriptEngine.chm" todir="build/doc" />
+    <copy file="haven.groovy" todir="build" />
+    <copy file="lib/kthaven-res.jar" todir="build" />
   </target>
 
   <target name="appletview" depends="build-env">

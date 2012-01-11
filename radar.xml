@@ -1,0 +1,55 @@
+<radar>
+    <group name="herb" show="true">
+        <!-- common forageables -->
+        <marker match="gfx/terobjs/herbs/bloodstern" res="gfx/hud/mmap/bloodstern" show="true" />
+        <marker match="gfx/terobjs/herbs/blueberry" res="gfx/hud/mmap/blueberry" show="true" />
+        <marker match="gfx/terobjs/herbs/candleberry" res="gfx/hud/mmap/candleberry" show="true" />
+        <marker match="gfx/terobjs/herbs/cavebulb" res="gfx/hud/mmap/cavebulb" show="true" />
+        <marker match="gfx/terobjs/herbs/chantrelle" res="gfx/hud/mmap/chantrelle" show="true" />
+        <marker match="gfx/terobjs/herbs/fourleafclover" res="gfx/hud/mmap/fourleafclover" show="false" />
+        <marker match="gfx/terobjs/herbs/inkweed" res="gfx/hud/mmap/inkweed" show="false" />
+        <marker match="gfx/terobjs/herbs/mussel" res="gfx/hud/mmap/mussel" show="false" />
+        <marker match="gfx/terobjs/herbs/rustroot" res="gfx/hud/mmap/rustroot" show="false" />
+        <marker match="gfx/terobjs/herbs/spindlytaproot" res="gfx/hud/mmap/spindlytaproot" show="false" />
+        <marker match="gfx/terobjs/herbs/stingingnettle" res="gfx/hud/mmap/stingingnettle" show="false" />
+        <marker match="gfx/terobjs/herbs/windweed" res="gfx/hud/mmap/windweed" show="false" />
+        <!-- clay -->
+        <marker match="gfx/terobjs/herbs/caveclay" res="gfx/hud/mmap/caveclay" show="true" />
+        <marker match="gfx/terobjs/herbs/feldspar" res="gfx/hud/mmap/feldspar" show="false" />
+        <marker match="gfx/terobjs/herbs/grayclay" res="gfx/hud/mmap/grayclay" show="false" />
+        <!-- curious -->
+        <marker match="gfx/terobjs/herbs/bloatedbolete" res="gfx/hud/mmap/bloatedbolete" show="true" />
+        <marker match="gfx/terobjs/herbs/chimingbluebell" res="gfx/hud/mmap/chimingbluebell" show="true" />
+        <marker match="gfx/terobjs/herbs/dandelion" res="gfx/hud/mmap/dandelion" show="false" />
+        <marker match="gfx/terobjs/herbs/edelweiss" res="gfx/hud/mmap/edelweiss" show="true" />
+        <marker match="gfx/terobjs/herbs/flotsam" res="gfx/hud/mmap/flotsam" show="true" />
+        <marker match="gfx/terobjs/herbs/frogscrown" res="gfx/hud/mmap/frogscrown" show="true" />
+        <marker match="gfx/terobjs/herbs/ladysmantle" res="gfx/hud/mmap/ladysmantle" show="true" />
+        <marker match="gfx/terobjs/herbs/glimmermoss" res="gfx/hud/mmap/glimmermoss" show="true" />
+        <marker match="gfx/terobjs/herbs/royaltoadstool" res="gfx/hud/mmap/royaltoadstool" show="true" />
+        <marker match="gfx/terobjs/herbs/stalagoom" res="gfx/hud/mmap/stalagoom" show="true" />
+        <marker match="gfx/terobjs/herbs/tangledbramble" res="gfx/hud/mmap/tangledbramble" show="true" />
+        <marker match="gfx/terobjs/herbs/thornythistle" res="gfx/hud/mmap/thornythistle" show="true" />
+        <marker match="gfx/terobjs/herbs/uncommonsnapdragon" res="gfx/hud/mmap/uncommonsnapdragon" show="true" />
+        <marker match="gfx/terobjs/herbs/washedupbladderwrack" res="gfx/hud/mmap/washedupbladderwrack" show="true" />
+        <!-- unknown forageables -->
+        <marker pattern="gfx/terobjs/herbs/.+" />
+    </group>
+    <!-- animals -->
+    <group name="animal" show="true">
+        <marker match="gfx/kritter/bear/s" res="gfx/hud/mmap/bear" />
+        <marker match="gfx/kritter/boar/s" res="gfx/hud/mmap/boar" />
+        <marker match="gfx/kritter/deer/s" res="gfx/hud/mmap/deer" />
+    </group>
+    <!-- players -->
+    <group name="player" show="true">
+        <marker pattern="gfx/borka/body/.+" res="gfx/hud/mmap/pl" />
+    </group>
+    <group name="custom" show="true">
+        <marker match="gfx/terobjs/mining/minehole" res="gfx/hud/mmap/minehole" show="true" />
+        <marker match="gfx/terobjs/mining/ladder" res="gfx/hud/mmap/ladder" show="true" />
+        <marker match="gfx/terobjs/vclaim" res="gfx/hud/mmap/vskull" show="true" />
+        <marker pattern="gfx/kritter/bram/.+" res="gfx/hud/mmap/bram" show="true" />
+        <marker match="gfx/terobjs/anthill" res="gfx/hud/mmap/anthill" show="true" />
+    </group>
+</radar>

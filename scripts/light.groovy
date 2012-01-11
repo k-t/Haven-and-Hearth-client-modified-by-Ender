@@ -1,0 +1,1 @@
+findWindow("Ore Smelter", "Kiln", "Finery Forge", "Oven")?.findButton("Light")?.click()
