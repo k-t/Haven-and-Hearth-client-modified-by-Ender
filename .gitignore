@@ -5,3 +5,8 @@
 /dist
 /.settings
 /.externalToolBuilders
+
+*.ipr
+*.iws
+*.iml
+.idea/
